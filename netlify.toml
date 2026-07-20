@@ -1,0 +1,15 @@
+# Netlify-configuratie voor PandPlicht.nl (Next.js 16).
+# Netlify detecteert Next.js automatisch en past de Next.js Runtime toe,
+# zodat server components, API-routes en dynamische pagina's blijven werken.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Node-versie afstemmen op de lokale ontwikkelomgeving.
+  NODE_VERSION = "22"
+
+# De officiële Next.js-runtime van Netlify (wordt automatisch geïnstalleerd).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
