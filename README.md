@@ -117,6 +117,9 @@ app merkt daar niets van.
 - [ ] DNS voor `pandplicht.nl` (www primair) en 301 vanaf `pandplicht.online`.
 - [ ] Productieopslag (PostgreSQL/Supabase) achter het Storage-interface.
 - [ ] Echt contact-/lead-e-mailadres + e-mailadapter (Resend o.i.d.) activeren.
+- [ ] EP-Online API-sleutel aanvragen bij RVO en zetten (`EPONLINE_API_KEY` +
+      `ENABLE_EP_ONLINE_INTEGRATION=true`) om label/oppervlakte automatisch op te
+      halen; controleer de veldnamen tegen de live API bij eerste gebruik.
 - [ ] Privacyvriendelijke analytics kiezen (Plausible/Umami) en site-ID zetten.
 - [ ] Google Search Console + Bing Webmaster Tools verifiëren, sitemap indienen.
 - [ ] KvK-gegevens in `src/lib/site.ts` (`LEGAL`) invullen zodra die bestaan.
@@ -127,7 +130,7 @@ app merkt daar niets van.
 | Integratie | Status |
 |---|---|
 | PDOK Locatieserver (adressen) | **Live** via server-side proxy met cache/timeout en handmatige fallback |
-| EP-Online (energielabels) | **Uit** (`ENABLE_EP_ONLINE_INTEGRATION=false`); bezoeker zoekt zelf op, wij linken |
+| EP-Online (energielabels) | **Adapter gebouwd**, standaard uit. Zet `ENABLE_EP_ONLINE_INTEGRATION=true` + `EPONLINE_API_KEY` (gratis bij RVO aan te vragen) → de PandCheck haalt dan automatisch label + oppervlakte op. Zonder sleutel/label valt de wizard terug op handmatige invoer; er wordt nooit een label verzonnen |
 | Live netcapaciteitsdata | **Uit** (`ENABLE_LIVE_GRID_DATA=false`); scan verzint géén capaciteit |
 | E-mail | **Uit**; leads worden alleen opgeslagen |
 | Advertenties | **Uit** (`ADS_ENABLED=false`); `SponsoredSlot` rendert niets |

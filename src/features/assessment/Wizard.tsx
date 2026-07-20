@@ -18,6 +18,7 @@ import {
   TextInput,
 } from "./fields";
 import type { AddressSuggestion } from "@/lib/address/pdok";
+import type { EnergyLabelLookup } from "@/lib/address/ep-online";
 
 const STORAGE_KEY = "pp-check-v1";
 const TOTAL_STEPS = 6;
@@ -98,6 +99,14 @@ export function Wizard() {
   const [zoeken, setZoeken] = useState(false);
   const [handmatig, setHandmatig] = useState(false);
   const [plaatsHandmatig, setPlaatsHandmatig] = useState("");
+
+  // EP-Online: automatisch label + oppervlakte ophalen
+  const [labelLookup, setLabelLookup] = useState<
+    EnergyLabelLookup | { status: "loading" } | null
+  >(null);
+  const [oppervlakteHandmatig, setOppervlakteHandmatig] = useState(false);
+  const [labelHandmatig, setLabelHandmatig] = useState(false);
+  const lookedUpKey = useRef<string | null>(null);
 
   // Herstel opgeslagen sessie of neem querystring van de adresstarter over.
   useEffect(() => {
@@ -195,8 +204,42 @@ export function Wizard() {
     }
   }, [postcode, huisnummer, toevoeging]);
 
+  // Haal automatisch het geregistreerde energielabel + oppervlakte op.
+  // Vult de betreffende velden vooraf in; faalt het (geen sleutel/geen label),
+  // dan blijven de handmatige velden gewoon beschikbaar.
+  const lookupLabel = useCallback(
+    async (pc: string, hn: string, toev?: string) => {
+      const key = `${pc}-${hn}-${toev ?? ""}`.toUpperCase();
+      if (lookedUpKey.current === key) return;
+      lookedUpKey.current = key;
+      setLabelLookup({ status: "loading" });
+      setOppervlakteHandmatig(false);
+      setLabelHandmatig(false);
+      try {
+        const qs = new URLSearchParams({ postcode: pc, huisnummer: hn });
+        if (toev) qs.set("toevoeging", toev);
+        const res = await fetch(`/api/energylabel?${qs.toString()}`);
+        const data = (await res.json()) as EnergyLabelLookup;
+        setLabelLookup(data);
+        if (data.status === "found") {
+          patch({
+            energielabel: data.label,
+            ...(data.oppervlakteM2
+              ? { oppervlakteExactM2: data.oppervlakteM2, oppervlakteBand: null }
+              : {}),
+          });
+        }
+      } catch {
+        setLabelLookup({ status: "error" });
+      }
+    },
+    [patch],
+  );
+
   const kiesSuggestie = useCallback(
     (s: AddressSuggestion) => {
+      const pc = (s.postcode ?? postcode.trim()).toUpperCase().replace(/\s+/g, "");
+      const hn = (s.huisnummer ?? huisnummer.trim()).replace(/\D/g, "");
       patch({
         adres: {
           postcode: s.postcode ?? postcode.trim().toUpperCase(),
@@ -210,8 +253,9 @@ export function Wizard() {
         },
       });
       setSuggesties(null);
+      void lookupLabel(pc, hn, toevoeging.trim() || undefined);
     },
-    [patch, postcode, huisnummer, toevoeging],
+    [patch, postcode, huisnummer, toevoeging, lookupLabel],
   );
 
   const bevestigHandmatig = useCallback(() => {
@@ -231,7 +275,12 @@ export function Wizard() {
       },
     });
     setAdresFout(null);
-  }, [patch, postcode, huisnummer, toevoeging, plaatsHandmatig]);
+    void lookupLabel(
+      pc.replace(/\s+/g, ""),
+      hn,
+      toevoeging.trim() || undefined,
+    );
+  }, [patch, postcode, huisnummer, toevoeging, plaatsHandmatig, lookupLabel]);
 
   /* ---------------- Berekenen (stap 6) ---------------- */
 
@@ -529,44 +578,62 @@ export function Wizard() {
               />
             </FieldGroup>
 
-            <FieldGroup
-              legend="Hoe groot is de totale gebruiksoppervlakte?"
-              hint="Een schatting is prima. De 100 m²-grens is relevant voor de label-C-plicht van kantoren."
-            >
-              <RadioCards
-                name="oppervlakte"
-                value={input.oppervlakteBand}
-                onChange={(v) => {
-                  patch({ oppervlakteBand: v });
-                  if (v !== null) track("assessment_unknown_selected", { step: 3 });
-                }}
-                columns={3}
-                options={[
-                  { value: "lt100", label: "Minder dan 100 m²" },
-                  { value: "b100_250", label: "100 – 250 m²" },
-                  { value: "b250_1000", label: "250 – 1.000 m²" },
-                  { value: "b1000_5000", label: "1.000 – 5.000 m²" },
-                  { value: "gt5000", label: "Meer dan 5.000 m²" },
-                  { value: "onbekend", label: "Weet ik niet" },
-                ]}
-              />
-              <div className="mt-3 max-w-xs">
-                <TextInput
-                  id="w-m2"
-                  label="Exacte oppervlakte in m² (optioneel)"
-                  inputMode="numeric"
-                  placeholder="bijv. 650"
-                  value={input.oppervlakteExactM2 ?? ""}
-                  onChange={(e) => {
-                    const n = Number(e.target.value);
-                    patch({
-                      oppervlakteExactM2:
-                        e.target.value === "" || Number.isNaN(n) ? null : n,
-                    });
-                  }}
+            {labelLookup?.status === "found" &&
+            labelLookup.oppervlakteM2 &&
+            !oppervlakteHandmatig ? (
+              <FieldGroup legend="Gebruiksoppervlakte">
+                <EpAutoCard
+                  waarde={`${labelLookup.oppervlakteM2.toLocaleString("nl-NL")} m²`}
+                  toelichting="Gebruiksoppervlakte volgens het geregistreerde energielabel."
+                  registratiedatum={labelLookup.registratiedatum}
+                  onCorrigeer={() => setOppervlakteHandmatig(true)}
                 />
-              </div>
-            </FieldGroup>
+              </FieldGroup>
+            ) : (
+              <FieldGroup
+                legend="Hoe groot is de totale gebruiksoppervlakte?"
+                hint="Een schatting is prima. De 100 m²-grens is relevant voor de label-C-plicht van kantoren."
+              >
+                {labelLookup?.status === "loading" ? (
+                  <p className="mb-3 text-sm text-ink-soft">
+                    Wij proberen de oppervlakte automatisch op te halen…
+                  </p>
+                ) : null}
+                <RadioCards
+                  name="oppervlakte"
+                  value={input.oppervlakteBand}
+                  onChange={(v) => {
+                    patch({ oppervlakteBand: v });
+                    if (v !== null) track("assessment_unknown_selected", { step: 3 });
+                  }}
+                  columns={3}
+                  options={[
+                    { value: "lt100", label: "Minder dan 100 m²" },
+                    { value: "b100_250", label: "100 – 250 m²" },
+                    { value: "b250_1000", label: "250 – 1.000 m²" },
+                    { value: "b1000_5000", label: "1.000 – 5.000 m²" },
+                    { value: "gt5000", label: "Meer dan 5.000 m²" },
+                    { value: "onbekend", label: "Weet ik niet" },
+                  ]}
+                />
+                <div className="mt-3 max-w-xs">
+                  <TextInput
+                    id="w-m2"
+                    label="Exacte oppervlakte in m² (optioneel)"
+                    inputMode="numeric"
+                    placeholder="bijv. 650"
+                    value={input.oppervlakteExactM2 ?? ""}
+                    onChange={(e) => {
+                      const n = Number(e.target.value);
+                      patch({
+                        oppervlakteExactM2:
+                          e.target.value === "" || Number.isNaN(n) ? null : n,
+                      });
+                    }}
+                  />
+                </div>
+              </FieldGroup>
+            )}
 
             <FieldGroup
               legend="Welk deel van het oppervlak is kantoorfunctie?"
@@ -651,28 +718,56 @@ export function Wizard() {
               extraOptieLabel="Geen gasaansluiting"
             />
 
-            <FieldGroup
-              legend="Wat is het bekende energielabel?"
-              hint="Gratis te controleren in EP-Online, de officiële labeldatabase."
-            >
-              <RadioCards
-                name="label"
-                value={input.energielabel}
-                onChange={(v) => patch({ energielabel: v })}
-                columns={3}
-                options={[
-                  { value: "A", label: "A (of beter)" },
-                  { value: "B", label: "B" },
-                  { value: "C", label: "C" },
-                  { value: "D", label: "D" },
-                  { value: "E", label: "E" },
-                  { value: "F", label: "F" },
-                  { value: "G", label: "G" },
-                  { value: "geen", label: "Geen label" },
-                  { value: "onbekend", label: "Weet ik niet" },
-                ]}
-              />
-            </FieldGroup>
+            {labelLookup?.status === "found" && !labelHandmatig ? (
+              <FieldGroup legend="Energielabel">
+                <EpAutoCard
+                  waarde={`Label ${labelLookup.labelRaw}`}
+                  toelichting="Automatisch opgehaald uit het officiële energielabelregister."
+                  registratiedatum={labelLookup.registratiedatum}
+                  geldigTot={labelLookup.geldigTot}
+                  onCorrigeer={() => setLabelHandmatig(true)}
+                />
+              </FieldGroup>
+            ) : (
+              <FieldGroup
+                legend="Wat is het bekende energielabel?"
+                hint="Gratis te controleren in EP-Online, de officiële labeldatabase."
+              >
+                {labelLookup?.status === "loading" ? (
+                  <p className="mb-3 text-sm text-ink-soft">
+                    Wij proberen het label automatisch op te halen…
+                  </p>
+                ) : labelLookup?.status === "not_found" ? (
+                  <p className="mb-3 rounded-card bg-status-unknown-bg p-3 text-sm text-status-unknown-ink">
+                    Voor dit adres vonden wij geen geregistreerd energielabel.
+                    Vul het zelf in als u het weet, of kies &lsquo;Weet ik
+                    niet&rsquo;.
+                  </p>
+                ) : labelLookup?.status === "error" ? (
+                  <p className="mb-3 rounded-card bg-status-maybe-bg p-3 text-sm text-status-maybe-ink">
+                    Automatisch ophalen lukte nu niet. U kunt het label zelf
+                    invullen.
+                  </p>
+                ) : null}
+                <RadioCards
+                  name="label"
+                  value={input.energielabel}
+                  onChange={(v) => patch({ energielabel: v })}
+                  columns={3}
+                  options={[
+                    { value: "A", label: "A (of beter)" },
+                    { value: "B", label: "B" },
+                    { value: "C", label: "C" },
+                    { value: "D", label: "D" },
+                    { value: "E", label: "E" },
+                    { value: "F", label: "F" },
+                    { value: "G", label: "G" },
+                    { value: "geen", label: "Geen label" },
+                    { value: "onbekend", label: "Weet ik niet" },
+                  ]}
+                />
+              </FieldGroup>
+            )}
 
             <FieldGroup legend="Heeft het pand eigen opwek?">
               <RadioCards
@@ -1013,6 +1108,54 @@ function leegBatterij() {
     investeringshorizonJaren: null,
     noodstroomNodig: null,
   };
+}
+
+/* ---------------- EP-Online: automatisch opgehaald ---------------- */
+
+function EpAutoCard({
+  waarde,
+  toelichting,
+  registratiedatum,
+  geldigTot,
+  onCorrigeer,
+}: {
+  waarde: string;
+  toelichting: string;
+  registratiedatum?: string | null;
+  geldigTot?: string | null;
+  onCorrigeer: () => void;
+}) {
+  const fmt = (d?: string | null) =>
+    d ? new Date(d).toLocaleDateString("nl-NL") : null;
+  const reg = fmt(registratiedatum);
+  const geldig = fmt(geldigTot);
+  return (
+    <div className="rounded-card border-2 border-status-no-border bg-status-no-bg p-4">
+      <div className="flex items-start gap-3">
+        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-status-no-ink/10 text-status-no-ink">
+          <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="m5 10.3 3 3 7-7.6" />
+          </svg>
+        </span>
+        <div>
+          <p className="text-lg font-bold text-status-no-ink">{waarde}</p>
+          <p className="mt-0.5 text-sm text-status-no-ink/90">{toelichting}</p>
+          <p className="mt-1 text-xs text-status-no-ink/80">
+            Bron: EP-Online (RVO)
+            {reg ? ` • geregistreerd op ${reg}` : ""}
+            {geldig ? ` • geldig tot ${geldig}` : ""}
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onCorrigeer}
+        className="mt-3 text-sm font-bold text-pine underline"
+      >
+        Klopt niet? Pas handmatig aan
+      </button>
+    </div>
+  );
 }
 
 /* ---------------- Energie-invoercomponent ---------------- */
