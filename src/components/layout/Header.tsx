@@ -60,7 +60,7 @@ export function Header() {
         scrolled ? "shadow-soft" : ""
       }`}
     >
-      <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-[76px] w-full max-w-[88rem] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10 xl:px-14">
         <Link
           href="/"
           className="rounded-lg focus-visible:outline-3 focus-visible:outline-action"
@@ -77,7 +77,7 @@ export function Header() {
                 <Link
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className={`rounded-full px-3.5 py-2 text-[0.95rem] font-semibold transition-colors hover:bg-mint-soft hover:text-pine ${
+                  className={`whitespace-nowrap rounded-full px-3 py-2 text-[0.95rem] font-semibold transition-colors hover:bg-mint-soft hover:text-pine ${
                     pathname === item.href ? "text-pine" : "text-ink"
                   }`}
                 >
@@ -88,7 +88,7 @@ export function Header() {
             <li>
               <Link
                 href="/voor-adviseurs"
-                className="rounded-full px-3.5 py-2 text-[0.95rem] font-medium text-ink-soft transition-colors hover:bg-mint-soft hover:text-pine"
+                className="whitespace-nowrap rounded-full px-3 py-2 text-[0.95rem] font-medium text-ink-soft transition-colors hover:bg-mint-soft hover:text-pine"
               >
                 Voor adviseurs
               </Link>

@@ -11,7 +11,7 @@ export function AddressStarter({ compact = false }: { compact?: boolean }) {
         compact ? "" : "mt-8"
       }`}
     >
-      <div className="grid gap-3 sm:grid-cols-[1.1fr_0.8fr_0.7fr]">
+      <div className="grid items-end gap-3 sm:grid-cols-[1.1fr_0.8fr_0.9fr]">
         <div>
           <label
             htmlFor="hs-postcode"
@@ -57,7 +57,7 @@ export function AddressStarter({ compact = false }: { compact?: boolean }) {
             className="mb-1 block text-sm font-bold text-ink"
           >
             Toevoeging{" "}
-            <span className="font-normal text-ink-soft">(optioneel)</span>
+            <span className="font-normal text-ink-soft">(optie.)</span>
           </label>
           <input
             id="hs-toevoeging"

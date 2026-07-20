@@ -32,24 +32,32 @@ const TOOLS = [
     title: "Pandverplichtingencheck",
     text: "Bekijk welke verplichtingen mogelijk bij uw gebruik, oppervlakte en energieverbruik passen.",
     Icon: IconPand,
+    accent: "bg-pine text-white",
+    bar: "bg-pine",
   },
   {
     href: "/tools/energiebesparingsplicht-check",
     title: "Energiebesparingsplichtcheck",
     text: "Krijg een indicatie van de energie-, informatie- of onderzoeksplicht.",
     Icon: IconMeter,
+    accent: "bg-action text-white",
+    bar: "bg-action",
   },
   {
     href: "/tools/netcongestiecheck",
     title: "Netcongestiecheck",
     text: "Breng uw aansluiting, groeiplannen en mogelijke knelpunten in beeld.",
     Icon: IconGrid,
+    accent: "bg-amber text-ink",
+    bar: "bg-amber",
   },
   {
     href: "/tools/zakelijke-batterijscan",
     title: "Zakelijke batterijscan",
     text: "Ontdek of batterijonderzoek voor uw situatie logisch kan zijn.",
     Icon: IconBattery,
+    accent: "bg-coral text-white",
+    bar: "bg-coral",
   },
 ];
 
@@ -99,27 +107,59 @@ export default function HomePage() {
       <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
 
       {/* --- Hero --- */}
-      <section className="pt-10 sm:pt-16">
+      <section className="relative overflow-hidden pt-10 sm:pt-16">
+        {/* Decoratieve kleurvlakken op de achtergrond */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+        >
+          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-mint/50 blur-3xl" />
+          <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-amber/25 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-action/15 blur-3xl" />
+        </div>
         <Container>
-          <div className="reveal rounded-panel bg-surface p-6 shadow-soft sm:p-10 lg:p-14">
-            <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="reveal relative overflow-hidden rounded-panel bg-gradient-to-br from-surface via-surface to-mint-soft p-6 shadow-lift ring-1 ring-line/60 sm:p-10 lg:p-14">
+            {/* Accentrandje bovenaan het paneel */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-pine via-action to-amber"
+            />
+            <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
               <div>
-                <p className="inline-flex items-center gap-2 rounded-full bg-mint-soft px-4 py-1.5 text-sm font-bold text-pine">
-                  <span className="h-2 w-2 rounded-full bg-action" aria-hidden />
+                <p className="inline-flex items-center gap-2 rounded-full bg-pine px-4 py-1.5 text-sm font-bold text-white shadow-soft">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-amber" aria-hidden />
                   Gratis indicatieve check voor bedrijfspanden
                 </p>
-                <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-6xl">
-                  Weet u welke plichten voor uw bedrijfspand gelden?
+                <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[4rem]">
+                  Weet u welke plichten voor uw{" "}
+                  <span className="relative whitespace-nowrap text-pine">
+                    bedrijfspand
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 300 18"
+                      preserveAspectRatio="none"
+                      className="absolute -bottom-1 left-0 h-3 w-full text-amber"
+                    >
+                      <path
+                        d="M3 13c60-9 234-9 294 0"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </span>{" "}
+                  gelden?
                 </h1>
-                <p className="mt-5 max-w-xl text-lg text-ink-soft">
+                <p className="mt-6 max-w-xl text-lg text-ink-soft">
                   Controleer binnen enkele minuten mogelijke
                   energieverplichtingen, netcongestierisico&rsquo;s en kansen
                   voor batterijopslag. Helder uitgelegd en met bronnen.
                 </p>
                 <AddressStarter />
               </div>
-              <div className="mx-auto hidden max-w-md lg:block">
-                <HeroIllustration className="w-full" />
+              <div className="mx-auto hidden max-w-lg lg:block">
+                <HeroIllustration className="w-full drop-shadow-sm" />
               </div>
             </div>
           </div>
@@ -127,33 +167,36 @@ export default function HomePage() {
       </section>
 
       {/* --- Vertrouwensbalk --- */}
-      <section aria-label="Waar u op kunt rekenen" className="mt-8">
+      <section aria-label="Waar u op kunt rekenen" className="mt-10">
         <Container>
           <ul className="grid grid-cols-2 gap-3 text-sm font-semibold text-ink sm:grid-cols-4">
             {[
-              "Gebaseerd op openbare overheidsbronnen",
-              "Uitslag in enkele minuten",
-              "Geen account nodig",
-              "Uw kernuitslag vóór het contactformulier",
+              { t: "Gebaseerd op openbare overheidsbronnen", c: "bg-mint-soft text-pine" },
+              { t: "Uitslag in enkele minuten", c: "bg-amber-soft text-amber-ink" },
+              { t: "Geen account nodig", c: "bg-status-no-bg text-status-no-ink" },
+              { t: "Uw kernuitslag vóór het contactformulier", c: "bg-coral-soft text-coral-ink" },
             ].map((item) => (
               <li
-                key={item}
-                className="flex items-center gap-2.5 rounded-card border border-line bg-surface px-4 py-3"
+                key={item.t}
+                className="flex items-center gap-3 rounded-card border border-line bg-surface px-4 py-3.5 shadow-soft"
               >
-                <svg
-                  viewBox="0 0 20 20"
-                  className="h-5 w-5 shrink-0 text-action"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
+                <span
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.c}`}
                 >
-                  <circle cx="10" cy="10" r="8" />
-                  <path d="m6.5 10.3 2.3 2.3 4.7-5.2" />
-                </svg>
-                {item}
+                  <svg
+                    viewBox="0 0 20 20"
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 10.3 3 3 7-7.6" />
+                  </svg>
+                </span>
+                {item.t}
               </li>
             ))}
           </ul>
@@ -173,23 +216,29 @@ export default function HomePage() {
             Doe de complete PandCheck of start bij het onderwerp dat nu speelt.
             Elke check is gratis en indicatief.
           </p>
-          <div className="mt-8 grid gap-5 sm:grid--cols-2 sm:grid-cols-2 lg:grid-cols-4">
-            {TOOLS.map(({ href, title, text, Icon }) => (
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {TOOLS.map(({ href, title, text, Icon, accent, bar }) => (
               <article
                 key={href}
-                className="flex flex-col rounded-panel border border-line bg-surface p-6 shadow-soft transition-transform duration-200 hover:-translate-y-1"
+                className="group relative flex flex-col overflow-hidden rounded-panel border border-line bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:shadow-lift"
               >
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-mint-soft text-pine">
+                <div
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1.5 ${bar}`}
+                />
+                <span
+                  className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-soft transition-transform duration-200 group-hover:scale-110 ${accent}`}
+                >
                   <Icon />
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-ink">{title}</h3>
                 <p className="mt-2 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
                 <Link
                   href={href}
-                  className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine hover:underline"
+                  className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine group-hover:gap-2.5"
                 >
                   Bekijk deze check
-                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 10h12m-5-5 5 5-5 5" />
                   </svg>
                 </Link>
@@ -453,17 +502,34 @@ export default function HomePage() {
       {/* --- Eind-CTA --- */}
       <section aria-labelledby="cta-heading" className="mt-16 sm:mt-24">
         <Container>
-          <div className="rounded-panel bg-mint-soft p-8 text-center sm:p-14">
-            <h2
-              id="cta-heading"
-              className="mx-auto max-w-xl text-3xl font-extrabold tracking-tight text-ink sm:text-4xl"
+          <div className="relative overflow-hidden rounded-panel bg-gradient-to-br from-pine via-pine to-[#0a4239] p-8 text-center shadow-lift sm:p-16">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
             >
-              Begin met duidelijkheid over uw pand.
-            </h2>
-            <div className="mt-7">
-              <ButtonLink href="/pandcheck" size="lg">
-                Start gratis PandCheck
-              </ButtonLink>
+              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-action/30 blur-2xl" />
+              <div className="absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-amber/20 blur-2xl" />
+            </div>
+            <div className="relative">
+              <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold text-mint">
+                <span className="h-2 w-2 rounded-full bg-amber" aria-hidden />
+                Gratis • geen account • uitslag in enkele minuten
+              </p>
+              <h2
+                id="cta-heading"
+                className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-5xl"
+              >
+                Begin met duidelijkheid over uw pand.
+              </h2>
+              <div className="mt-8">
+                <ButtonLink
+                  href="/pandcheck"
+                  size="lg"
+                  className="bg-amber text-ink hover:bg-[#e6a92f]"
+                >
+                  Start gratis PandCheck
+                </ButtonLink>
+              </div>
             </div>
           </div>
         </Container>
