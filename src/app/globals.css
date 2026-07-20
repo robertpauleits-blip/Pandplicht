@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- Merk-kleurtokens PandPlicht --- */
+  --color-ink: #16313a; /* primaire tekst, navigatie, donkere vlakken */
+  --color-ink-soft: #46606a; /* secundaire tekst */
+  --color-pine: #0e5a4f; /* merkanker, primaire CTA */
+  --color-pine-dark: #0a4239; /* CTA hover/active */
+  --color-action: #18a978; /* accenten en positieve signalen */
+  --color-mint: #bceedc; /* zachte informatieve vlakken */
+  --color-mint-soft: #e2f7ee;
+  --color-canvas: #f6f3ea; /* hoofdachtergrond */
+  --color-surface: #fffdf8; /* kaarten en formulieren */
+  --color-amber: #f2bb4a; /* aandachtspunt */
+  --color-amber-soft: #fbf0d7;
+  --color-amber-ink: #6b4a0e;
+  --color-coral: #d76652; /* waarschuwing, spaarzaam */
+  --color-coral-soft: #fcebe6;
+  --color-coral-ink: #8c3420;
+  --color-line: #e6eceb; /* borders en scheidingen */
+
+  /* Statusvlakken */
+  --color-status-yes-bg: #fdf0e4;
+  --color-status-yes-border: #ecc9a8;
+  --color-status-yes-ink: #8a4a14;
+  --color-status-maybe-bg: #fbf0d7;
+  --color-status-maybe-border: #e8d296;
+  --color-status-maybe-ink: #6b4a0e;
+  --color-status-no-bg: #e4f5ec;
+  --color-status-no-border: #a9dfc6;
+  --color-status-no-ink: #0e5a4f;
+  --color-status-unknown-bg: #edf1f1;
+  --color-status-unknown-border: #ccd9d8;
+  --color-status-unknown-ink: #3e5860;
+
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-panel: 1.75rem; /* grote afgeronde hoofdpanelen */
+  --radius-card: 1.125rem; /* kaarten en formuliervelden */
+
+  --shadow-soft: 0 1px 2px rgb(22 49 58 / 0.04), 0 6px 24px rgb(22 49 58 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(22 49 58 / 0.05), 0 12px 32px rgb(22 49 58 / 0.09);
+}
+
+/* --- Basis --- */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+}
+
+/* Zichtbare focus voor toetsenbordgebruikers */
+:focus-visible {
+  outline: 3px solid var(--color-action);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-mint);
+  color: var(--color-ink);
+}
+
+/* Skiplink */
+.skiplink {
+  @apply absolute left-4 top-4 z-[100] -translate-y-24 rounded-lg bg-ink px-4 py-2.5 font-semibold text-white transition-transform;
+}
+.skiplink:focus {
+  transform: translateY(0);
+}
+
+/* Zachte sectie-reveal (respecteert reduced motion via regel hierboven) */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal {
+  animation: rise-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Nette standaard voor langere leescontent */
+.prose-pp {
+  max-width: 42rem;
+}
+.prose-pp h2 {
+  @apply mt-10 mb-3 text-2xl font-bold tracking-tight text-ink;
+}
+.prose-pp h3 {
+  @apply mt-7 mb-2 text-xl font-bold text-ink;
+}
+.prose-pp p {
+  @apply mb-4 text-ink-soft;
+}
+.prose-pp ul {
+  @apply mb-4 list-disc space-y-1.5 pl-6 text-ink-soft;
+}
+.prose-pp ol {
+  @apply mb-4 list-decimal space-y-1.5 pl-6 text-ink-soft;
+}
+.prose-pp li strong,
+.prose-pp p strong {
+  @apply text-ink;
+}
+.prose-pp a {
+  @apply font-semibold text-pine underline decoration-mint decoration-2 underline-offset-2 hover:decoration-action;
+}
+.prose-pp table {
+  @apply mb-4 w-full border-collapse text-left text-[0.95rem];
+}
+.prose-pp caption {
+  @apply mb-2 text-left text-sm font-semibold text-ink-soft;
+}
+.prose-pp th {
+  @apply border-b-2 border-line bg-surface px-3 py-2 font-bold text-ink;
+}
+.prose-pp td {
+  @apply border-b border-line px-3 py-2 align-top text-ink-soft;
+}
+
+/* --- Print: alleen de inhoud van het rapport --- */
+@media print {
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 11pt;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-block {
+    break-inside: avoid;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+    word-break: break-all;
+  }
+  .shadow-soft,
+  .shadow-lift {
+    box-shadow: none !important;
+  }
+}
