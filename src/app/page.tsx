@@ -157,6 +157,27 @@ export default function HomePage() {
                   voor batterijopslag. Helder uitgelegd en met bronnen.
                 </p>
                 <AddressStarter />
+                <div className="mt-6">
+                  <p className="text-sm font-semibold text-ink-soft">
+                    Of start direct bij een onderwerp:
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {[
+                      { href: "/tools/pandverplichtingencheck", label: "Verplichtingen" },
+                      { href: "/tools/energiebesparingsplicht-check", label: "Energiebesparing" },
+                      { href: "/tools/netcongestiecheck", label: "Netcongestie" },
+                      { href: "/tools/zakelijke-batterijscan", label: "Zakelijke batterij" },
+                    ].map((c) => (
+                      <Link
+                        key={c.href}
+                        href={c.href}
+                        className="inline-flex min-h-[40px] items-center rounded-full border-2 border-line bg-surface px-4 text-sm font-bold text-ink transition-colors hover:border-pine hover:text-pine"
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
               <div className="mx-auto hidden max-w-lg lg:block">
                 <HeroIllustration className="w-full drop-shadow-sm" />
@@ -203,24 +224,26 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Vier productkaarten --- */}
+      {/* --- Vier productkaarten (categorie-ingangen) --- */}
       <section aria-labelledby="tools-heading" className="mt-16 sm:mt-24">
         <Container>
-          <h2
-            id="tools-heading"
-            className="max-w-2xl text-3xl font-extrabold tracking-tight text-ink sm:text-4xl"
-          >
-            Vier checks, één helder overzicht
-          </h2>
-          <p className="mt-3 max-w-2xl text-ink-soft">
-            Doe de complete PandCheck of start bij het onderwerp dat nu speelt.
-            Elke check is gratis en indicatief.
-          </p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2
+              id="tools-heading"
+              className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl"
+            >
+              Waar wilt u mee starten?
+            </h2>
+            <p className="mt-3 text-ink-soft">
+              Doe de complete PandCheck of kies het onderwerp dat nu speelt.
+              Elke check is gratis, indicatief en met bronnen.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {TOOLS.map(({ href, title, text, Icon, accent, bar }) => (
               <article
                 key={href}
-                className="group relative flex flex-col overflow-hidden rounded-panel border border-line bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:shadow-lift"
+                className="group relative flex flex-col overflow-hidden rounded-panel border border-line bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-transparent hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"
@@ -235,10 +258,10 @@ export default function HomePage() {
                 <p className="mt-2 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
                 <Link
                   href={href}
-                  className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine group-hover:gap-2.5"
+                  className="mt-5 inline-flex min-h-[46px] items-center justify-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[0.95rem] font-bold text-white transition-colors group-hover:bg-pine"
                 >
-                  Bekijk deze check
-                  <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  Doe deze check
+                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 10h12m-5-5 5 5-5 5" />
                   </svg>
                 </Link>
