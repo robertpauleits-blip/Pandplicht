@@ -30,7 +30,7 @@ const TOOLS = [
   {
     href: "/tools/pandverplichtingencheck",
     title: "Pandverplichtingencheck",
-    text: "Bekijk welke verplichtingen mogelijk bij uw gebruik, oppervlakte en energieverbruik passen.",
+    text: "Welke verplichtingen passen bij uw pand?",
     Icon: IconPand,
     accent: "bg-pine text-white",
     bar: "bg-pine",
@@ -38,7 +38,7 @@ const TOOLS = [
   {
     href: "/tools/energiebesparingsplicht-check",
     title: "Energiebesparingsplichtcheck",
-    text: "Krijg een indicatie van de energie-, informatie- of onderzoeksplicht.",
+    text: "Geldt de energie- of informatieplicht voor u?",
     Icon: IconMeter,
     accent: "bg-action text-white",
     bar: "bg-action",
@@ -46,7 +46,7 @@ const TOOLS = [
   {
     href: "/tools/netcongestiecheck",
     title: "Netcongestiecheck",
-    text: "Breng uw aansluiting, groeiplannen en mogelijke knelpunten in beeld.",
+    text: "Aansluiting, plannen en knelpunten in beeld.",
     Icon: IconGrid,
     accent: "bg-amber text-ink",
     bar: "bg-amber",
@@ -54,7 +54,7 @@ const TOOLS = [
   {
     href: "/tools/zakelijke-batterijscan",
     title: "Zakelijke batterijscan",
-    text: "Ontdek of batterijonderzoek voor uw situatie logisch kan zijn.",
+    text: "Is batterijonderzoek voor u de moeite waard?",
     Icon: IconBattery,
     accent: "bg-coral text-white",
     bar: "bg-coral",
@@ -151,10 +151,9 @@ export default function HomePage() {
                   </span>{" "}
                   gelden?
                 </h1>
-                <p className="mt-6 max-w-xl text-lg text-ink-soft">
-                  Controleer binnen enkele minuten mogelijke
-                  energieverplichtingen, netcongestierisico&rsquo;s en kansen
-                  voor batterijopslag. Helder uitgelegd en met bronnen.
+                <p className="mt-6 max-w-md text-lg text-ink-soft">
+                  Check in een paar minuten welke energieverplichtingen,
+                  netcongestie en batterijkansen spelen. Helder en met bronnen.
                 </p>
                 <AddressStarter />
                 <div className="mt-6">
@@ -235,8 +234,8 @@ export default function HomePage() {
               Waar wilt u mee starten?
             </h2>
             <p className="mt-3 text-ink-soft">
-              Doe de complete PandCheck of kies het onderwerp dat nu speelt.
-              Elke check is gratis, indicatief en met bronnen.
+              Doe de complete PandCheck of kies één onderwerp. Gratis en met
+              bronnen.
             </p>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -284,10 +283,8 @@ export default function HomePage() {
                   Zo ziet uw uitslag eruit
                 </h2>
                 <p className="mt-4 text-white/75">
-                  Per onderwerp ziet u een genuanceerde status, waarom u die
-                  krijgt, welke bron is gebruikt en wat een logische volgende
-                  stap is. Ook wat wij <em>niet</em> weten, benoemen we
-                  expliciet.
+                  Per onderwerp een heldere status, de bron en uw volgende stap.
+                  Ook wat wij <em>niet</em> weten, zeggen we eerlijk.
                 </p>
                 <ul className="mt-6 space-y-3">
                   {[
@@ -380,16 +377,16 @@ export default function HomePage() {
           <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {[
               {
-                title: "Vul uw pand en gebruik in",
-                text: "Start met postcode en huisnummer. Daarna beantwoordt u korte vragen over gebruik, oppervlakte en energie. 'Weet ik niet' is altijd een geldig antwoord.",
+                title: "Vul uw pand in",
+                text: "Postcode, huisnummer en een paar korte vragen. ‘Weet ik niet’ mag altijd.",
               },
               {
-                title: "Wij toetsen uw antwoorden aan actuele regels en signalen",
-                text: "Uw antwoorden worden vergeleken met drempels en voorwaarden uit openbare overheidsbronnen, met per regel een bron en controledatum.",
+                title: "Wij toetsen aan de regels",
+                text: "We vergelijken uw antwoorden met officiële drempels — met bron en datum.",
               },
               {
-                title: "Ontvang een overzicht met prioriteiten en vervolgstappen",
-                text: "U ziet direct wat waarschijnlijk speelt, wat u moet nakijken en wat nu minder relevant lijkt — inclusief een printbaar rapport.",
+                title: "U krijgt uw overzicht",
+                text: "Direct helder wat speelt, wat u nakijkt en wat kan wachten. Printbaar.",
               },
             ].map((step, i) => (
               <li
@@ -422,9 +419,8 @@ export default function HomePage() {
                 Waarom PandPlicht?
               </h2>
               <p className="mt-4 text-ink-soft">
-                De regels bestaan al — maar ze staan verspreid over RVO,
-                Rijksoverheid, EP-Online, netbeheerders en gemeenten. Wij
-                zetten ze voor uw situatie op één rij.
+                De regels staan verspreid over RVO, EP-Online, netbeheerders en
+                gemeenten. Wij zetten ze voor uw pand op één rij.
               </p>
               <div className="mt-6">
                 <ButtonLink href="/pandcheck" size="lg">
@@ -435,32 +431,31 @@ export default function HomePage() {
             <ul className="space-y-4">
               {[
                 [
-                  "Informatie staat op meerdere websites",
-                  "RVO legt de plicht uit, EP-Online kent uw label, de netbeheerder weet uw aansluiting. Wij brengen die versnipperde informatie samen in één check.",
+                  "Alles op één plek",
+                  "Versnipperde regels samen in één check.",
                 ],
                 [
-                  "Verantwoordelijkheid verschilt per situatie",
-                  "Eigenaar of huurder? Dat maakt uit per verplichting. De uitslag benoemt wie meestal aan zet is, zonder juridische schijnzekerheid.",
+                  "Eerlijk over uw rol",
+                  "Wie is aan zet — eigenaar of huurder? Zonder schijnzekerheid.",
                 ],
                 [
-                  "Drempelwaarden zijn moeilijk te onthouden",
-                  "50.000 kWh, 25.000 m³, 100 m², label C — wij toetsen uw cijfers aan de actuele drempels en tonen de bron erbij.",
-                ],
-                [
-                  "Een congestiekaart zegt niet wat ú moet doen",
-                  "Een kleur op de kaart is geen antwoord. Onze scan vertaalt uw aansluiting en plannen naar concrete vervolgstappen richting de netbeheerder.",
-                ],
-                [
-                  "Een batterij is niet altijd logisch",
-                  "Wij rekenen geen rendement voor dat we niet kunnen onderbouwen. De scan zegt eerlijk of nader onderzoek zinvol lijkt — of juist niet.",
+                  "Altijd met bron",
+                  "Elke drempel en uitkomst met officiële bron en datum.",
                 ],
               ].map(([title, text]) => (
                 <li
                   key={title}
-                  className="rounded-card border border-line bg-surface p-5"
+                  className="flex items-start gap-3 rounded-card border border-line bg-surface p-5"
                 >
-                  <h3 className="font-bold text-ink">{title}</h3>
-                  <p className="mt-1.5 text-[0.95rem] text-ink-soft">{text}</p>
+                  <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint-soft text-pine">
+                    <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m5 10.3 3 3 7-7.6" />
+                    </svg>
+                  </span>
+                  <span>
+                    <h3 className="font-bold text-ink">{title}</h3>
+                    <p className="mt-0.5 text-[0.95rem] text-ink-soft">{text}</p>
+                  </span>
                 </li>
               ))}
             </ul>
