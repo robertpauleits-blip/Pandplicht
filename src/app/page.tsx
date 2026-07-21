@@ -106,113 +106,92 @@ export default function HomePage() {
     <>
       <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
 
-      {/* --- Hero --- */}
-      <section className="relative overflow-hidden pt-10 sm:pt-16">
-        {/* Decoratieve kleurvlakken op de achtergrond */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-        >
-          <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-mint/50 blur-3xl" />
-          <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-amber/25 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-action/15 blur-3xl" />
+      {/* --- Hero (baan: lichtgroen) --- */}
+      <section className="relative overflow-hidden bg-[#e8f2ef] pt-12 pb-16 sm:pt-20 sm:pb-24">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-24 top-6 h-72 w-72 rounded-full bg-mint/40 blur-3xl" />
+          <div className="absolute right-0 -top-6 h-80 w-80 rounded-full bg-amber/20 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-action/10 blur-3xl" />
         </div>
-        <Container>
-          <div className="reveal relative overflow-hidden rounded-panel bg-gradient-to-br from-surface via-surface to-mint-soft p-6 shadow-lift ring-1 ring-line/60 sm:p-10 lg:p-14">
-            {/* Accentrandje bovenaan het paneel */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-pine via-action to-amber"
-            />
-            <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-              <div>
-                <p className="inline-flex items-center gap-2 rounded-full bg-pine px-4 py-1.5 text-sm font-bold text-white shadow-soft">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-amber" aria-hidden />
-                  Gratis indicatieve check voor bedrijfspanden
+        <Container className="relative">
+          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="reveal">
+              <p className="inline-flex items-center gap-2 rounded-full bg-pine px-4 py-1.5 text-sm font-bold text-white shadow-soft">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-amber" aria-hidden />
+                Gratis indicatieve check voor bedrijfspanden
+              </p>
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[4rem]">
+                Weet u welke plichten voor uw{" "}
+                <span className="relative whitespace-nowrap text-pine">
+                  bedrijfspand
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 300 18"
+                    preserveAspectRatio="none"
+                    className="absolute -bottom-1 left-0 h-3 w-full text-amber"
+                  >
+                    <path
+                      d="M3 13c60-9 234-9 294 0"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </span>{" "}
+                gelden?
+              </h1>
+              <p className="mt-6 max-w-md text-lg text-ink-soft">
+                Check in een paar minuten welke energieverplichtingen,
+                netcongestie en batterijkansen spelen. Helder en met bronnen.
+              </p>
+              <div className="mt-7 max-w-xl">
+                <AddressStarter compact />
+              </div>
+              <div className="mt-5">
+                <p className="text-sm font-semibold text-ink-soft">
+                  Of start direct bij een onderwerp:
                 </p>
-                <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[4rem]">
-                  Weet u welke plichten voor uw{" "}
-                  <span className="relative whitespace-nowrap text-pine">
-                    bedrijfspand
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 300 18"
-                      preserveAspectRatio="none"
-                      className="absolute -bottom-1 left-0 h-3 w-full text-amber"
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {[
+                    { href: "/tools/pandverplichtingencheck", label: "Verplichtingen" },
+                    { href: "/tools/energiebesparingsplicht-check", label: "Energiebesparing" },
+                    { href: "/tools/netcongestiecheck", label: "Netcongestie" },
+                    { href: "/tools/zakelijke-batterijscan", label: "Zakelijke batterij" },
+                  ].map((c) => (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      className="inline-flex min-h-[40px] items-center rounded-full border-2 border-line bg-surface px-4 text-sm font-bold text-ink transition-colors hover:border-pine hover:text-pine"
                     >
-                      <path
-                        d="M3 13c60-9 234-9 294 0"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="5"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>{" "}
-                  gelden?
-                </h1>
-                <p className="mt-6 max-w-md text-lg text-ink-soft">
-                  Check in een paar minuten welke energieverplichtingen,
-                  netcongestie en batterijkansen spelen. Helder en met bronnen.
-                </p>
-                <AddressStarter />
-                <div className="mt-6">
-                  <p className="text-sm font-semibold text-ink-soft">
-                    Of start direct bij een onderwerp:
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {[
-                      { href: "/tools/pandverplichtingencheck", label: "Verplichtingen" },
-                      { href: "/tools/energiebesparingsplicht-check", label: "Energiebesparing" },
-                      { href: "/tools/netcongestiecheck", label: "Netcongestie" },
-                      { href: "/tools/zakelijke-batterijscan", label: "Zakelijke batterij" },
-                    ].map((c) => (
-                      <Link
-                        key={c.href}
-                        href={c.href}
-                        className="inline-flex min-h-[40px] items-center rounded-full border-2 border-line bg-surface px-4 text-sm font-bold text-ink transition-colors hover:border-pine hover:text-pine"
-                      >
-                        {c.label}
-                      </Link>
-                    ))}
-                  </div>
+                      {c.label}
+                    </Link>
+                  ))}
                 </div>
               </div>
-              <div className="mx-auto hidden max-w-lg lg:block">
-                <HeroIllustration className="w-full drop-shadow-sm" />
-              </div>
+            </div>
+            <div className="mx-auto hidden max-w-md lg:block">
+              <HeroIllustration className="w-full drop-shadow-sm" />
             </div>
           </div>
         </Container>
       </section>
 
-      {/* --- Vertrouwensbalk --- */}
-      <section aria-label="Waar u op kunt rekenen" className="mt-10">
-        <Container>
-          <ul className="grid grid-cols-2 gap-3 text-sm font-semibold text-ink sm:grid-cols-4">
+      {/* --- Vertrouwensbalk (baan: wit, smalle strip) --- */}
+      <section aria-label="Waar u op kunt rekenen" className="border-y border-line bg-surface">
+        <Container className="py-5">
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm font-semibold text-ink sm:grid-cols-4">
             {[
               { t: "Gebaseerd op openbare overheidsbronnen", c: "bg-mint-soft text-pine" },
               { t: "Uitslag in enkele minuten", c: "bg-amber-soft text-amber-ink" },
               { t: "Geen account nodig", c: "bg-status-no-bg text-status-no-ink" },
-              { t: "Uw kernuitslag vóór het contactformulier", c: "bg-coral-soft text-coral-ink" },
+              { t: "Uitslag vóór het contactformulier", c: "bg-coral-soft text-coral-ink" },
             ].map((item) => (
-              <li
-                key={item.t}
-                className="flex items-center gap-3 rounded-card border border-line bg-surface px-4 py-3.5 shadow-soft"
-              >
+              <li key={item.t} className="flex items-center gap-2.5">
                 <span
-                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${item.c}`}
+                  className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${item.c}`}
                 >
-                  <svg
-                    viewBox="0 0 20 20"
-                    className="h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
+                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="m5 10.3 3 3 7-7.6" />
                   </svg>
                 </span>
@@ -223,8 +202,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Vier productkaarten (categorie-ingangen) --- */}
-      <section aria-labelledby="tools-heading" className="mt-16 sm:mt-24">
+      {/* --- Vier productkaarten (categorie-ingangen) — baan: wit --- */}
+      <section aria-labelledby="tools-heading" className="bg-surface py-16 sm:py-20">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <h2
@@ -242,7 +221,7 @@ export default function HomePage() {
             {TOOLS.map(({ href, title, text, Icon, accent, bar }) => (
               <article
                 key={href}
-                className="group relative flex flex-col overflow-hidden rounded-panel border border-line bg-surface p-6 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-transparent hover:shadow-lift"
+                className="group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface p-5 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-transparent hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"
@@ -270,10 +249,10 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Voorbeeldrapport --- */}
-      <section aria-labelledby="voorbeeld-heading" className="mt-16 sm:mt-24">
+      {/* --- Voorbeeldrapport — baan: navy --- */}
+      <section aria-labelledby="voorbeeld-heading" className="bg-ink py-16 sm:py-24">
         <Container>
-          <div className="rounded-panel bg-ink p-6 sm:p-10 lg:p-14">
+          <div>
             <div className="grid items-start gap-10 lg:grid-cols-[0.9fr_1.1fr]">
               <div>
                 <h2
@@ -365,8 +344,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Zo werkt het --- */}
-      <section aria-labelledby="werkwijze-heading" className="mt-16 sm:mt-24">
+      {/* --- Zo werkt het — baan: wit --- */}
+      <section aria-labelledby="werkwijze-heading" className="bg-surface py-16 sm:py-20">
         <Container>
           <h2
             id="werkwijze-heading"
@@ -407,8 +386,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Waarom PandPlicht --- */}
-      <section aria-labelledby="waarom-heading" className="mt-16 sm:mt-24">
+      {/* --- Waarom PandPlicht — baan: lichtgroen --- */}
+      <section aria-labelledby="waarom-heading" className="bg-[#eef4f3] py-16 sm:py-20">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
@@ -463,8 +442,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Kennis en actuele onderwerpen --- */}
-      <section aria-labelledby="kennis-heading" className="mt-16 sm:mt-24">
+      {/* --- Kennis en actuele onderwerpen — baan: wit --- */}
+      <section aria-labelledby="kennis-heading" className="bg-surface py-16 sm:py-20">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2
@@ -510,25 +489,24 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- FAQ --- */}
-      <section className="mt-16 sm:mt-24">
+      {/* --- FAQ — baan: lichtgroen --- */}
+      <section className="bg-[#eef4f3] py-16 sm:py-20">
         <Container className="max-w-3xl">
           <Faq items={FAQ_ITEMS} />
         </Container>
       </section>
 
-      {/* --- Eind-CTA --- */}
-      <section aria-labelledby="cta-heading" className="mt-16 sm:mt-24">
+      {/* --- Eind-CTA — baan: groen (full-bleed) --- */}
+      <section
+        aria-labelledby="cta-heading"
+        className="relative overflow-hidden bg-gradient-to-br from-pine via-pine to-[#0a4239] py-16 text-center sm:py-24"
+      >
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-action/30 blur-2xl" />
+          <div className="absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-amber/20 blur-2xl" />
+        </div>
         <Container>
-          <div className="relative overflow-hidden rounded-panel bg-gradient-to-br from-pine via-pine to-[#0a4239] p-8 text-center shadow-lift sm:p-16">
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0"
-            >
-              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-action/30 blur-2xl" />
-              <div className="absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-amber/20 blur-2xl" />
-            </div>
-            <div className="relative">
+          <div className="relative">
               <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold text-mint">
                 <span className="h-2 w-2 rounded-full bg-amber" aria-hidden />
                 Gratis • geen account • uitslag in enkele minuten
@@ -549,7 +527,6 @@ export default function HomePage() {
                 </ButtonLink>
               </div>
             </div>
-          </div>
         </Container>
       </section>
     </>

@@ -107,6 +107,8 @@ export function Wizard() {
   const [oppervlakteHandmatig, setOppervlakteHandmatig] = useState(false);
   const [labelHandmatig, setLabelHandmatig] = useState(false);
   const lookedUpKey = useRef<string | null>(null);
+  const kiesSuggestieRef = useRef<(s: AddressSuggestion) => void>(() => {});
+  const autoSearched = useRef(false);
 
   // Herstel opgeslagen sessie of neem querystring van de adresstarter over.
   useEffect(() => {
@@ -154,6 +156,19 @@ export function Wizard() {
     track("assessment_step_viewed", { step });
   }, [step]);
 
+  // Komt de bezoeker met postcode + huisnummer vanaf de homepage?
+  // Zoek het adres dan automatisch op, zodat stap 1 niet opnieuw hoeft.
+  useEffect(() => {
+    if (!hydrated || autoSearched.current) return;
+    autoSearched.current = true;
+    const qp = searchParams.get("postcode");
+    const qh = searchParams.get("huisnummer");
+    if (qp && qh && !input.adres) {
+      void zoekAdres();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
+
   const patch = useCallback((p: Partial<AssessmentInput>) => {
     setInput((cur) => ({ ...cur, ...p }));
   }, []);
@@ -192,6 +207,9 @@ export function Wizard() {
         setAdresFout(
           "Wij vinden dit adres niet. Controleer postcode en huisnummer, of ga verder met handmatige invoer.",
         );
+      } else if (data.suggestions.length === 1 && data.suggestions[0]) {
+        // Precies één treffer: direct kiezen zodat de bezoeker niets hoeft te herhalen.
+        kiesSuggestieRef.current(data.suggestions[0]);
       } else {
         setSuggesties(data.suggestions);
       }
@@ -257,6 +275,11 @@ export function Wizard() {
     },
     [patch, postcode, huisnummer, toevoeging, lookupLabel],
   );
+
+  // Houd de ref actueel zodat de auto-zoek (bij één treffer) kan selecteren.
+  useEffect(() => {
+    kiesSuggestieRef.current = kiesSuggestie;
+  }, [kiesSuggestie]);
 
   const bevestigHandmatig = useCallback(() => {
     const pc = postcode.trim().toUpperCase().replace(/\s+/g, " ");
