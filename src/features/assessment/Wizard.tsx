@@ -163,8 +163,9 @@ export function Wizard() {
     autoSearched.current = true;
     const qp = searchParams.get("postcode");
     const qh = searchParams.get("huisnummer");
+    const qt = searchParams.get("toevoeging") ?? undefined;
     if (qp && qh && !input.adres) {
-      void zoekAdres();
+      void zoekAdres({ pc: qp, hn: qh, toev: qt });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated]);
@@ -185,11 +186,15 @@ export function Wizard() {
 
   /* ---------------- Stap 1: adres zoeken ---------------- */
 
-  const zoekAdres = useCallback(async () => {
+  const zoekAdres = useCallback(
+    async (override?: { pc: string; hn: string; toev?: string }) => {
     setAdresFout(null);
     setSuggesties(null);
-    const pc = postcode.trim().toUpperCase().replace(/\s+/g, " ");
-    const hn = huisnummer.trim();
+    // Bij de automatische start lezen we rechtstreeks uit de link (override),
+    // zodat we niet afhankelijk zijn van nog niet-ingeladen invoervelden.
+    const pc = (override?.pc ?? postcode).trim().toUpperCase().replace(/\s+/g, " ");
+    const hn = (override?.hn ?? huisnummer).trim();
+    const toev = (override?.toev ?? toevoeging).trim();
     if (!/^[1-9][0-9]{3}\s?[A-Z]{2}$/.test(pc) || !/^[0-9]{1,5}$/.test(hn)) {
       setAdresFout(
         "Vul een geldige Nederlandse postcode (bijv. 1234 AB) en een huisnummer in.",
@@ -199,16 +204,25 @@ export function Wizard() {
     }
     setZoeken(true);
     try {
-      const q = `${pc} ${hn}${toevoeging ? ` ${toevoeging.trim()}` : ""}`;
+      const q = `${pc} ${hn}${toev ? ` ${toev}` : ""}`;
       const res = await fetch(`/api/address/suggest?q=${encodeURIComponent(q)}`);
       if (!res.ok) throw new Error("suggest_failed");
       const data = (await res.json()) as { suggestions: AddressSuggestion[] };
+      const norm = (s: string) => s.toUpperCase().replace(/\s+/g, "");
+      const exact = data.suggestions.filter(
+        (s) =>
+          s.postcode &&
+          norm(s.postcode) === norm(pc) &&
+          (s.huisnummer ?? "").replace(/\D/g, "") === hn,
+      );
       if (data.suggestions.length === 0) {
         setAdresFout(
           "Wij vinden dit adres niet. Controleer postcode en huisnummer, of ga verder met handmatige invoer.",
         );
+      } else if (exact.length === 1 && exact[0]) {
+        // Exacte treffer op postcode + huisnummer: direct kiezen.
+        kiesSuggestieRef.current(exact[0]);
       } else if (data.suggestions.length === 1 && data.suggestions[0]) {
-        // Precies één treffer: direct kiezen zodat de bezoeker niets hoeft te herhalen.
         kiesSuggestieRef.current(data.suggestions[0]);
       } else {
         setSuggesties(data.suggestions);
@@ -220,7 +234,9 @@ export function Wizard() {
     } finally {
       setZoeken(false);
     }
-  }, [postcode, huisnummer, toevoeging]);
+    },
+    [postcode, huisnummer, toevoeging],
+  );
 
   // Haal automatisch het geregistreerde energielabel + oppervlakte op.
   // Vult de betreffende velden vooraf in; faalt het (geen sleutel/geen label),
@@ -446,7 +462,7 @@ export function Wizard() {
             {!handmatig ? (
               <button
                 type="button"
-                onClick={zoekAdres}
+                onClick={() => zoekAdres()}
                 disabled={zoeken}
                 className="mt-4 inline-flex min-h-[48px] items-center justify-center rounded-full bg-pine px-6 py-3 font-bold text-white transition-colors hover:bg-pine-dark disabled:opacity-50"
               >
