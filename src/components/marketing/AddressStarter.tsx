@@ -69,7 +69,7 @@ export function AddressStarter({
             className="mb-1 block text-sm font-bold text-ink"
           >
             Toevoeging{" "}
-            <span className="font-normal text-ink-soft">(optie.)</span>
+            <span className="font-normal text-ink-soft">(optioneel)</span>
           </label>
           <input
             id="hs-toevoeging"

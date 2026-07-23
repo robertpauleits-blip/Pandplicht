@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Container } from "@/components/ui/Container";
 import { Wizard } from "@/features/assessment/Wizard";
+import { WizardSkeleton } from "@/features/assessment/WizardSkeleton";
 
 export const metadata: Metadata = {
   title: "Gratis PandCheck",
@@ -23,13 +24,7 @@ export default function PandcheckPage() {
           niet juridisch bindend.
         </p>
       </div>
-      <Suspense
-        fallback={
-          <div className="mx-auto max-w-2xl rounded-panel border border-line bg-surface p-8 text-center text-ink-soft">
-            De check wordt geladen…
-          </div>
-        }
-      >
+      <Suspense fallback={<WizardSkeleton />}>
         <Wizard />
       </Suspense>
     </Container>

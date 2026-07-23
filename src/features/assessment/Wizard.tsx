@@ -11,6 +11,7 @@ import type {
 import { ELEKTRA_BANDS, GAS_BANDS } from "@/rules/helpers";
 import { runAssessment } from "@/rules/engine";
 import { track } from "@/lib/analytics";
+import { WizardSkeleton } from "@/features/assessment/WizardSkeleton";
 import {
   CheckboxCards,
   FieldGroup,
@@ -374,11 +375,7 @@ export function Wizard() {
   }, [goto]);
 
   if (!hydrated) {
-    return (
-      <div className="rounded-panel border border-line bg-surface p-8 text-center text-ink-soft">
-        De check wordt geladen…
-      </div>
-    );
+    return <WizardSkeleton />;
   }
 
   const stepName = STEP_NAMES[step - 1] ?? "";

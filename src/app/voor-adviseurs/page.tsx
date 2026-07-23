@@ -48,8 +48,8 @@ export default function VoorAdviseursPage() {
               daar expliciet toestemming voor.
             </li>
             <li>
-              Vergoeding per geldige aanvraag; transparant en zonder exclusieve
-              wurgcontracten.
+              Vergoeding per geldige aanvraag, met transparante voorwaarden en
+              zonder langdurige exclusiviteitsverplichtingen.
             </li>
             <li>
               De inhoudelijke uitslag van de check blijft altijd onafhankelijk
