@@ -103,6 +103,102 @@ body {
   animation: rise-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
+/* --- Pandscan hero-illustratie --- */
+/* Kaarten zijn standaard zichtbaar (ook zonder JS). Zodra de scan actief is
+   (.pandscan-enh) starten ze verborgen en verschijnen ze na elkaar. */
+.pandscan-enh .pandscan-card {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* Eén frame zonder transitie om te verbergen zonder zichtbare fade-out. */
+.pandscan-noanim .pandscan-card {
+  transition: none !important;
+}
+.pandscan-enh[data-revealed="true"] .pandscan-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@keyframes pandscan-sweep {
+  0% {
+    top: -8%;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+.pandscan-scanline {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  height: 46px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(
+    to bottom,
+    rgba(24, 169, 120, 0) 0%,
+    rgba(24, 169, 120, 0.16) 46%,
+    rgba(24, 169, 120, 0.26) 50%,
+    rgba(24, 169, 120, 0.16) 54%,
+    rgba(24, 169, 120, 0) 100%
+  );
+  animation: pandscan-sweep 1.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.pandscan-scanline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    rgba(24, 169, 120, 0),
+    rgba(24, 169, 120, 0.9),
+    rgba(24, 169, 120, 0)
+  );
+}
+
+@keyframes pandscan-float {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-6px);
+  }
+}
+.pandscan-float {
+  animation: pandscan-float 4.5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pandscan-scanline {
+    display: none;
+  }
+  .pandscan-float {
+    animation: none;
+  }
+  .pandscan-enh .pandscan-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Nette standaard voor langere leescontent */
 .prose-pp {
   max-width: 42rem;

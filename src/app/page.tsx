@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { AddressStarter } from "@/components/marketing/AddressStarter";
+import { PandScanHero } from "@/components/marketing/PandScanHero";
 import { Faq, type FaqEntry } from "@/components/marketing/Faq";
 import {
   IconBattery,
@@ -97,88 +97,36 @@ export default function HomePage() {
     <>
       <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
 
-      {/* --- HERO, grote remake in overstappen.nl-stijl (gecentreerd) --- */}
-      <section
-        aria-labelledby="hero-heading"
-        className="relative overflow-hidden bg-[#eef4f3] pt-10 pb-16 text-center sm:pt-14 sm:pb-20"
-      >
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-24 top-6 h-72 w-72 rounded-full bg-mint/40 blur-3xl" />
-          <div className="absolute right-0 -top-6 h-80 w-80 rounded-full bg-amber/20 blur-3xl" />
-          <div className="absolute bottom-10 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-action/10 blur-3xl" />
-        </div>
-        <Container className="relative">
-          <p className="mx-auto inline-flex items-center gap-2 rounded-full bg-pine px-4 py-1.5 text-sm font-bold text-white shadow-soft">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-amber" aria-hidden />
-            Gratis check voor bedrijfspanden
-          </p>
-          <h1
-            id="hero-heading"
-            className="mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl"
+      {/* --- HERO met interactieve pandscan --- */}
+      <PandScanHero />
+
+      {/* --- Categorie-tegels, baan: wit --- */}
+      <section aria-labelledby="tools-heading" className="bg-surface py-16 sm:py-20">
+        <Container>
+          <h2
+            id="tools-heading"
+            className="text-center text-2xl font-extrabold tracking-tight text-ink sm:text-3xl"
           >
-            Weet u welke plichten uw{" "}
-            <span className="relative whitespace-nowrap text-pine">
-              bedrijfspand
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 300 18"
-                preserveAspectRatio="none"
-                className="absolute -bottom-1 left-0 h-3 w-full text-amber"
+            Of kies direct een onderwerp
+          </h2>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {TOOLS.map(({ href, title, text, Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex flex-col items-center rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:shadow-lift"
               >
-                <path d="M3 13c60-9 234-9 294 0" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-              </svg>
-            </span>{" "}
-            heeft?
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-ink-soft">
-            Doe de gratis PandCheck. Helder, in een paar minuten en met bronnen.
-          </p>
-
-          {/* Prominente adres-zoekbalk */}
-          <div className="mx-auto mt-8 max-w-2xl text-left">
-            <AddressStarter compact />
-          </div>
-
-          {/* Trust-rij (eerlijk, geen nep-reviews) */}
-          <ul className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-ink-soft">
-            {[
-              "Gebaseerd op overheidsbronnen",
-              "Geen account nodig",
-              "U krijgt eerst uw uitslag",
-            ].map((t) => (
-              <li key={t} className="inline-flex items-center gap-2">
-                <svg viewBox="0 0 20 20" className="h-4 w-4 text-action" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="m4 10.3 3.2 3.2L16 5.4" />
-                </svg>
-                {t}
-              </li>
+                <Icon className="h-10 w-10 text-pine transition-transform duration-200 group-hover:scale-105" />
+                <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
+                <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
+                  Bekijk
+                  <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 10h12m-5-5 5 5-5 5" />
+                  </svg>
+                </span>
+              </Link>
             ))}
-          </ul>
-
-          {/* Categorie-tegels, het middelpunt, net als overstappen */}
-          <div className="mt-14">
-            <h2 id="tools-heading" className="text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
-              Of kies direct een onderwerp
-            </h2>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {TOOLS.map(({ href, title, text, Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="group flex flex-col items-center rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:shadow-lift"
-                >
-                  <Icon className="h-10 w-10 text-pine transition-transform duration-200 group-hover:scale-105" />
-                  <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
-                  <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
-                    Bekijk
-                    <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M4 10h12m-5-5 5 5-5 5" />
-                    </svg>
-                  </span>
-                </Link>
-              ))}
-            </div>
           </div>
         </Container>
       </section>

@@ -1,8 +1,19 @@
+"use client";
+
 /**
  * Adresstarter, werkt zonder JavaScript (GET-formulier naar /pandcheck).
  * Validatiepatronen volgen de Nederlandse postcode- en huisnummerconventie.
+ * Met JavaScript kan een ouder via `onPostcodeInput` op invoer reageren
+ * (bijvoorbeeld de pandscan-illustratie triggeren); zonder JS blijft het
+ * een gewoon formulier.
  */
-export function AddressStarter({ compact = false }: { compact?: boolean }) {
+export function AddressStarter({
+  compact = false,
+  onPostcodeInput,
+}: {
+  compact?: boolean;
+  onPostcodeInput?: (value: string) => void;
+}) {
   return (
     <form
       action="/pandcheck"
@@ -29,6 +40,7 @@ export function AddressStarter({ compact = false }: { compact?: boolean }) {
             pattern="[1-9][0-9]{3}\s?[A-Za-z]{2}"
             title="Nederlandse postcode, bijvoorbeeld 1234 AB"
             placeholder="1234 AB"
+            onChange={(e) => onPostcodeInput?.(e.target.value)}
             className="w-full rounded-xl border-2 border-line bg-white px-3.5 py-2.5 text-ink placeholder:text-ink-soft/50 focus:border-action focus:outline-none"
           />
         </div>
