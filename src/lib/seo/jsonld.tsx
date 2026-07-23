@@ -27,8 +27,20 @@ export function organizationLd() {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
+    logo: absoluteUrl("/icon.svg"),
+    image: absoluteUrl("/opengraph-image"),
     description:
       "PandPlicht biedt een gratis, indicatieve online check voor energie- en verduurzamingsverplichtingen van Nederlandse bedrijfspanden.",
+    areaServed: { "@type": "Country", name: "Nederland" },
+    knowsAbout: [
+      "Energiebesparingsplicht",
+      "Informatieplicht energiebesparing",
+      "Onderzoeksplicht energiebesparing",
+      "Energielabel C voor kantoren",
+      "Energielabel utiliteitsbouw",
+      "Netcongestie",
+      "Zakelijke batterijopslag",
+    ],
   };
 }
 
@@ -39,6 +51,23 @@ export function websiteLd() {
     name: SITE_NAME,
     url: SITE_URL,
     inLanguage: "nl-NL",
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+  };
+}
+
+/** Service-schema voor de gratis PandCheck (alleen feitelijke, zichtbare claims). */
+export function serviceLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "PandCheck",
+    serviceType: "Indicatieve check energie- en verduurzamingsplichten bedrijfspand",
+    provider: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    areaServed: { "@type": "Country", name: "Nederland" },
+    url: absoluteUrl("/pandcheck"),
+    offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+    description:
+      "Gratis indicatieve check die per bedrijfspand laat zien welke energie- en verduurzamingsverplichtingen, netcongestierisico's en batterijkansen mogelijk spelen, met bronnen en peildatum.",
   };
 }
 

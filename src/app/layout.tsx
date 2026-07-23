@@ -12,14 +12,39 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
     locale: "nl_NL",
+    url: SITE_URL,
+    title: `${SITE_NAME}, Gratis indicatieve check voor bedrijfspanden`,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME}, Gratis indicatieve check voor bedrijfspanden`,
+    description: SITE_DESCRIPTION,
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  // Zoekmachine-eigendomsverificatie via omgevingsvariabelen (geen codewijziging
+  // nodig): zet GOOGLE_SITE_VERIFICATION en/of BING_SITE_VERIFICATION in Netlify.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : {},
   },
 };
 

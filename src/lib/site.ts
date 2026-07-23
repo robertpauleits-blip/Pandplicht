@@ -4,8 +4,10 @@
  * blijven leeg tot ze echt zijn geregeld; lege velden worden nergens getoond.
  */
 
+// Canoniek domein. Moet gelijk zijn aan het primaire domein in Netlify
+// (apex pandplicht.nl), zodat canonicals niet naar een 301-redirect wijzen.
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.pandplicht.nl";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://pandplicht.nl";
 
 export const SITE_NAME = "PandPlicht";
 

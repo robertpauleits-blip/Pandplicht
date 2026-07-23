@@ -16,6 +16,7 @@ import {
   JsonLd,
   faqLd,
   organizationLd,
+  serviceLd,
   websiteLd,
 } from "@/lib/seo/jsonld";
 import { getRecentArticles } from "@/content/knowledge";
@@ -96,7 +97,9 @@ export default function HomePage() {
 
   return (
     <>
-      <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
+      <JsonLd
+        data={[organizationLd(), websiteLd(), serviceLd(), faqLd(FAQ_ITEMS)]}
+      />
 
       {/* --- HERO met interactieve pandscan --- */}
       <PandScanHero />
