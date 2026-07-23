@@ -79,8 +79,7 @@ export function AddressStarter({ compact = false }: { compact?: boolean }) {
         </svg>
       </button>
       <p className="mt-3 text-sm text-ink-soft">
-        Geen account nodig • U krijgt eerst uw uitslag • Indicatief, niet
-        juridisch bindend
+        Indicatief, geen juridisch advies of beschikking.
       </p>
     </form>
   );

@@ -144,7 +144,7 @@ export default function HomePage() {
             {[
               "Gebaseerd op overheidsbronnen",
               "Geen account nodig",
-              "Uitslag in enkele minuten",
+              "U krijgt eerst uw uitslag",
             ].map((t) => (
               <li key={t} className="inline-flex items-center gap-2">
                 <svg viewBox="0 0 20 20" className="h-4 w-4 text-action" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
