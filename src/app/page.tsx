@@ -4,13 +4,14 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { PandScanHero } from "@/components/marketing/PandScanHero";
+import { ProofStrip } from "@/components/marketing/ProofStrip";
 import { Faq, type FaqEntry } from "@/components/marketing/Faq";
 import {
-  IconBattery,
-  IconGrid,
-  IconMeter,
-  IconPand,
-} from "@/components/marketing/ToolIcons";
+  SceneBattery,
+  SceneGrid,
+  SceneMeter,
+  ScenePand,
+} from "@/components/marketing/ToolScenes";
 import {
   JsonLd,
   faqLd,
@@ -30,25 +31,25 @@ const TOOLS = [
     href: "/tools/pandverplichtingencheck",
     title: "Pandverplichtingen",
     text: "Welke plichten gelden voor uw pand?",
-    Icon: IconPand,
+    Scene: ScenePand,
   },
   {
     href: "/tools/energiebesparingsplicht-check",
     title: "Energiebesparing",
     text: "Geldt de energie- of informatieplicht?",
-    Icon: IconMeter,
+    Scene: SceneMeter,
   },
   {
     href: "/tools/netcongestiecheck",
     title: "Netcongestie",
     text: "Aansluiting, plannen en knelpunten.",
-    Icon: IconGrid,
+    Scene: SceneGrid,
   },
   {
     href: "/tools/zakelijke-batterijscan",
     title: "Zakelijke batterij",
     text: "Is batterijonderzoek de moeite waard?",
-    Icon: IconBattery,
+    Scene: SceneBattery,
   },
 ];
 
@@ -100,6 +101,9 @@ export default function HomePage() {
       {/* --- HERO met interactieve pandscan --- */}
       <PandScanHero />
 
+      {/* --- Systeemstatus-strook (eerlijke bewijsvoering) --- */}
+      <ProofStrip />
+
       {/* --- Categorie-tegels, baan: wit --- */}
       <section aria-labelledby="tools-heading" className="bg-surface py-16 sm:py-20">
         <Container>
@@ -110,14 +114,14 @@ export default function HomePage() {
             Of kies direct een onderwerp
           </h2>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {TOOLS.map(({ href, title, text, Icon }) => (
+            {TOOLS.map(({ href, title, text, Scene }) => (
               <Link
                 key={href}
                 href={href}
-                className="group flex flex-col items-center rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:shadow-lift"
+                className="vt-rise group flex flex-col items-center rounded-panel border border-line bg-surface p-6 pt-4 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:bg-[#f8fcfa] hover:shadow-lift"
               >
-                <Icon className="h-10 w-10 text-pine transition-transform duration-200 group-hover:scale-105" />
-                <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
+                <Scene className="h-24 w-full max-w-[11rem]" />
+                <h3 className="mt-3 text-lg font-bold text-ink">{title}</h3>
                 <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
                 <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
                   Bekijk
@@ -169,7 +173,7 @@ export default function HomePage() {
 
               {/* Mock van resultatenpaneel, duidelijk gelabeld als voorbeeld */}
               <div
-                className="rounded-panel bg-surface p-5 shadow-lift sm:p-6"
+                className="vt-rise rounded-panel bg-surface p-5 shadow-lift sm:p-6"
                 aria-label="Voorbeeld van een resultatenoverzicht met fictieve gegevens"
               >
                 <p className="inline-flex rounded-full bg-amber-soft px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-ink">
@@ -252,7 +256,7 @@ export default function HomePage() {
             ].map((step, i) => (
               <li
                 key={step.title}
-                className="rounded-panel border border-line bg-surface p-6"
+                className="vt-rise rounded-panel border border-line bg-surface p-6"
               >
                 <span
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-pine text-lg font-extrabold text-white"
@@ -306,7 +310,7 @@ export default function HomePage() {
               ].map(([title, text]) => (
                 <li
                   key={title}
-                  className="flex items-start gap-3 rounded-card border border-line bg-surface p-5"
+                  className="vt-rise flex items-start gap-3 rounded-card border border-line bg-surface p-5"
                 >
                   <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint-soft text-pine">
                     <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -342,7 +346,7 @@ export default function HomePage() {
             {articles.map((a) => (
               <article
                 key={a.slug}
-                className="flex flex-col rounded-panel border border-line bg-surface p-6 shadow-soft"
+                className="vt-rise flex flex-col rounded-panel border border-line bg-surface p-6 shadow-soft"
               >
                 <p className="text-xs font-bold uppercase tracking-wide text-pine">
                   {a.category}

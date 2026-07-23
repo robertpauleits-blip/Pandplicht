@@ -4,12 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { AddressStarter } from "@/components/marketing/AddressStarter";
 import { PandScan, type ScanPhase } from "@/components/marketing/PandScan";
-
-const TRUST = [
-  "Gebaseerd op overheidsbronnen",
-  "Geen account nodig",
-  "U krijgt eerst uw uitslag",
-];
+import { PeekResultCard } from "@/components/marketing/PeekResultCard";
 
 const SCAN_MS = 2000; // duur van de scanlijn + onthulling
 
@@ -139,28 +134,12 @@ export function PandScanHero() {
             </p>
 
             <div className="mx-auto mt-8 max-w-2xl lg:mx-0">
-              <AddressStarter compact onPostcodeFocus={onPostcodeFocus} />
+              <div className="relative z-10">
+                <AddressStarter compact onPostcodeFocus={onPostcodeFocus} />
+              </div>
+              {/* Uitgluurende voorbeeld-resultatenkaart */}
+              <PeekResultCard />
             </div>
-
-            <ul className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-ink-soft lg:mx-0 lg:justify-start">
-              {TRUST.map((t) => (
-                <li key={t} className="inline-flex items-center gap-2">
-                  <svg
-                    viewBox="0 0 20 20"
-                    className="h-4 w-4 text-action"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m4 10.3 3.2 3.2L16 5.4" />
-                  </svg>
-                  {t}
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Rechts: interactieve pandscan */}
@@ -174,6 +153,16 @@ export function PandScanHero() {
           </div>
         </div>
       </Container>
+
+      {/* Zachte gebogen overgang naar de volgende baan */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 1440 48"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 bottom-0 h-8 w-full text-surface sm:h-12"
+      >
+        <path d="M0 48V34C240 8 480 0 720 0s480 8 720 34v14Z" fill="currentColor" />
+      </svg>
     </section>
   );
 }
