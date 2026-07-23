@@ -31,32 +31,24 @@ const TOOLS = [
     title: "Pandverplichtingen",
     text: "Welke plichten gelden voor uw pand?",
     Icon: IconPand,
-    accent: "bg-[#e2f7ee] text-pine",
-    bar: "bg-pine",
   },
   {
     href: "/tools/energiebesparingsplicht-check",
     title: "Energiebesparing",
     text: "Geldt de energie- of informatieplicht?",
     Icon: IconMeter,
-    accent: "bg-[#e4f5ec] text-action",
-    bar: "bg-action",
   },
   {
     href: "/tools/netcongestiecheck",
     title: "Netcongestie",
     text: "Aansluiting, plannen en knelpunten.",
     Icon: IconGrid,
-    accent: "bg-amber-soft text-amber-ink",
-    bar: "bg-amber",
   },
   {
     href: "/tools/zakelijke-batterijscan",
     title: "Zakelijke batterij",
     text: "Is batterijonderzoek de moeite waard?",
     Icon: IconBattery,
-    accent: "bg-coral-soft text-coral-ink",
-    bar: "bg-coral",
   },
 ];
 
@@ -169,19 +161,14 @@ export default function HomePage() {
               Of kies direct een onderwerp
             </h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {TOOLS.map(({ href, title, text, Icon, accent, bar }) => (
+              {TOOLS.map(({ href, title, text, Icon }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="group relative flex flex-col items-center overflow-hidden rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/30 hover:shadow-lift"
+                  className="group flex flex-col items-center rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:shadow-lift"
                 >
-                  <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-1.5 ${bar}`} />
-                  <span
-                    className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-110 ${accent}`}
-                  >
-                    <Icon className="h-8 w-8" />
-                  </span>
-                  <h3 className="mt-4 text-lg font-bold text-ink">{title}</h3>
+                  <Icon className="h-10 w-10 text-pine transition-transform duration-200 group-hover:scale-105" />
+                  <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
                   <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
                   <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
                     Bekijk

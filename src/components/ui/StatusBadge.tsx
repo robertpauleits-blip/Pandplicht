@@ -1,15 +1,19 @@
 import type { AssessmentStatus, TopicId } from "@/rules/types";
 import { STATUS_LABEL_OVERRIDES, STATUS_META } from "@/rules/topics";
 
-const TONES = {
-  yes: "bg-status-yes-bg border-status-yes-border text-status-yes-ink",
-  maybe: "bg-status-maybe-bg border-status-maybe-border text-status-maybe-ink",
-  no: "bg-status-no-bg border-status-no-border text-status-no-ink",
-  unknown:
-    "bg-status-unknown-bg border-status-unknown-border text-status-unknown-ink",
+/**
+ * Kleur zit alleen in het icoon (signaal), niet in een pastelvlak. De
+ * betekenis wordt altijd voluit in tekst genoemd, dus nooit alleen via kleur.
+ * groen = waarschijnlijk niet van toepassing, amber = aandacht, grijs = onbekend.
+ */
+const ICON_TONE = {
+  yes: "text-amber-ink",
+  maybe: "text-amber-ink",
+  no: "text-action",
+  unknown: "text-ink-soft",
 } as const;
 
-function StatusIcon({ tone }: { tone: keyof typeof TONES }) {
+function StatusIcon({ tone }: { tone: keyof typeof ICON_TONE }) {
   const common = {
     className: "h-4 w-4 shrink-0",
     viewBox: "0 0 20 20",
@@ -69,9 +73,11 @@ export function StatusBadge({
     (topicId && STATUS_LABEL_OVERRIDES[topicId]?.[status]) || meta.label;
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.82rem] font-bold ${TONES[meta.tone]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-[0.82rem] font-semibold text-ink ${className}`}
     >
-      <StatusIcon tone={meta.tone} />
+      <span className={`inline-flex ${ICON_TONE[meta.tone]}`}>
+        <StatusIcon tone={meta.tone} />
+      </span>
       {label}
     </span>
   );
