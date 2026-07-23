@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import type { StoredAssessment } from "@/rules/types";
+import type { AssessmentStatus, StoredAssessment } from "@/rules/types";
 import { sortResults, summarize } from "@/rules/engine";
 import {
   CONFIDENCE_META,
@@ -21,10 +21,119 @@ function maskAdres(a: StoredAssessment["input"]["adres"]): string {
   return `${pc4} ••, huisnr. ${a.huisnummer}${a.toevoeging ?? ""}${a.plaats ? `, ${a.plaats}` : ""}`;
 }
 
+function statusDot(status: AssessmentStatus): string {
+  switch (status) {
+    case "likely_applicable":
+    case "possibly_applicable":
+      return "bg-amber";
+    case "likely_not_applicable":
+      return "bg-action";
+    default:
+      return "bg-ink-soft";
+  }
+}
+
+const SCAN_PHASES = [
+  "Antwoorden controleren…",
+  "Drempels uit officiële bronnen vergelijken…",
+  "Bronnen en peildata koppelen…",
+];
+
+/** Korte scanceremonie vóór de onthulling van de uitslag. */
+function ScanCeremony({ adres }: { adres: string }) {
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    const t = setInterval(
+      () => setPhase((p) => Math.min(p + 1, SCAN_PHASES.length - 1)),
+      650,
+    );
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="mx-auto max-w-xl rounded-panel border border-line bg-surface p-10 text-center shadow-soft"
+    >
+      <svg viewBox="0 0 48 48" className="mx-auto h-14 w-14" aria-hidden="true">
+        <rect x="9" y="11" width="19" height="30" rx="2" fill="#0e5a4f" />
+        <rect x="9" y="11" width="19" height="3" fill="#f2bb4a" />
+        <rect x="30" y="20" width="10" height="21" rx="1.5" fill="#116154" />
+        {[14, 21].map((x) =>
+          [17, 24, 31].map((y) => (
+            <rect key={`${x}-${y}`} x={x} y={y} width="4.5" height="5" rx="1" fill="#cdf1e0" />
+          )),
+        )}
+        <rect x="32" y="24" width="5" height="5" rx="1" fill="#cdf1e0" />
+        <rect x="32" y="32" width="5" height="5" rx="1" fill="#f2bb4a" />
+      </svg>
+      <p className="mt-3 text-lg font-bold text-ink">{adres}</p>
+      <div className="relative mx-auto mt-6 h-20 w-20">
+        <svg viewBox="0 0 80 80" className="h-20 w-20 -rotate-90">
+          <circle cx="40" cy="40" r="30" stroke="#e6eceb" strokeWidth="8" fill="none" />
+          <circle
+            cx="40"
+            cy="40"
+            r="30"
+            stroke="#18a978"
+            strokeWidth="8"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray="188.5"
+            strokeDashoffset="188.5"
+            className="res-ringbar"
+          />
+        </svg>
+      </div>
+      <p className="mt-4 text-sm font-semibold text-ink-soft">
+        {SCAN_PHASES[phase]}
+      </p>
+    </div>
+  );
+}
+
+type RevealMode = "scan" | "anim" | "instant";
+
 export function ResultsView({ token }: { token: string }) {
   const [assessment, setAssessment] = useState<StoredAssessment | null>(null);
   const [state, setState] = useState<"loading" | "ok" | "notfound">("loading");
   const [afgevinkt, setAfgevinkt] = useState<Set<string>>(new Set());
+  const [reveal, setReveal] = useState<RevealMode | null>(null);
+
+  // Het resultaatmoment: één keer per uitslag een korte scanceremonie,
+  // daarna vallen de onderwerpen na elkaar op hun plek. Bij herbezoek of
+  // reduced motion verschijnt alles direct. Let op: de timer mag niet worden
+  // opgeruimd door de eigen state-wijziging, vandaar de ref in plaats van
+  // `reveal` in de dependencies.
+  const revealStarted = useRef(false);
+  useEffect(() => {
+    if (state !== "ok" || revealStarted.current) return;
+    revealStarted.current = true;
+    const key = `pp-onthuld-${token}`;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(key) === "1";
+    } catch {
+      /* privémodus */
+    }
+    if (reduced || seen) {
+      setReveal("instant");
+      return;
+    }
+    setReveal("scan");
+    const t = setTimeout(() => {
+      setReveal("anim");
+      try {
+        sessionStorage.setItem(key, "1");
+      } catch {
+        /* privémodus */
+      }
+    }, 2100);
+    return () => clearTimeout(t);
+  }, [state, token]);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,10 +219,21 @@ export function ResultsView({ token }: { token: string }) {
 
   const datum = new Date(assessment.outcome.calculatedAt);
 
+  // Tijdens de ceremonie alleen het scanpaneel tonen.
+  if (reveal === null) return null;
+  if (reveal === "scan") {
+    return <ScanCeremony adres={maskAdres(assessment.input.adres)} />;
+  }
+
   return (
-    <div className="mx-auto max-w-3xl">
+    <div
+      className={`mx-auto max-w-3xl ${reveal === "anim" ? "res-anim" : ""}`}
+    >
       {/* Kop */}
-      <header className="print-block">
+      <header
+        className="res-item print-block"
+        style={{ "--ri": 0 } as CSSProperties}
+      >
         <p className="text-sm font-bold uppercase tracking-wide text-pine">
           Uw indicatieve PandPlicht-overzicht
         </p>
@@ -174,15 +294,54 @@ export function ResultsView({ token }: { token: string }) {
         </div>
       </header>
 
+      {/* Samenvatting: dit speelt mogelijk bij uw pand */}
+      <section
+        aria-labelledby="samenvatting-h"
+        className="res-item print-block mt-8 rounded-panel border border-line bg-surface p-5 shadow-soft"
+        style={{ "--ri": 1 } as CSSProperties}
+      >
+        <h2
+          id="samenvatting-h"
+          className="text-sm font-bold uppercase tracking-wide text-ink-soft"
+        >
+          Dit speelt mogelijk bij uw pand
+        </h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {results.map((r) => (
+            <button
+              key={r.topicId}
+              type="button"
+              onClick={() =>
+                document
+                  .getElementById(`topic-${r.topicId}`)
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+              className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-pine/50"
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${statusDot(r.status)}`}
+                aria-hidden="true"
+              />
+              {TOPIC_META[r.topicId].shortTitle}
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-sm text-ink-soft">
+          Klik op een onderwerp voor de uitleg, bronnen en vervolgstappen.
+        </p>
+      </section>
+
       {/* Resultaatkaarten */}
       <section aria-label="Resultaten per onderwerp" className="mt-8 space-y-4">
-        {results.map((r) => {
+        {results.map((r, resIndex) => {
           const meta = TOPIC_META[r.topicId];
           const sources = getSources(r.sourceIds).slice(0, 3);
           return (
             <article
               key={r.topicId}
-              className="print-block rounded-panel border border-line bg-surface p-5 shadow-soft sm:p-6"
+              id={`topic-${r.topicId}`}
+              className="res-item print-block scroll-mt-24 rounded-panel border border-line bg-surface p-5 shadow-soft sm:p-6"
+              style={{ "--ri": 2 + resIndex } as CSSProperties}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -280,7 +439,7 @@ export function ResultsView({ token }: { token: string }) {
 
       {/* Actieplan */}
       {alleStappen.length > 0 ? (
-        <section aria-labelledby="actieplan-h" className="print-block mt-10">
+        <section aria-labelledby="actieplan-h" className="res-item print-block mt-10" style={{ "--ri": 6 } as CSSProperties}>
           <h2 id="actieplan-h" className="text-2xl font-extrabold tracking-tight text-ink">
             Uw actieplan
           </h2>
@@ -329,7 +488,7 @@ export function ResultsView({ token }: { token: string }) {
 
       {/* Wat wij nog niet weten */}
       {onzekerheden.length > 0 ? (
-        <section aria-labelledby="onzeker-h" className="print-block mt-10">
+        <section aria-labelledby="onzeker-h" className="res-item print-block mt-10" style={{ "--ri": 6 } as CSSProperties}>
           <h2 id="onzeker-h" className="text-2xl font-extrabold tracking-tight text-ink">
             Wat wij nog niet weten
           </h2>
@@ -353,7 +512,7 @@ export function ResultsView({ token }: { token: string }) {
       ) : null}
 
       {/* Lead-CTA, pas ná de kernuitslag */}
-      <div className="mt-12">
+      <div className="res-item mt-12" style={{ "--ri": 7 } as CSSProperties}>
         <LeadForm assessment={assessment} />
       </div>
 

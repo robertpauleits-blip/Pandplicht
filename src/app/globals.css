@@ -491,6 +491,44 @@ body {
   }
 }
 
+/* --- Resultaatmoment op de uitslagpagina --- */
+@keyframes res-pop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.res-anim .res-item {
+  animation: res-pop 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: calc(var(--ri, 0) * 150ms);
+}
+@keyframes res-ringbar-kf {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.res-ringbar {
+  animation: res-ringbar-kf 1.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .res-anim .res-item {
+    animation: none;
+  }
+  .res-ringbar {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+@media print {
+  .res-anim .res-item {
+    animation: none !important;
+  }
+}
+
 /* Nette standaard voor langere leescontent */
 .prose-pp {
   max-width: 42rem;
