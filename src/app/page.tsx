@@ -29,34 +29,34 @@ export const metadata: Metadata = {
 const TOOLS = [
   {
     href: "/tools/pandverplichtingencheck",
-    title: "Pandverplichtingencheck",
-    text: "Welke verplichtingen passen bij uw pand?",
+    title: "Pandverplichtingen",
+    text: "Welke plichten gelden voor uw pand?",
     Icon: IconPand,
-    accent: "bg-pine text-white",
+    accent: "bg-[#e2f7ee] text-pine",
     bar: "bg-pine",
   },
   {
     href: "/tools/energiebesparingsplicht-check",
-    title: "Energiebesparingsplichtcheck",
-    text: "Geldt de energie- of informatieplicht voor u?",
+    title: "Energiebesparing",
+    text: "Geldt de energie- of informatieplicht?",
     Icon: IconMeter,
-    accent: "bg-action text-white",
+    accent: "bg-[#e4f5ec] text-action",
     bar: "bg-action",
   },
   {
     href: "/tools/netcongestiecheck",
-    title: "Netcongestiecheck",
-    text: "Aansluiting, plannen en knelpunten in beeld.",
+    title: "Netcongestie",
+    text: "Aansluiting, plannen en knelpunten.",
     Icon: IconGrid,
-    accent: "bg-amber text-ink",
+    accent: "bg-amber-soft text-amber-ink",
     bar: "bg-amber",
   },
   {
     href: "/tools/zakelijke-batterijscan",
-    title: "Zakelijke batterijscan",
-    text: "Is batterijonderzoek voor u de moeite waard?",
+    title: "Zakelijke batterij",
+    text: "Is batterijonderzoek de moeite waard?",
     Icon: IconBattery,
-    accent: "bg-coral text-white",
+    accent: "bg-coral-soft text-coral-ink",
     bar: "bg-coral",
   },
 ];
@@ -106,8 +106,8 @@ export default function HomePage() {
     <>
       <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
 
-      {/* --- Hero (baan: lichtgroen) --- */}
-      <section className="relative overflow-hidden bg-[#e8f2ef] pt-12 pb-16 sm:pt-20 sm:pb-24">
+      {/* --- Hero (baan: wit, clean) --- */}
+      <section className="relative overflow-hidden bg-surface pt-10 pb-14 sm:pt-16 sm:pb-20">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="absolute -left-24 top-6 h-72 w-72 rounded-full bg-mint/40 blur-3xl" />
           <div className="absolute right-0 -top-6 h-80 w-80 rounded-full bg-amber/20 blur-3xl" />
@@ -202,8 +202,8 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Vier productkaarten (categorie-ingangen) — baan: wit --- */}
-      <section aria-labelledby="tools-heading" className="bg-surface py-16 sm:py-20">
+      {/* --- Vier productkaarten (categorie-ingangen) — baan: zachte tint --- */}
+      <section aria-labelledby="tools-heading" className="bg-[#eef4f3] py-16 sm:py-20">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <h2
@@ -219,31 +219,29 @@ export default function HomePage() {
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {TOOLS.map(({ href, title, text, Icon, accent, bar }) => (
-              <article
+              <Link
                 key={href}
-                className="group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface p-5 shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-transparent hover:shadow-lift"
+                href={href}
+                className="group relative flex flex-col items-center overflow-hidden rounded-panel border border-line bg-surface p-6 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/30 hover:shadow-lift"
               >
                 <div
                   aria-hidden="true"
                   className={`absolute inset-x-0 top-0 h-1.5 ${bar}`}
                 />
                 <span
-                  className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-soft transition-transform duration-200 group-hover:scale-110 ${accent}`}
+                  className={`inline-flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-110 ${accent}`}
                 >
-                  <Icon />
+                  <Icon className="h-8 w-8" />
                 </span>
                 <h3 className="mt-4 text-lg font-bold text-ink">{title}</h3>
-                <p className="mt-2 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
-                <Link
-                  href={href}
-                  className="mt-5 inline-flex min-h-[46px] items-center justify-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[0.95rem] font-bold text-white transition-colors group-hover:bg-pine"
-                >
-                  Doe deze check
-                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
+                  Bekijk
+                  <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 10h12m-5-5 5 5-5 5" />
                   </svg>
-                </Link>
-              </article>
+                </span>
+              </Link>
             ))}
           </div>
         </Container>
