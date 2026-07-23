@@ -83,10 +83,10 @@ export function AddressStarter({
       </div>
       <button
         type="submit"
-        className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-pine px-7 py-3.5 text-[1.05rem] font-bold text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-pine-dark sm:w-auto"
+        className="cta-btn mt-4 inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-full bg-pine px-7 py-3.5 text-[1.05rem] font-bold text-white shadow-soft transition-all duration-200 hover:-translate-y-0.5 hover:bg-pine-dark sm:w-auto"
       >
         Start de gratis PandCheck
-        <svg viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg viewBox="0 0 20 20" className="cta-arrow h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M4 10h12m-5-5 5 5-5 5" />
         </svg>
       </button>

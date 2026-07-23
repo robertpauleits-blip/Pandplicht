@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
   IconBattery,
   IconGrid,
@@ -317,7 +317,11 @@ export function PandScan({
 
       {/* zwevende analysekaarten */}
       {CARDS.map(({ label, Icon, tone, pos, order }) => (
-        <div key={label} className={`absolute ${pos}`}>
+        <div
+          key={label}
+          className={`par-el absolute ${pos}`}
+          style={{ "--par-depth": String(3 + order * 1.4) } as CSSProperties}
+        >
           <div
             className="pandscan-card"
             style={{ transitionDelay: `${order * 180}ms` }}
@@ -344,8 +348,13 @@ export function PandScan({
 
       {/* statusbalk onder het pand */}
       <div className="absolute -bottom-3 left-1/2 -translate-x-1/2">
-        <div className="pandscan-float" style={{ animationDelay: "200ms" }}>
-          <StatusPill phase={phase} />
+        <div
+          className="par-el"
+          style={{ "--par-depth": "2" } as CSSProperties}
+        >
+          <div className="pandscan-float" style={{ animationDelay: "200ms" }}>
+            <StatusPill phase={phase} />
+          </div>
         </div>
       </div>
     </div>

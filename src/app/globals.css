@@ -402,6 +402,95 @@ body {
   }
 }
 
+/* --- CTA-micro-interacties --- */
+.cta-btn {
+  position: relative;
+  overflow: hidden;
+}
+.cta-btn:hover {
+  box-shadow:
+    0 0 0 3px rgb(242 187 74 / 0.4),
+    0 2px 4px rgb(22 49 58 / 0.05),
+    0 12px 32px rgb(22 49 58 / 0.09);
+}
+.cta-btn .cta-arrow,
+.cta-btn svg:last-child {
+  transition: transform 0.2s ease;
+}
+.cta-btn:hover .cta-arrow,
+.cta-btn:hover svg:last-child {
+  transform: translateX(3px);
+}
+/* Korte scanlijn door de knop bij klikken */
+.cta-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -35%;
+  width: 30%;
+  transform: skewX(-18deg);
+  background: linear-gradient(
+    to right,
+    rgb(255 255 255 / 0),
+    rgb(242 187 74 / 0.45),
+    rgb(255 255 255 / 0)
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+.cta-btn:active::after {
+  animation: cta-scan 0.45s ease-out;
+}
+@keyframes cta-scan {
+  0% {
+    opacity: 1;
+    left: -35%;
+  }
+  100% {
+    opacity: 0;
+    left: 105%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-btn:active::after {
+    animation: none;
+  }
+  .cta-btn:hover .cta-arrow,
+  .cta-btn:hover svg:last-child {
+    transform: none;
+  }
+}
+
+/* --- Cursor-parallax in de hero (alleen desktop met precieze muis) --- */
+.hero-parallax {
+  --par-x: 0;
+  --par-y: 0;
+}
+@media (pointer: fine) {
+  .par-glow {
+    transform: translate(
+      calc(var(--par-x) * 14px),
+      calc(var(--par-y) * 10px)
+    );
+    transition: transform 0.25s ease-out;
+  }
+  .par-el {
+    transform: translate(
+      calc(var(--par-x) * var(--par-depth, 3) * 1px),
+      calc(var(--par-y) * var(--par-depth, 3) * 0.8px)
+    );
+    transition: transform 0.25s ease-out;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .par-glow,
+  .par-el {
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Nette standaard voor langere leescontent */
 .prose-pp {
   max-width: 42rem;

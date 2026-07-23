@@ -27,6 +27,7 @@ export function PandScanHero() {
   const reduced = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const running = useRef(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   const clearTimers = () => {
     timers.current.forEach(clearTimeout);
@@ -82,12 +83,53 @@ export function PandScanHero() {
     runScan();
   }, [runScan]);
 
+  // Subtiele cursor-parallax: gloed en zwevende labels bewegen enkele pixels
+  // mee, elk met een eigen diepte. Alleen bij een precieze muis en zonder
+  // reduced motion; rAF-gethrottled en puur transform (geen layout).
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !window.matchMedia("(pointer: fine)").matches
+    ) {
+      return;
+    }
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const r = el.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width) * 2 - 1;
+        const y = ((e.clientY - r.top) / r.height) * 2 - 1;
+        el.style.setProperty("--par-x", x.toFixed(3));
+        el.style.setProperty("--par-y", y.toFixed(3));
+      });
+    };
+    const onLeave = () => {
+      el.style.setProperty("--par-x", "0");
+      el.style.setProperty("--par-y", "0");
+    };
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-[#eef4f3] pt-10 pb-16 sm:pt-14 sm:pb-20"
+      className="hero-parallax relative overflow-hidden bg-[#eef4f3] pt-10 pb-16 sm:pt-14 sm:pb-20"
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+      <div
+        aria-hidden="true"
+        className="par-glow pointer-events-none absolute inset-0"
+      >
         <div className="absolute -left-24 top-6 h-72 w-72 rounded-full bg-mint/40 blur-3xl" />
         <div className="absolute right-0 -top-6 h-80 w-80 rounded-full bg-amber/20 blur-3xl" />
         <div className="absolute bottom-10 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-action/10 blur-3xl" />
