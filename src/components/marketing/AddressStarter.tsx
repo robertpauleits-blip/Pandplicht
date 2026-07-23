@@ -1,5 +1,5 @@
 /**
- * Adresstarter — werkt zonder JavaScript (GET-formulier naar /pandcheck).
+ * Adresstarter, werkt zonder JavaScript (GET-formulier naar /pandcheck).
  * Validatiepatronen volgen de Nederlandse postcode- en huisnummerconventie.
  */
 export function AddressStarter({ compact = false }: { compact?: boolean }) {

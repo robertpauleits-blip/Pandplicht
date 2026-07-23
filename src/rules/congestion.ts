@@ -15,7 +15,7 @@ const GROEI_PLANNEN = new Set([
 ]);
 
 /**
- * Netcongestie — risico- en handelingsscan (geen capaciteitsbelofte).
+ * Netcongestie, risico- en handelingsscan (geen capaciteitsbelofte).
  */
 export function assessNetcongestie(input: AssessmentInput): RuleResult {
   const missingInputs: string[] = [];

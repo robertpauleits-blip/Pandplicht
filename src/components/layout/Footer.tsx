@@ -52,7 +52,7 @@ export function Footer() {
             <Logo className="h-8" />
             <p className="mt-4 max-w-xs text-[0.95rem] text-ink-soft">
               Eén gratis, indicatieve check voor de energie- en
-              verduurzamingsverplichtingen van uw bedrijfspand — met bronnen en
+              verduurzamingsverplichtingen van uw bedrijfspand, met bronnen en
               vervolgstappen.
             </p>
           </div>

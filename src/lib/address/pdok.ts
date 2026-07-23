@@ -1,6 +1,6 @@
 /**
  * Server-side client voor de PDOK Locatieserver (openbare data, geen key).
- * Met timeout, kleine cache, inputlimieten en nette fouttolerantie —
+ * Met timeout, kleine cache, inputlimieten en nette fouttolerantie,
  * een storing mag nooit tot een witte pagina leiden (handmatige invoer blijft
  * altijd mogelijk in de wizard).
  */

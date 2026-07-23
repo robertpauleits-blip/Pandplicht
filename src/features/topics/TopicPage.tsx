@@ -43,7 +43,7 @@ export function TopicPage({ data }: { data: TopicPageData }) {
           </p>
         </div>
 
-        {/* Feiten op een rij — uit dezelfde brondata als de rule engine */}
+        {/* Feiten op een rij, uit dezelfde brondata als de rule engine */}
         <section aria-labelledby="feiten-h" className="prose-pp mt-8 max-w-none">
           <h2 id="feiten-h">Feiten op een rij</h2>
           <div className="overflow-x-auto">
@@ -117,7 +117,7 @@ export function TopicPage({ data }: { data: TopicPageData }) {
                   {s.title}
                 </a>{" "}
                 <span className="text-ink-soft">
-                  — {s.publisher}, door PandPlicht gecontroleerd op{" "}
+                 , {s.publisher}, door PandPlicht gecontroleerd op{" "}
                   {new Date(s.checkedAt).toLocaleDateString("nl-NL")}
                 </span>
               </li>

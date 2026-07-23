@@ -6,7 +6,7 @@ import { getArticlesByCategory } from "@/content/knowledge";
 import { JsonLd, webPageLd } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
-  title: "Kennisbank — pandverplichtingen helder uitgelegd",
+  title: "Kennisbank, pandverplichtingen helder uitgelegd",
   description:
     "Alle uitleg over energieverplichtingen, energielabels, netcongestie en zakelijke batterijen voor Nederlandse bedrijfspanden. Met bronnen en controledata.",
   alternates: { canonical: "/kennisbank" },
@@ -30,7 +30,7 @@ export default function KennisbankPage() {
         Kennisbank
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-ink-soft">
-        Heldere uitleg over de regels voor bedrijfspanden — geschreven op basis
+        Heldere uitleg over de regels voor bedrijfspanden, geschreven op basis
         van openbare overheidsbronnen, met per artikel een zichtbare
         controledatum.
       </p>

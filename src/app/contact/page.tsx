@@ -30,7 +30,7 @@ export default function ContactPage() {
           Vragen over de check, een inhoudelijke correctie of interesse in
           samenwerking? Gebruik het formulier hieronder. Ziet u een fout in
           onze informatie of een beveiligingsprobleem, dan horen wij dat graag
-          — vermeld dat duidelijk in uw bericht.
+         , vermeld dat duidelijk in uw bericht.
         </p>
         <div className="mt-8">
           <ContactForm />

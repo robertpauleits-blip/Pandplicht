@@ -59,7 +59,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       {
         type: "lijst",
         items: [
-          "Gebruikt uw locatie jaarlijks 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) of meer? Dan geldt waarschijnlijk de energiebesparingsplicht — en daarmee ook een rapportageverplichting.",
+          "Gebruikt uw locatie jaarlijks 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) of meer? Dan geldt waarschijnlijk de energiebesparingsplicht, en daarmee ook een rapportageverplichting.",
           "Is uw pand (grotendeels) een kantoor van 100 m² of meer? Dan geldt waarschijnlijk de label-C-plicht, tenzij een uitzondering van toepassing is.",
           "Gaat u verkopen, opnieuw verhuren of opleveren? Dan is in de regel een geldig energielabel verplicht.",
           "Gebruikt u meer dan 10 miljoen kWh of 170.000 m³ gas per jaar in een relevante bedrijfstak? Dan kan de onderzoeksplicht gelden.",
@@ -118,12 +118,12 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       label: "Doe de energiebesparingsplichtcheck",
     },
     kortAntwoord:
-      "De energiebesparingsplicht geldt voor locaties die per jaar 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) of meer gebruiken. Wie eronder valt, moet alle energiebesparende maatregelen nemen die zich binnen vijf jaar terugverdienen, en daarover periodiek rapporteren. Onder de drempels geldt de plicht niet, maar kunnen andere verplichtingen — zoals labeleisen — nog steeds spelen.",
+      "De energiebesparingsplicht geldt voor locaties die per jaar 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) of meer gebruiken. Wie eronder valt, moet alle energiebesparende maatregelen nemen die zich binnen vijf jaar terugverdienen, en daarover periodiek rapporteren. Onder de drempels geldt de plicht niet, maar kunnen andere verplichtingen, zoals labeleisen, nog steeds spelen.",
     sections: [
       { type: "kop", text: "Wanneer geldt de energiebesparingsplicht?" },
       {
         type: "paragraaf",
-        text: "De plicht kijkt naar het energiegebruik per locatie (Wm-inrichting of gebouw), niet naar uw hele onderneming. Het gaat om het jaarlijkse gebruik: 50.000 kWh elektriciteit óf 25.000 m³ aardgas(equivalent) is genoeg om onder de plicht te vallen — het hoeft niet allebei.",
+        text: "De plicht kijkt naar het energiegebruik per locatie (Wm-inrichting of gebouw), niet naar uw hele onderneming. Het gaat om het jaarlijkse gebruik: 50.000 kWh elektriciteit óf 25.000 m³ aardgas(equivalent) is genoeg om onder de plicht te vallen, het hoeft niet allebei.",
       },
       {
         type: "tabel",
@@ -140,13 +140,13 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
         items: [
           "Uw locatie blijft duidelijk onder beide drempels.",
           "Voor bepaalde activiteiten gelden aparte regimes (bijvoorbeeld deelnemers aan het EU-emissiehandelssysteem voor het betreffende deel); controleer dit bij RVO.",
-          "Let op: 'geen besparingsplicht' betekent niet 'geen verplichtingen' — labeleisen staan er los van.",
+          "Let op: 'geen besparingsplicht' betekent niet 'geen verplichtingen', labeleisen staan er los van.",
         ],
       },
       { type: "kop", text: "Wat houdt de plicht concreet in?" },
       {
         type: "paragraaf",
-        text: "U moet alle energiebesparende maatregelen nemen met een terugverdientijd van vijf jaar of korter. Om dat praktisch te maken bestaat de Erkende Maatregelenlijst (EML): een lijst per gebouwtype en activiteit met maatregelen waarvan de overheid heeft vastgesteld dat ze zich doorgaans binnen vijf jaar terugverdienen — denk aan ledverlichting, isolatie van leidingen en slimme regelingen.",
+        text: "U moet alle energiebesparende maatregelen nemen met een terugverdientijd van vijf jaar of korter. Om dat praktisch te maken bestaat de Erkende Maatregelenlijst (EML): een lijst per gebouwtype en activiteit met maatregelen waarvan de overheid heeft vastgesteld dat ze zich doorgaans binnen vijf jaar terugverdienen, denk aan ledverlichting, isolatie van leidingen en slimme regelingen.",
       },
       { type: "kop", text: "Welke gegevens heeft u nodig?" },
       {
@@ -178,7 +178,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       {
         question: "Mijn verbruik schommelt rond de grens. Wat nu?",
         answer:
-          "Gebruik meerdere jaren als referentie en documenteer uw cijfers. Ligt u structureel rond de drempel, behandel de plicht dan als waarschijnlijk relevant en bekijk de EML — veel maatregelen zijn sowieso rendabel.",
+          "Gebruik meerdere jaren als referentie en documenteer uw cijfers. Ligt u structureel rond de drempel, behandel de plicht dan als waarschijnlijk relevant en bekijk de EML, veel maatregelen zijn sowieso rendabel.",
       },
     ],
     related: [
@@ -215,7 +215,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       { type: "kop", text: "Wie moet rapporteren: eigenaar of gebruiker?" },
       {
         type: "paragraaf",
-        text: "De rapportage ligt bij degene op wie de energiebesparingsplicht rust — vaak de gebruiker van het pand (de drijver van de activiteit). Sinds de actualisering van de regels zijn er ook maatregelen die juist het gebouw betreffen en daarmee de eigenaar raken. Bij verhuurde panden is het verstandig om samen vast te leggen wie wat rapporteert.",
+        text: "De rapportage ligt bij degene op wie de energiebesparingsplicht rust, vaak de gebruiker van het pand (de drijver van de activiteit). Sinds de actualisering van de regels zijn er ook maatregelen die juist het gebouw betreffen en daarmee de eigenaar raken. Bij verhuurde panden is het verstandig om samen vast te leggen wie wat rapporteert.",
       },
       { type: "kop", text: "Wanneer moet u rapporteren?" },
       {
@@ -269,7 +269,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       label: "Check uw drempels",
     },
     kortAntwoord:
-      "De onderzoeksplicht geldt voor locaties met een zeer groot energiegebruik — RVO noemt als drempels 10 miljoen kWh elektriciteit of 170.000 m³ aardgas(equivalent) per jaar — binnen relevante (milieubelastende) bedrijfstakken. Deze bedrijven doen eens per vier jaar een onderzoek naar alle kosteneffectieve besparings- en verduurzamingsmaatregelen en stellen een uitvoeringsplan op.",
+      "De onderzoeksplicht geldt voor locaties met een zeer groot energiegebruik, RVO noemt als drempels 10 miljoen kWh elektriciteit of 170.000 m³ aardgas(equivalent) per jaar, binnen relevante (milieubelastende) bedrijfstakken. Deze bedrijven doen eens per vier jaar een onderzoek naar alle kosteneffectieve besparings- en verduurzamingsmaatregelen en stellen een uitvoeringsplan op.",
     sections: [
       { type: "kop", text: "Voor wie geldt de onderzoeksplicht?" },
       {
@@ -310,7 +310,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       {
         question: "Vervalt de informatieplicht als ik onderzoeksplichtig ben?",
         answer:
-          "De rapportages hangen samen: wie onderzoeksplichtig is, rapporteert via het onderzoek. Hoe dit precies voor uw situatie uitpakt, staat in de actuele RVO-uitleg — neem dit mee in uw planning.",
+          "De rapportages hangen samen: wie onderzoeksplichtig is, rapporteert via het onderzoek. Hoe dit precies voor uw situatie uitpakt, staat in de actuele RVO-uitleg, neem dit mee in uw planning.",
       },
     ],
     related: [
@@ -338,7 +338,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
       { type: "kop", text: "Wanneer geldt de label-C-plicht?" },
       {
         type: "paragraaf",
-        text: "De plicht geldt voor gebouwen met een kantoorfunctie. Bepalend zijn het gebruiksoppervlak en de verhouding tussen kantoor- en nevenfuncties. Voldoet het gebouw niet, dan mag het volgens de regelgeving in principe niet als kantoor worden gebruikt — reden om dit serieus op te pakken.",
+        text: "De plicht geldt voor gebouwen met een kantoorfunctie. Bepalend zijn het gebruiksoppervlak en de verhouding tussen kantoor- en nevenfuncties. Voldoet het gebouw niet, dan mag het volgens de regelgeving in principe niet als kantoor worden gebruikt, reden om dit serieus op te pakken.",
       },
       { type: "kop", text: "Wanneer geldt de plicht mogelijk niet?" },
       {
@@ -370,14 +370,14 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
         geordend: true,
         items: [
           "Zoek uw gebouw op in EP-Online (gratis, officieel).",
-          "Controleer de labelklasse én de geldigheidsdatum — labels zijn 10 jaar geldig.",
+          "Controleer de labelklasse én de geldigheidsdatum, labels zijn 10 jaar geldig.",
           "Geen label of D of lager? Vraag een gecertificeerd adviseur om een opname en maatwerkadvies.",
         ],
       },
       { type: "kop", text: "Praktisch voorbeeld" },
       {
         type: "paragraaf",
-        text: "Fictief voorbeeld: een bedrijfsverzamelgebouw van 800 m² heeft 500 m² kantoren en 300 m² opslag. De kantoorfunctie beslaat ruim 60% van het oppervlak en het gebouw is groter dan de 100 m²-grens: de label-C-plicht is dan waarschijnlijk van toepassing. Heeft het gebouw label E, dan is verbetering naar minimaal C nodig — vaak haalbaar met ledverlichting, isolatie en installatie-optimalisatie.",
+        text: "Fictief voorbeeld: een bedrijfsverzamelgebouw van 800 m² heeft 500 m² kantoren en 300 m² opslag. De kantoorfunctie beslaat ruim 60% van het oppervlak en het gebouw is groter dan de 100 m²-grens: de label-C-plicht is dan waarschijnlijk van toepassing. Heeft het gebouw label E, dan is verbetering naar minimaal C nodig, vaak haalbaar met ledverlichting, isolatie en installatie-optimalisatie.",
       },
     ],
     faq: [
@@ -448,7 +448,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
         geordend: true,
         items: [
           "Controleer in EP-Online of er een geldig label is geregistreerd.",
-          "Plan bij een verlopen of ontbrekend label tijdig een labelopname — ruim vóór de transactie.",
+          "Plan bij een verlopen of ontbrekend label tijdig een labelopname, ruim vóór de transactie.",
           "Vermeld de labelklasse in verkoop- of verhuurinformatie waar dat vereist is.",
         ],
       },
@@ -490,7 +490,7 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
     ],
     relatedTool: { href: "/pandcheck", label: "Doe de PandCheck" },
     kortAntwoord:
-      "De rolverdeling verschilt per verplichting. De energiebesparingsplicht en informatieplicht liggen in beginsel bij degene die de activiteit op de locatie uitvoert — vaak de huurder — maar gebouwgebonden maatregelen raken de eigenaar. De label-C-plicht en het label bij verkoop of verhuur zijn gebouwgebonden en liggen primair bij de eigenaar. Goede afspraken in het huurcontract voorkomen discussie.",
+      "De rolverdeling verschilt per verplichting. De energiebesparingsplicht en informatieplicht liggen in beginsel bij degene die de activiteit op de locatie uitvoert, vaak de huurder, maar gebouwgebonden maatregelen raken de eigenaar. De label-C-plicht en het label bij verkoop of verhuur zijn gebouwgebonden en liggen primair bij de eigenaar. Goede afspraken in het huurcontract voorkomen discussie.",
     sections: [
       { type: "kop", text: "Hoe zit de verdeling per verplichting?" },
       {

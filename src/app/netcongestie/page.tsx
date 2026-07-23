@@ -52,7 +52,7 @@ export default function NetcongestiePage() {
             is de vraag naar transportcapaciteit groter dan het net aankan.
             Ondernemers merken dit via wachtlijsten voor (zwaardere)
             aansluitingen en beperkingen op afname of teruglevering. Een
-            kaartkleur zegt niets definitiefs over uw specifieke aansluiting —
+            kaartkleur zegt niets definitiefs over uw specifieke aansluiting,
             uitsluitsel geeft alleen uw netbeheerder.
           </p>
         </div>
@@ -107,7 +107,7 @@ export default function NetcongestiePage() {
                   {s.title}
                 </a>{" "}
                 <span className="text-ink-soft">
-                  — {s.publisher}, gecontroleerd op{" "}
+                 , {s.publisher}, gecontroleerd op{" "}
                   {new Date(s.checkedAt).toLocaleDateString("nl-NL")}
                 </span>
               </li>

@@ -52,7 +52,7 @@ export default function DisclaimerPage() {
         <h2>Fouten melden</h2>
         <p>
           Ziet u een inhoudelijke fout of een verouderde drempelwaarde? Meld
-          het via het <a href="/contact">contactformulier</a> — wij controleren
+          het via het <a href="/contact">contactformulier</a>, wij controleren
           en corrigeren aantoonbare fouten zo snel mogelijk en houden een
           changelog bij op de{" "}
           <a href="/bronnen-en-methodologie">methodologiepagina</a>.

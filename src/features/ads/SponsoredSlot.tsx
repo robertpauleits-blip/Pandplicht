@@ -1,7 +1,7 @@
 import { FLAGS } from "@/lib/site";
 
 /**
- * Advertentiemodule — voorbereid maar uitgeschakeld (ADS_ENABLED=false).
+ * Advertentiemodule, voorbereid maar uitgeschakeld (ADS_ENABLED=false).
  *
  * Eisen bij latere activering (zie specificatie):
  * - geen layout shift (vaste hoogte reserveren zodra actief);
@@ -10,7 +10,7 @@ import { FLAGS } from "@/lib/site";
  * - nooit in kritieke vragen of boven de kernuitslag;
  * - geen trackingpixels zonder passende toestemming.
  *
- * Zolang de flag uit staat rendert dit component niets — ook geen lege ruimte.
+ * Zolang de flag uit staat rendert dit component niets, ook geen lege ruimte.
  */
 export function SponsoredSlot({ slotId }: { slotId: string }) {
   if (!FLAGS.adsEnabled) return null;

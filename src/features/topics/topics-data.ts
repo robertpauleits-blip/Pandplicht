@@ -9,7 +9,7 @@ export type TopicPageData = {
   metaTitle: string;
   description: string;
   kortAntwoord: string;
-  /** Feiten op een rij — gegenereerd uit dezelfde drempeldata als de rule engine. */
+  /** Feiten op een rij, gegenereerd uit dezelfde drempeldata als de rule engine. */
   feiten: { onderdeel: string; uitleg: string }[];
   wanneerGeldt: string[];
   wanneerNiet: string[];
@@ -66,7 +66,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
       "Overzicht van al genomen besparingsmaatregelen.",
     ],
     verantwoordelijk:
-      "In beginsel degene die de activiteit op de locatie uitvoert — vaak de gebruiker/huurder. Gebouwgebonden maatregelen raken de eigenaar; leg de verdeling bij verhuur samen vast.",
+      "In beginsel degene die de activiteit op de locatie uitvoert, vaak de gebruiker/huurder. Gebouwgebonden maatregelen raken de eigenaar; leg de verdeling bij verhuur samen vast.",
     watNuDoen: [
       "Controleer uw jaarverbruik op de meest recente jaarafrekening.",
       "Loop bij (mogelijke) toepasselijkheid de Erkende Maatregelenlijst (EML) door.",
@@ -117,7 +117,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
     ],
     wanneerNiet: [
       "Uw locatie blijft onder beide verbruiksdrempels.",
-      "Uw locatie valt onder de onderzoeksplicht; dan verloopt rapportage via het onderzoek — controleer de details bij RVO.",
+      "Uw locatie valt onder de onderzoeksplicht; dan verloopt rapportage via het onderzoek, controleer de details bij RVO.",
     ],
     gegevensNodig: [
       "Jaarverbruik elektriciteit en gas.",
@@ -125,7 +125,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
       "Bewijsstukken zoals facturen en onderhoudsrapporten.",
     ],
     verantwoordelijk:
-      "Degene op wie de energiebesparingsplicht rust — vaak de gebruiker. Spreek bij verhuur af wie rapporteert, zodat er niet dubbel of juist niet wordt gerapporteerd.",
+      "Degene op wie de energiebesparingsplicht rust, vaak de gebruiker. Spreek bij verhuur af wie rapporteert, zodat er niet dubbel of juist niet wordt gerapporteerd.",
     watNuDoen: [
       "Stel vast of uw locatie boven een drempel zit.",
       "Inventariseer de EML-maatregelen en hun status.",
@@ -170,7 +170,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
     ],
     wanneerNiet: [
       "Uw verbruik ligt duidelijk onder beide drempels.",
-      "Uw activiteiten vallen buiten de doelgroep — controleer dit bij RVO; een hoog verbruik alleen is niet doorslaggevend.",
+      "Uw activiteiten vallen buiten de doelgroep, controleer dit bij RVO; een hoog verbruik alleen is niet doorslaggevend.",
     ],
     gegevensNodig: [
       "Jaarverbruik per locatie (elektriciteit en gas).",
@@ -287,7 +287,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
       "Gebouwfunctie.",
     ],
     verantwoordelijk:
-      "De verkoper, verhuurder of opleverende partij — in de praktijk de eigenaar.",
+      "De verkoper, verhuurder of opleverende partij, in de praktijk de eigenaar.",
     watNuDoen: [
       "Controleer het label in EP-Online.",
       "Plan bij een ontbrekend of verlopen label tijdig een labelopname.",
@@ -311,7 +311,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
     metaTitle: "Zakelijke batterij registreren: de regels",
     description:
       "Netgekoppelde batterijsystemen moeten vanaf een bepaald vermogen worden geregistreerd. Wat de registratie inhoudt en hoe u het regelt.",
-    kortAntwoord: `Netgekoppelde batterijsystemen moeten vanaf een vermogensgrens worden geregistreerd; RVO noemt momenteel ${THRESHOLDS.batterijRegistratieKw} kW — praktisch elke zakelijke batterij valt daaronder. De registratie helpt netbeheerders het net veilig te beheren. Controleer de actuele grens en route bij RVO vóór ingebruikname.`,
+    kortAntwoord: `Netgekoppelde batterijsystemen moeten vanaf een vermogensgrens worden geregistreerd; RVO noemt momenteel ${THRESHOLDS.batterijRegistratieKw} kW, praktisch elke zakelijke batterij valt daaronder. De registratie helpt netbeheerders het net veilig te beheren. Controleer de actuele grens en route bij RVO vóór ingebruikname.`,
     feiten: [
       {
         onderdeel: "Vermogensgrens",
@@ -327,7 +327,7 @@ export const TOPIC_PAGES: TopicPageData[] = [
       "Ook bestaande, nog niet geregistreerde systemen vallen eronder.",
     ],
     wanneerNiet: [
-      "Volledig autonome (niet netgekoppelde) systemen kunnen afwijken — controleer de actuele uitleg.",
+      "Volledig autonome (niet netgekoppelde) systemen kunnen afwijken, controleer de actuele uitleg.",
     ],
     gegevensNodig: [
       "Vermogen (kW) en capaciteit (kWh) van het systeem.",

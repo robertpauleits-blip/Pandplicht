@@ -6,7 +6,7 @@ import { FLAGS } from "@/lib/site";
  *
  * Vereist een API-sleutel (`EPONLINE_API_KEY`) die je gratis bij RVO aanvraagt,
  * en de feature flag `ENABLE_EP_ONLINE_INTEGRATION=true`. Zonder sleutel of
- * flag geeft de adapter bewust `not_configured` terug — er wordt nooit een
+ * flag geeft de adapter bewust `not_configured` terug, er wordt nooit een
  * label verzonnen (harde regel: geen nepdata als echte labeldata).
  *
  * Endpoint: GET /api/v5/PandEnergielabel/Adres?postcode=&huisnummer=&huisnummertoevoeging=

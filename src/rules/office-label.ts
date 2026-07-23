@@ -40,7 +40,7 @@ function oppervlakteOnderGrens(input: AssessmentInput): boolean | null {
 }
 
 /**
- * Energielabel C voor kantoren — indicatief, met de belangrijkste
+ * Energielabel C voor kantoren, indicatief, met de belangrijkste
  * uitzonderingen: kantooraandeel < 50%, kleine gebouwen (< 100 m²-grens)
  * en monumenten.
  */
@@ -144,7 +144,7 @@ export function assessEnergielabelCKantoor(input: AssessmentInput): RuleResult {
     };
   }
 
-  // Kantoor, mogelijk onder de plicht — beoordeel op label.
+  // Kantoor, mogelijk onder de plicht, beoordeel op label.
   const label = input.energielabel;
 
   if (label === "D" || label === "E" || label === "F" || label === "G") {

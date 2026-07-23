@@ -133,7 +133,7 @@ export default async function ArtikelPage({
           <time dateTime={article.lastReviewedAt}>{reviewedDate}</time>
         </p>
 
-        {/* Kort antwoord — zelfstandig leesbaar, direct onder de H1 */}
+        {/* Kort antwoord, zelfstandig leesbaar, direct onder de H1 */}
         <div className="mt-6 rounded-panel border-2 border-mint bg-mint-soft/60 p-5 sm:p-6">
           <h2 className="text-sm font-bold uppercase tracking-wide text-pine">
             Kort antwoord
@@ -166,7 +166,7 @@ export default async function ArtikelPage({
                   {s.title}
                 </a>{" "}
                 <span className="text-ink-soft">
-                  — {s.publisher}, door PandPlicht gecontroleerd op{" "}
+                 , {s.publisher}, door PandPlicht gecontroleerd op{" "}
                   {new Date(s.checkedAt).toLocaleDateString("nl-NL")}
                 </span>
               </li>

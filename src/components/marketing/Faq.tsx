@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export type FaqEntry = { question: string; answer: string };
 
 /**
- * FAQ met zichtbare, server-rendered antwoorden (details/summary —
+ * FAQ met zichtbare, server-rendered antwoorden (details/summary,
  * volledige inhoud staat in de HTML).
  */
 export function Faq({

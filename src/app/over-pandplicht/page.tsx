@@ -32,8 +32,8 @@ export default function OverPage() {
         </h1>
         <div className="prose-pp mt-8 max-w-none">
           <p>
-            De regels voor bedrijfspanden — energiebesparingsplicht,
-            energielabels, netcongestie, batterijopslag — bestaan allemaal al.
+            De regels voor bedrijfspanden, energiebesparingsplicht,
+            energielabels, netcongestie, batterijopslag, bestaan allemaal al.
             Ze staan alleen verspreid over RVO, Rijksoverheid, EP-Online,
             netbeheerders en gemeenten, in taal die niet voor ondernemers is
             geschreven. Daardoor weten veel mkb-ondernemers niet wélke regels
@@ -49,7 +49,7 @@ export default function OverPage() {
           <ul>
             <li>
               <strong>Eerst waarde, dan pas gegevens.</strong> U ziet uw
-              uitslag vóórdat wij om contactgegevens vragen — en die blijven
+              uitslag vóórdat wij om contactgegevens vragen, en die blijven
               altijd optioneel.
             </li>
             <li>

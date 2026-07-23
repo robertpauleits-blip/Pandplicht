@@ -53,7 +53,7 @@ function StatusIcon({ tone }: { tone: keyof typeof TONES }) {
 }
 
 /**
- * Statuslabel met icoon + tekst — betekenis nooit alleen via kleur.
+ * Statuslabel met icoon + tekst, betekenis nooit alleen via kleur.
  */
 export function StatusBadge({
   status,

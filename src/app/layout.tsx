@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Gratis indicatieve check voor bedrijfspanden`,
+    default: `${SITE_NAME}, Gratis indicatieve check voor bedrijfspanden`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,

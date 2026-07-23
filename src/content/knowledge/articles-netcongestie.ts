@@ -39,7 +39,7 @@ export const ARTIKELEN_NETCONGESTIE: Article[] = [
         geordend: true,
         items: [
           "Vraag uw netbeheerder schriftelijk naar de situatie op uw locatie en de status van eventuele aanvragen.",
-          "Breng uw werkelijke verbruikspieken in kaart met kwartierdata — vaak is er binnen het bestaande contract meer mogelijk dan gedacht.",
+          "Breng uw werkelijke verbruikspieken in kaart met kwartierdata, vaak is er binnen het bestaande contract meer mogelijk dan gedacht.",
           "Verken flexibiliteit: pieken spreiden, processen verschuiven, slim laden.",
           "Onderzoek alternatieven zoals opslag of samenwerking met buurbedrijven (energiehub).",
         ],
@@ -118,7 +118,7 @@ export const ARTIKELEN_NETCONGESTIE: Article[] = [
         type: "lijst",
         items: [
           "Check bij uitbreidings- of elektrificatieplannen éérst of afname beperkt is op uw locatie.",
-          "Check bij zonneplannen of invoeding beperkt is — soms is eigen gebruik (met of zonder opslag) aantrekkelijker dan terugleveren.",
+          "Check bij zonneplannen of invoeding beperkt is, soms is eigen gebruik (met of zonder opslag) aantrekkelijker dan terugleveren.",
           "Beide typen kunnen tegelijk spelen; vraag uw netbeheerder om het volledige beeld.",
         ],
       },
@@ -196,7 +196,7 @@ export const ARTIKELEN_NETCONGESTIE: Article[] = [
       {
         question: "Hoe lang duurt een verzwaring in een congestiegebied?",
         answer:
-          "Dat verschilt sterk per regio en netvlak — van maanden tot meerdere jaren. Uw netbeheerder kan een indicatie geven; reken in congestiegebieden niet op snelle uitbreiding en plan parallel aan de alternatieven hierboven.",
+          "Dat verschilt sterk per regio en netvlak, van maanden tot meerdere jaren. Uw netbeheerder kan een indicatie geven; reken in congestiegebieden niet op snelle uitbreiding en plan parallel aan de alternatieven hierboven.",
       },
     ],
     related: [

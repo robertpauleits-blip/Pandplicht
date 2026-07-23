@@ -64,7 +64,7 @@ export function Header() {
         <Link
           href="/"
           className="rounded-lg focus-visible:outline-3 focus-visible:outline-action"
-          aria-label="PandPlicht — naar de homepage"
+          aria-label="PandPlicht, naar de homepage"
         >
           <Logo className="h-8" />
         </Link>

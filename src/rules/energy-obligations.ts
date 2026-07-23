@@ -3,7 +3,7 @@ import { THRESHOLDS } from "./version";
 import { compareToThreshold, formatGas, formatKwh, toRange } from "./helpers";
 
 /**
- * Energiebesparingsplicht — indicatieve beoordeling op basis van jaarlijks
+ * Energiebesparingsplicht, indicatieve beoordeling op basis van jaarlijks
  * energiegebruik per locatie. Startwaarden: 50.000 kWh of 25.000 m³
  * aardgas(equivalent) per jaar (bron: RVO, zie sources.ts).
  */
@@ -145,7 +145,7 @@ export function assessEnergiebesparingsplicht(
 }
 
 /**
- * Informatieplicht energiebesparing — volgt de energiebesparingsplicht.
+ * Informatieplicht energiebesparing, volgt de energiebesparingsplicht.
  * Rapportage kan eens per vier jaar gelden. Wanneer de onderzoeksplicht
  * geldt, verloopt rapportage (deels) via het onderzoek; wij trekken daarover
  * geen definitieve conclusie.
@@ -221,7 +221,7 @@ export function assessInformatieplicht(
 }
 
 /**
- * Onderzoeksplicht energiebesparing — voor relevante bedrijfstakken vanaf
+ * Onderzoeksplicht energiebesparing, voor relevante bedrijfstakken vanaf
  * o.a. 10 mln kWh of 170.000 m³ aardgas(equivalent) per jaar (startwaarden).
  */
 export function assessOnderzoeksplicht(input: AssessmentInput): RuleResult {

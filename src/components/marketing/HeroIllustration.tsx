@@ -1,6 +1,6 @@
 /**
  * Eigen abstracte lijnillustratie: bedrijfspand met signalen voor
- * energielabel, stroomnet en batterij. Decoratief — verborgen voor
+ * energielabel, stroomnet en batterij. Decoratief, verborgen voor
  * screenreaders.
  */
 export function HeroIllustration({ className = "" }: { className?: string }) {

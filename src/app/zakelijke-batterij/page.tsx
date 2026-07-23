@@ -10,7 +10,7 @@ import { JsonLd, webPageLd } from "@/lib/seo/jsonld";
 export const metadata: Metadata = {
   title: "Zakelijke batterij: wanneer is onderzoek zinvol?",
   description:
-    "Wanneer is een zakelijke batterij interessant? Uitleg over peak shaving, eigen opwek, kwartierdata en registratie — zonder loze ROI-beloftes.",
+    "Wanneer is een zakelijke batterij interessant? Uitleg over peak shaving, eigen opwek, kwartierdata en registratie, zonder loze ROI-beloftes.",
   alternates: { canonical: "/zakelijke-batterij" },
 };
 
@@ -52,7 +52,7 @@ export default function ZakelijkeBatterijPage() {
           </h2>
           <p className="mt-2 text-[1.05rem] leading-relaxed text-ink">
             Een zakelijke batterij kan waardevol zijn bij netknelpunten, hoge
-            kwartierpieken of structureel zonne-overschot — maar niet voor
+            kwartierpieken of structureel zonne-overschot, maar niet voor
             iedere locatie. Een serieuze afweging vraagt kwartierdata en een
             specialist; een rendement berekend op alleen jaarverbruik is
             schijnzekerheid. Onze batterijscan zegt eerlijk of nader onderzoek
@@ -85,7 +85,7 @@ export default function ZakelijkeBatterijPage() {
             Het rendement hangt af van uw werkelijke kwartierprofiel, uw
             contract, energieprijzen en de inzetstrategie. Daarom geeft
             PandPlicht een transparante <em>onderzoeksscore</em> (0–100) met
-            alle deelscores zichtbaar — geen ROI-belofte. Scoort uw situatie
+            alle deelscores zichtbaar, geen ROI-belofte. Scoort uw situatie
             hoog, dan is de logische volgende stap: kwartierdata verzamelen en
             een specialist laten dimensioneren.
           </p>
@@ -117,7 +117,7 @@ export default function ZakelijkeBatterijPage() {
                   {s.title}
                 </a>{" "}
                 <span className="text-ink-soft">
-                  — {s.publisher}, gecontroleerd op{" "}
+                 , {s.publisher}, gecontroleerd op{" "}
                   {new Date(s.checkedAt).toLocaleDateString("nl-NL")}
                 </span>
               </li>

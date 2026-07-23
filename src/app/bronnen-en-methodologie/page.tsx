@@ -130,7 +130,7 @@ export default function BronnenPage() {
                 <p className="font-bold text-ink">
                   v{entry.version}{" "}
                   <span className="font-normal text-ink-soft">
-                    — {new Date(entry.date).toLocaleDateString("nl-NL")}
+                   , {new Date(entry.date).toLocaleDateString("nl-NL")}
                   </span>
                 </p>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-soft">

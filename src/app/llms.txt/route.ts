@@ -3,7 +3,7 @@ import { indexableRoutes } from "@/lib/seo/routes";
 import { ARTICLES } from "@/content/knowledge";
 
 /**
- * Optionele llms.txt — aanvullende navigatie voor AI-systemen, gegenereerd
+ * Optionele llms.txt, aanvullende navigatie voor AI-systemen, gegenereerd
  * uit dezelfde routebron als de sitemap zodat hij niet veroudert.
  * Geen kernstrategie en geen vervanging van SEO (zie methodologie).
  */

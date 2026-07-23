@@ -74,7 +74,7 @@ const FAQ_ITEMS: FaqEntry[] = [
   {
     question: "Welke gegevens heb ik nodig?",
     answer:
-      "Handig om bij de hand te hebben: uw postcode en huisnummer, uw jaarlijkse energiegebruik (kWh en m³ gas — dit staat op de jaarafrekening), en eventueel uw energielabel. Weet u iets niet? Kies dan 'Weet ik niet'; de check werkt ook met onvolledige gegevens, alleen wordt de indicatie dan wat minder scherp.",
+      "Handig om bij de hand te hebben: uw postcode en huisnummer, uw jaarlijkse energiegebruik (kWh en m³ gas, dit staat op de jaarafrekening), en eventueel uw energielabel. Weet u iets niet? Kies dan 'Weet ik niet'; de check werkt ook met onvolledige gegevens, alleen wordt de indicatie dan wat minder scherp.",
   },
   {
     question: "Wat gebeurt er met mijn adres en antwoorden?",
@@ -84,7 +84,7 @@ const FAQ_ITEMS: FaqEntry[] = [
   {
     question: "Kan ik de check doen als huurder?",
     answer:
-      "Ja. In de check geeft u aan wat uw relatie tot het pand is (eigenaar, verhuurder, huurder of beheerder). Sommige verplichtingen liggen vooral bij de eigenaar, andere bij de gebruiker; de uitslag legt per onderwerp uit wie meestal aan zet is — zonder daar een definitief juridisch oordeel over te geven.",
+      "Ja. In de check geeft u aan wat uw relatie tot het pand is (eigenaar, verhuurder, huurder of beheerder). Sommige verplichtingen liggen vooral bij de eigenaar, andere bij de gebruiker; de uitslag legt per onderwerp uit wie meestal aan zet is, zonder daar een definitief juridisch oordeel over te geven.",
   },
   {
     question: "Kan PandPlicht mijn energielabel ophalen?",
@@ -105,7 +105,7 @@ export default function HomePage() {
     <>
       <JsonLd data={[organizationLd(), websiteLd(), faqLd(FAQ_ITEMS)]} />
 
-      {/* --- HERO — grote remake in overstappen.nl-stijl (gecentreerd) --- */}
+      {/* --- HERO, grote remake in overstappen.nl-stijl (gecentreerd) --- */}
       <section
         aria-labelledby="hero-heading"
         className="relative overflow-hidden bg-[#eef4f3] pt-10 pb-16 text-center sm:pt-14 sm:pb-20"
@@ -163,7 +163,7 @@ export default function HomePage() {
             ))}
           </ul>
 
-          {/* Categorie-tegels — het middelpunt, net als overstappen */}
+          {/* Categorie-tegels, het middelpunt, net als overstappen */}
           <div className="mt-14">
             <h2 id="tools-heading" className="text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
               Of kies direct een onderwerp
@@ -196,7 +196,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Voorbeeldrapport — baan: navy --- */}
+      {/* --- Voorbeeldrapport, baan: navy --- */}
       <section aria-labelledby="voorbeeld-heading" className="bg-ink py-16 sm:py-24">
         <Container>
           <div>
@@ -217,7 +217,7 @@ export default function HomePage() {
                     ["Waarom ziet u dit?", "Iedere status is herleidbaar naar uw antwoorden."],
                     ["Welke bron is gebruikt?", "Met uitgever en controledatum, direct te openen."],
                     ["Wat is de volgende stap?", "Concreet en in volgorde van prioriteit."],
-                    ["Welke onzekerheid blijft er?", "Ontbrekende gegevens verlagen de zekerheid — dat ziet u terug."],
+                    ["Welke onzekerheid blijft er?", "Ontbrekende gegevens verlagen de zekerheid, dat ziet u terug."],
                   ].map(([q, a]) => (
                     <li key={q} className="flex gap-3 text-white/85">
                       <svg viewBox="0 0 20 20" className="mt-1 h-5 w-5 shrink-0 text-action" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -232,7 +232,7 @@ export default function HomePage() {
                 </ul>
               </div>
 
-              {/* Mock van resultatenpaneel — duidelijk gelabeld als voorbeeld */}
+              {/* Mock van resultatenpaneel, duidelijk gelabeld als voorbeeld */}
               <div
                 className="rounded-panel bg-surface p-5 shadow-lift sm:p-6"
                 aria-label="Voorbeeld van een resultatenoverzicht met fictieve gegevens"
@@ -250,7 +250,7 @@ export default function HomePage() {
                       <StatusBadge status="likely_applicable" />
                     </div>
                     <p className="mt-2 text-sm text-ink-soft">
-                      Voorbeeld: opgegeven label E bij een kantoor van 650 m² —
+                      Voorbeeld: opgegeven label E bij een kantoor van 650 m²,
                       minimaal label C is dan waarschijnlijk vereist. Bron: RVO.
                     </p>
                   </div>
@@ -260,7 +260,7 @@ export default function HomePage() {
                       <StatusBadge status="possibly_applicable" />
                     </div>
                     <p className="mt-2 text-sm text-ink-soft">
-                      Voorbeeld: verbruik rond de 50.000&nbsp;kWh-grens — controleer
+                      Voorbeeld: verbruik rond de 50.000&nbsp;kWh-grens, controleer
                       de jaarafrekening voor een scherpere indicatie.
                     </p>
                   </div>
@@ -270,7 +270,7 @@ export default function HomePage() {
                       <StatusBadge status="likely_not_applicable" topicId="netcongestie" />
                     </div>
                     <p className="mt-2 text-sm text-ink-soft">
-                      Voorbeeld: geen gemelde beperkingen en geen groeiplannen —
+                      Voorbeeld: geen gemelde beperkingen en geen groeiplannen,
                       wel blijven volgen bij nieuwe plannen.
                     </p>
                   </div>
@@ -291,7 +291,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Zo werkt het — baan: wit --- */}
+      {/* --- Zo werkt het, baan: wit --- */}
       <section aria-labelledby="werkwijze-heading" className="bg-surface py-16 sm:py-20">
         <Container>
           <h2
@@ -308,7 +308,7 @@ export default function HomePage() {
               },
               {
                 title: "Wij toetsen aan de regels",
-                text: "We vergelijken uw antwoorden met officiële drempels — met bron en datum.",
+                text: "We vergelijken uw antwoorden met officiële drempels, met bron en datum.",
               },
               {
                 title: "U krijgt uw overzicht",
@@ -333,7 +333,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Waarom PandPlicht — baan: lichtgroen --- */}
+      {/* --- Waarom PandPlicht, baan: lichtgroen --- */}
       <section aria-labelledby="waarom-heading" className="bg-[#eef4f3] py-16 sm:py-20">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
@@ -362,7 +362,7 @@ export default function HomePage() {
                 ],
                 [
                   "Eerlijk over uw rol",
-                  "Wie is aan zet — eigenaar of huurder? Zonder schijnzekerheid.",
+                  "Wie is aan zet, eigenaar of huurder? Zonder schijnzekerheid.",
                 ],
                 [
                   "Altijd met bron",
@@ -389,7 +389,7 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- Kennis en actuele onderwerpen — baan: wit --- */}
+      {/* --- Kennis en actuele onderwerpen, baan: wit --- */}
       <section aria-labelledby="kennis-heading" className="bg-surface py-16 sm:py-20">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -436,14 +436,14 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* --- FAQ — baan: lichtgroen --- */}
+      {/* --- FAQ, baan: lichtgroen --- */}
       <section className="bg-[#eef4f3] py-16 sm:py-20">
         <Container className="max-w-3xl">
           <Faq items={FAQ_ITEMS} />
         </Container>
       </section>
 
-      {/* --- Eind-CTA — baan: groen (full-bleed) --- */}
+      {/* --- Eind-CTA, baan: groen (full-bleed) --- */}
       <section
         aria-labelledby="cta-heading"
         className="relative overflow-hidden bg-gradient-to-br from-pine via-pine to-[#0a4239] py-16 text-center sm:py-24"

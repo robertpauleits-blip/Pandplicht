@@ -74,7 +74,7 @@ export const SOURCES: Record<string, SourceRecord> = {
   },
   "ep-online": {
     id: "ep-online",
-    title: "EP-Online — officiële energielabeldatabase",
+    title: "EP-Online, officiële energielabeldatabase",
     publisher: "RVO",
     url: "https://www.ep-online.nl/",
     checkedAt: "2026-07-20",

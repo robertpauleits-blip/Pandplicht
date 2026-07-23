@@ -58,7 +58,7 @@ export default function CookiesPage() {
         <p>
           Als wij later functionaliteit toevoegen die toestemmingsplichtige
           cookies vereist (bijvoorbeeld advertentiemeting), vragen wij die
-          toestemming vooraf via een duidelijke voorkeureninterface — zonder
+          toestemming vooraf via een duidelijke voorkeureninterface, zonder
           misleidende knoppen, en met &lsquo;weigeren&rsquo; net zo makkelijk
           als &lsquo;accepteren&rsquo;. Analytics houden wij bij voorkeur
           cookieloos en geaggregeerd.

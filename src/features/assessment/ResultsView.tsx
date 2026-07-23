@@ -29,7 +29,7 @@ export function ResultsView({ token }: { token: string }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      // 1) Lokale kopie (sessionStorage) — direct beschikbaar en privé.
+      // 1) Lokale kopie (sessionStorage), direct beschikbaar en privé.
       try {
         const raw = sessionStorage.getItem(`pp-uitslag-${token}`);
         if (raw) {
@@ -81,7 +81,7 @@ export function ResultsView({ token }: { token: string }) {
         <p className="mt-3 text-ink-soft">
           Uitslagen worden om privacyredenen na een bewaartermijn automatisch
           verwijderd, en links zijn alleen geldig in de browser waarin de check
-          is gedaan. U kunt de check opnieuw doorlopen — dat duurt maar een paar
+          is gedaan. U kunt de check opnieuw doorlopen, dat duurt maar een paar
           minuten.
         </p>
         <Link
@@ -260,7 +260,7 @@ export function ResultsView({ token }: { token: string }) {
                         {s.title}
                       </a>{" "}
                       <span className="text-ink-soft">
-                        — {s.publisher}, gecontroleerd op{" "}
+                       , {s.publisher}, gecontroleerd op{" "}
                         {new Date(s.checkedAt).toLocaleDateString("nl-NL")}
                       </span>
                     </li>
@@ -352,7 +352,7 @@ export function ResultsView({ token }: { token: string }) {
         </section>
       ) : null}
 
-      {/* Lead-CTA — pas ná de kernuitslag */}
+      {/* Lead-CTA, pas ná de kernuitslag */}
       <div className="mt-12">
         <LeadForm assessment={assessment} />
       </div>

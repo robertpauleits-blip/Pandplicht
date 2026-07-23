@@ -30,7 +30,7 @@ export async function GET(req: Request) {
 
   const result = await fetchEnergyLabel({ postcode, huisnummer, toevoeging });
 
-  // Uniforme, gesaneerde respons — nooit interne details of de sleutel.
+  // Uniforme, gesaneerde respons, nooit interne details of de sleutel.
   return NextResponse.json(result, {
     headers: { "Cache-Control": "private, max-age=3600" },
   });

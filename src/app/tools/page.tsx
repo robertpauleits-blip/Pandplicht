@@ -28,7 +28,7 @@ export default function ToolsPage() {
         Gratis checks
       </h1>
       <p className="mt-4 max-w-2xl text-lg text-ink-soft">
-        Start bij het onderwerp dat nu speelt, of doe de complete PandCheck —
+        Start bij het onderwerp dat nu speelt, of doe de complete PandCheck,
         die dekt alle vier de onderwerpen in één keer.
       </p>
 

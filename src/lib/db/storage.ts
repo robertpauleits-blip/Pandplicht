@@ -5,7 +5,7 @@ import type { StoredAssessment } from "@/rules/types";
 /**
  * Opslagadapter. Drie modi:
  * 1. Development/demo: bestandsadapter in `.data/` (deterministisch, lokaal).
- * 2. Production basic (P1): PostgreSQL — implementeer dit interface met een
+ * 2. Production basic (P1): PostgreSQL, implementeer dit interface met een
  *    databaseclient; alle aanroepen lopen al via deze laag.
  * 3. Future integrations: externe data-adapters.
  *

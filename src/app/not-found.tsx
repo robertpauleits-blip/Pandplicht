@@ -9,7 +9,7 @@ export default function NotFound() {
         Deze pagina bestaat niet (meer)
       </h1>
       <p className="mx-auto mt-4 max-w-md text-ink-soft">
-        Het adres klopt niet of de pagina is verplaatst. Geen zorgen — via de
+        Het adres klopt niet of de pagina is verplaatst. Geen zorgen, via de
         knoppen hieronder vindt u snel de juiste plek.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">

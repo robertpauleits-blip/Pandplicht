@@ -34,7 +34,7 @@ export default function VoorAdviseursPage() {
             verduurzamingsverplichtingen mogelijk voor hun bedrijfspand gelden.
             Bezoekers die na hun indicatieve uitslag hulp willen, kunnen
             vrijwillig een aanvraag doen voor contact met een passende
-            specialist — bijvoorbeeld een energieadviseur, labeladviseur of
+            specialist, bijvoorbeeld een energieadviseur, labeladviseur of
             installatiebedrijf.
           </p>
           <h2>Hoe gaat samenwerking eruitzien?</h2>
@@ -63,7 +63,7 @@ export default function VoorAdviseursPage() {
             niet aan; wij starten pas wanneer processen, overeenkomsten en
             privacyafspraken volledig staan. Interesse? Laat uw gegevens achter
             via het contactformulier met vermelding van uw specialisme en
-            werkgebied — wij nemen contact op zodra onboarding start.
+            werkgebied, wij nemen contact op zodra onboarding start.
           </p>
         </div>
 

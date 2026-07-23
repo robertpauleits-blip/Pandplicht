@@ -513,7 +513,7 @@ export function Wizard() {
             {handmatig ? (
               <div className="mt-4 rounded-card border border-line bg-white p-4">
                 <p className="mb-3 text-sm text-ink-soft">
-                  Handmatige invoer — vul eventueel uw plaats aan en bevestig.
+                  Handmatige invoer, vul eventueel uw plaats aan en bevestig.
                 </p>
                 <TextInput
                   id="w-plaats"
@@ -930,7 +930,7 @@ export function Wizard() {
               <div className="rounded-card border-2 border-mint bg-mint-soft/50 p-4 sm:p-5">
                 <h3 className="font-bold text-ink">
                   Batterijvragen{" "}
-                  <span className="font-normal text-ink-soft">(optioneel — voor de batterijscan)</span>
+                  <span className="font-normal text-ink-soft">(optioneel, voor de batterijscan)</span>
                 </h3>
                 <p className="mt-1 mb-4 text-sm text-ink-soft">
                   Op basis van uw situatie kan een batterij-indicatie relevant

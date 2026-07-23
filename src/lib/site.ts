@@ -15,7 +15,7 @@ export const SITE_DESCRIPTION =
 export const SITE_TAGLINE =
   "Ontdek wat er mogelijk voor uw bedrijfspand geldt.";
 
-/** Juridische configuratie — alleen tonen wat echt bestaat. */
+/** Juridische configuratie, alleen tonen wat echt bestaat. */
 export const LEGAL = {
   kvkNummer: "" as string,
   vestigingsadres: "" as string,

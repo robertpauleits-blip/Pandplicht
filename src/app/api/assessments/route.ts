@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
   // Berekening server-side met de gedeelde, deterministische rules-package.
   const outcome = runAssessment(parsed.data);
-  // Cryptografisch onvoorspelbare token — nooit een oplopend ID.
+  // Cryptografisch onvoorspelbare token, nooit een oplopend ID.
   const token = randomBytes(24).toString("base64url");
 
   try {

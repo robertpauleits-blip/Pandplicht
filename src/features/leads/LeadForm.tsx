@@ -146,8 +146,8 @@ export function LeadForm({ assessment }: { assessment: StoredAssessment | null }
         Vrijblijvende vervolgstap aanvragen
       </h2>
       <p className="mt-2 text-ink-soft">
-        Na verzending bekijken wij uw aanvraag en brengen wij u — alleen met uw
-        toestemming — in contact met een passende specialist voor de gekozen
+        Na verzending bekijken wij uw aanvraag en brengen wij u, alleen met uw
+        toestemming, in contact met een passende specialist voor de gekozen
         onderwerpen. Er ontstaat géén verplichting en u ontvangt geen
         ongevraagde marketing.
       </p>
@@ -271,7 +271,7 @@ export function LeadForm({ assessment }: { assessment: StoredAssessment | null }
                 .map((r) => TOPIC_META[r.topicId].shortTitle)
                 .slice(0, 3)
                 .join(", ")}
-              , …) — niet uw losse antwoorden.
+              , …), niet uw losse antwoorden.
             </span>
           </label>
         ) : null}

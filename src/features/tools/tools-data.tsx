@@ -42,7 +42,7 @@ export const TOOL_PAGES: ToolPageData[] = [
     watHeeftUNodig: [
       "Postcode en huisnummer van het pand.",
       "Jaarverbruik elektriciteit en gas (of een bandbreedte).",
-      "Uw energielabel, als u dat kent — anders kiest u 'Onbekend'.",
+      "Uw energielabel, als u dat kent, anders kiest u 'Onbekend'.",
     ],
     watKrijgtU: [
       "Per verplichting een genuanceerde status met uitleg.",
@@ -70,7 +70,7 @@ export const TOOL_PAGES: ToolPageData[] = [
     ],
     watHeeftUNodig: [
       "Jaarlijks elektriciteitsgebruik in kWh (jaarafrekening).",
-      "Jaarlijks gasgebruik in m³ — of kies een bandbreedte of 'Weet ik niet'.",
+      "Jaarlijks gasgebruik in m³, of kies een bandbreedte of 'Weet ik niet'.",
     ],
     watKrijgtU: [
       "Een heldere drempeltoets met de gebruikte grenswaarden en bron.",
@@ -90,14 +90,14 @@ export const TOOL_PAGES: ToolPageData[] = [
       "Breng gratis in beeld of netcongestie een risico is voor uw bedrijf: aansluiting, groeiplannen, teruglevering en concrete stappen richting uw netbeheerder.",
     Icon: IconGrid,
     intro:
-      "Geen kaartkleuren of capaciteitsbeloftes, maar een eerlijke risico- en handelingsscan: wat betekenen uw aansluiting, plannen en signalen van de netbeheerder — en wat is uw logische volgende stap?",
+      "Geen kaartkleuren of capaciteitsbeloftes, maar een eerlijke risico- en handelingsscan: wat betekenen uw aansluiting, plannen en signalen van de netbeheerder, en wat is uw logische volgende stap?",
     watChecktDeTool: [
       "Actuele knelpunten: gemelde beperkingen of een wachtende aanvraag.",
       "Verhoogde relevantie door uitbreidings- of elektrificatieplannen.",
       "Terugleverrisico's bij (geplande) zonnepanelen.",
     ],
     watHeeftUNodig: [
-      "Uw aansluitingstype (t/m 3×80 A of groter) — staat op de netbeheerderfactuur.",
+      "Uw aansluitingstype (t/m 3×80 A of groter), staat op de netbeheerderfactuur.",
       "Eventuele berichten van uw netbeheerder.",
       "Uw plannen voor de komende drie jaar.",
     ],
@@ -116,10 +116,10 @@ export const TOOL_PAGES: ToolPageData[] = [
     title: "Zakelijke batterijscan",
     metaTitle: "Zakelijke batterijscan: is onderzoek zinvol?",
     description:
-      "Ontdek gratis of nader onderzoek naar een zakelijke batterij zinvol lijkt — met een transparante onderzoeksscore, zonder ROI-beloftes.",
+      "Ontdek gratis of nader onderzoek naar een zakelijke batterij zinvol lijkt, met een transparante onderzoeksscore, zonder ROI-beloftes.",
     Icon: IconBattery,
     intro:
-      "De batterijscan beoordeelt of nader technisch en financieel onderzoek zinvol lijkt, met een transparante score van 0 tot 100 waarvan u alle onderdelen ziet. Géén definitieve capaciteit, géén terugverdientijd — wel een eerlijke volgende stap.",
+      "De batterijscan beoordeelt of nader technisch en financieel onderzoek zinvol lijkt, met een transparante score van 0 tot 100 waarvan u alle onderdelen ziet. Géén definitieve capaciteit, géén terugverdientijd, wel een eerlijke volgende stap.",
     watChecktDeTool: [
       "Net- of uitbreidingsknelpunten (max. 20 punten).",
       "Piekvermogensvraag (20) en eigen opwek met overschot (20).",
@@ -136,7 +136,7 @@ export const TOOL_PAGES: ToolPageData[] = [
       "Het advies om kwartierdata te exporteren vóór u offertes aanvraagt.",
     ],
     beperkingen:
-      "De scan geeft nooit een ROI, batterijvermogen of capaciteit als exact advies. Ontbrekende meetdata verlaagt de zekerheid — dat ziet u terug in de uitslag. Denk ook aan de registratieplicht voor batterijsystemen.",
+      "De scan geeft nooit een ROI, batterijvermogen of capaciteit als exact advies. Ontbrekende meetdata verlaagt de zekerheid, dat ziet u terug in de uitslag. Denk ook aan de registratieplicht voor batterijsystemen.",
     focus: "batterij",
   },
 ];

@@ -32,7 +32,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
   const b = input.batterij;
   let missingCount = 0;
 
-  // 1. Aantoonbaar net- of uitbreidingsknelpunt — max 20.
+  // 1. Aantoonbaar net- of uitbreidingsknelpunt, max 20.
   let knelpunt = 0;
   if (input.beperkingen === "ja") knelpunt += 12;
   if (input.wachtOpAansluiting === "ja") knelpunt += 8;
@@ -48,7 +48,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
   }
   knelpunt = Math.min(knelpunt, 20);
 
-  // 2. Betekenisvolle piekvermogensvraag — max 20.
+  // 2. Betekenisvolle piekvermogensvraag, max 20.
   let piek = 0;
   if (b?.piekKw != null) {
     if (b.piekKw >= 100) piek = 20;
@@ -64,7 +64,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
     missingCount += 1;
   }
 
-  // 3. Eigen opwek en structureel overschot — max 20.
+  // 3. Eigen opwek en structureel overschot, max 20.
   let opwek = 0;
   if (input.eigenOpwek === "zon" || input.eigenOpwek === "wind") {
     opwek += 8;
@@ -81,13 +81,13 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
   }
   opwek = Math.min(opwek, 20);
 
-  // 4. Flexibiliteit in laden/ontladen en bedrijfsprofiel — max 15.
+  // 4. Flexibiliteit in laden/ontladen en bedrijfsprofiel, max 15.
   let flexibiliteit = 0;
   if (b?.flexibelProfiel === "ja") flexibiliteit = 13;
   else if (b?.flexibelProfiel === "nee") flexibiliteit = 4;
   else missingCount += 1;
 
-  // 5. Economisch doel en investeringshorizon — max 10.
+  // 5. Economisch doel en investeringshorizon, max 10.
   let economisch = 0;
   if (b?.hoofddoel && b.hoofddoel !== "noodstroom") economisch += 5;
   if (b?.investeringshorizonJaren === "b5_10" || b?.investeringshorizonJaren === "gt10") {
@@ -99,7 +99,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
   }
   economisch = Math.min(economisch, 10);
 
-  // 6. Voldoende meetdata — max 10.
+  // 6. Voldoende meetdata, max 10.
   let meetdata = 0;
   if (b?.kwartierdataBeschikbaar === "ja") meetdata = 10;
   else if (b?.kwartierdataBeschikbaar === "nee") meetdata = 0;
@@ -110,7 +110,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
   }
   meetdata = Math.min(meetdata, 10);
 
-  // 7. Globale fysieke haalbaarheid — max 5.
+  // 7. Globale fysieke haalbaarheid, max 5.
   let fysiek = 0;
   if (b?.ruimteBeschikbaar === "ja") fysiek = 5;
   else if (b?.ruimteBeschikbaar === "beperkt") fysiek = 3;
@@ -134,7 +134,7 @@ export function batteryCategory(
 }
 
 /**
- * Zakelijke batterijscan — beoordeelt of nader onderzoek zinvol lijkt.
+ * Zakelijke batterijscan, beoordeelt of nader onderzoek zinvol lijkt.
  */
 export function assessBatterijscan(input: AssessmentInput): RuleResult {
   const score = computeBatteryScore(input);

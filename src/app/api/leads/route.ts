@@ -140,7 +140,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // P1: e-mailnotificatie via adapter (EMAIL_PROVIDER_API_KEY) — bewust
+  // P1: e-mailnotificatie via adapter (EMAIL_PROVIDER_API_KEY), bewust
   // uitgeschakeld zolang er geen echt e-mailadres is geconfigureerd.
 
   return NextResponse.json({ ok: true, id: lead.id }, { status: 201 });

@@ -4,7 +4,7 @@ import { absoluteUrl } from "@/lib/site";
 /**
  * Bewust robotsbeleid (zie specificatie §15.7):
  * - OAI-SearchBot toegestaan → zichtbaarheid in ChatGPT Search gewenst;
- * - GPTBot (trainingscrawler) apart behandeld en vooralsnog geblokkeerd —
+ * - GPTBot (trainingscrawler) apart behandeld en vooralsnog geblokkeerd,
  *   deze keuze staat los van zoekzichtbaarheid en kan de eigenaar wijzigen;
  * - persoonlijke uitslagen, API-routes en de scanflow nooit crawlbaar.
  */

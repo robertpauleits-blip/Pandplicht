@@ -29,7 +29,7 @@ export type RuleResult = {
   status: AssessmentStatus;
   confidence: Confidence;
   priority: Priority;
-  /** Waarom ziet u dit? — leesbare redenen op basis van de invoer. */
+  /** Waarom ziet u dit?, leesbare redenen op basis van de invoer. */
   reasons: string[];
   /** Welke invoer ontbreekt nog voor een scherpere indicatie. */
   missingInputs: string[];

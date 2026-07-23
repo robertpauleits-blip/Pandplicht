@@ -21,7 +21,7 @@ export const RULESET_CHANGELOG: {
 
 /**
  * Configureerbare drempelwaarden. Dit zijn indicatieve startwaarden op basis
- * van de gecontroleerde bronnen — geen onveranderlijke waarheid. Controleer
+ * van de gecontroleerde bronnen, geen onveranderlijke waarheid. Controleer
  * vóór livegang opnieuw bij RVO.
  */
 export const THRESHOLDS = {

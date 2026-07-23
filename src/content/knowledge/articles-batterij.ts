@@ -7,7 +7,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
     slug: "zakelijke-batterij-onderzoeken-waard",
     title: "Wanneer is een zakelijke batterij het onderzoeken waard?",
     description:
-      "Vijf signalen dat batterijonderzoek zinvol kan zijn voor uw bedrijf — en drie situaties waarin een batterij juist niet de eerste stap is.",
+      "Vijf signalen dat batterijonderzoek zinvol kan zijn voor uw bedrijf, en drie situaties waarin een batterij juist niet de eerste stap is.",
     category: "Zakelijke batterij",
     searchIntent: "zakelijke batterij rendabel wanneer interessant",
     publishedAt: D,
@@ -16,14 +16,14 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
     sourceIds: ["rvo-battery-investment", "rvo-grid-guide"],
     relatedTool: { href: "/tools/zakelijke-batterijscan", label: "Doe de batterijscan" },
     kortAntwoord:
-      "Batterijonderzoek is het overwegen waard wanneer minstens één van deze signalen speelt: een net- of uitbreidingsknelpunt, hoge kwartierpieken (peak shaving), structureel zonne-overschot, flexibiliteit in uw bedrijfsprofiel of een concreet economisch doel met een horizon van vijf jaar of langer. Zonder kwartierdata is geen serieuze batterijberekening mogelijk — verzamel die dus eerst.",
+      "Batterijonderzoek is het overwegen waard wanneer minstens één van deze signalen speelt: een net- of uitbreidingsknelpunt, hoge kwartierpieken (peak shaving), structureel zonne-overschot, flexibiliteit in uw bedrijfsprofiel of een concreet economisch doel met een horizon van vijf jaar of langer. Zonder kwartierdata is geen serieuze batterijberekening mogelijk, verzamel die dus eerst.",
     sections: [
       { type: "kop", text: "Vijf signalen dat onderzoek zinvol kan zijn" },
       {
         type: "lijst",
         items: [
           "Uw netbeheerder heeft beperkingen gemeld of u wacht op een (zwaardere) aansluiting.",
-          "Uw kwartierpieken liggen ver boven uw gemiddelde verbruik — de klassieke peak-shaving-casus.",
+          "Uw kwartierpieken liggen ver boven uw gemiddelde verbruik, de klassieke peak-shaving-casus.",
           "U levert structureel veel zonnestroom terug, zeker als teruglevering wordt begrensd of slecht wordt vergoed.",
           "Uw bedrijfsvoering is flexibel: laden en ontladen kan zonder het primaire proces te verstoren.",
           "U heeft een concreet doel (pieken, eigen gebruik, uitbreiding) en een investeringshorizon van 5+ jaar.",
@@ -41,7 +41,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
       { type: "kop", text: "Waarom geven wij geen terugverdientijd?" },
       {
         type: "paragraaf",
-        text: "Het rendement van een zakelijke batterij hangt af van uw werkelijke kwartierprofiel, uw contract, energieprijzen en de inzetstrategie. Een ROI op basis van alleen jaarverbruik is schijnzekerheid — die geven wij bewust niet. Onze batterijscan geeft een transparante onderzoeksscore die zegt of de vólgende stap (meten en laten doorrekenen) zinvol lijkt.",
+        text: "Het rendement van een zakelijke batterij hangt af van uw werkelijke kwartierprofiel, uw contract, energieprijzen en de inzetstrategie. Een ROI op basis van alleen jaarverbruik is schijnzekerheid, die geven wij bewust niet. Onze batterijscan geeft een transparante onderzoeksscore die zegt of de vólgende stap (meten en laten doorrekenen) zinvol lijkt.",
       },
       { type: "kop", text: "Wat moet u nu doen?" },
       {
@@ -88,21 +88,21 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
       { type: "kop", text: "Hoe werkt peak shaving?" },
       {
         type: "paragraaf",
-        text: "Grootverbruikers betalen mee aan het net op basis van hun hoogste kwartierpiek en hun gecontracteerd vermogen. Eén korte piek — bijvoorbeeld als machines gelijktijdig starten — kan zo onevenredig veel kosten of zelfs uw aansluitcapaciteit overschrijden. Een batterij levert op precies die momenten bij, waardoor de piek richting het net lager uitvalt.",
+        text: "Grootverbruikers betalen mee aan het net op basis van hun hoogste kwartierpiek en hun gecontracteerd vermogen. Eén korte piek, bijvoorbeeld als machines gelijktijdig starten, kan zo onevenredig veel kosten of zelfs uw aansluitcapaciteit overschrijden. Een batterij levert op precies die momenten bij, waardoor de piek richting het net lager uitvalt.",
       },
       { type: "kop", text: "Wanneer is peak shaving interessant?" },
       {
         type: "lijst",
         items: [
           "Uw pieken zijn kort en voorspelbaar (starten van processen, laden van voertuigen).",
-          "Het verschil tussen piek en gemiddelde is groot — een vlakke afname valt weinig te 'shaven'.",
+          "Het verschil tussen piek en gemiddelde is groot, een vlakke afname valt weinig te 'shaven'.",
           "U zit tegen uw gecontracteerd of fysiek aansluitvermogen aan en verzwaren kan niet of is duur.",
         ],
       },
       { type: "kop", text: "Een rekenvoorbeeld (fictief, met aannames)" },
       {
         type: "paragraaf",
-        text: "Fictief voorbeeld: een productiebedrijf heeft een gemiddelde afname van 60 kW, maar kwartierpieken tot 140 kW doordat twee lijnen tegelijk opstarten. Als 30 kW van die piek gedurende maximaal een uur moet worden opgevangen, is indicatief een batterij nodig die 30 kW kan leveren met circa 30 kWh bruikbare capaciteit. Aannames: pieken overlappen niet, de batterij is op piekmomenten vol en de ontlaaddiepte is beperkt. Dit voorbeeld toont de denkwijze — geen advies; de werkelijke dimensionering vraagt kwartierdata en een specialist.",
+        text: "Fictief voorbeeld: een productiebedrijf heeft een gemiddelde afname van 60 kW, maar kwartierpieken tot 140 kW doordat twee lijnen tegelijk opstarten. Als 30 kW van die piek gedurende maximaal een uur moet worden opgevangen, is indicatief een batterij nodig die 30 kW kan leveren met circa 30 kWh bruikbare capaciteit. Aannames: pieken overlappen niet, de batterij is op piekmomenten vol en de ontlaaddiepte is beperkt. Dit voorbeeld toont de denkwijze, geen advies; de werkelijke dimensionering vraagt kwartierdata en een specialist.",
       },
       { type: "kop", text: "Welke gegevens heeft u nodig?" },
       {
@@ -118,7 +118,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
       {
         question: "Kan ik pieken ook zonder batterij verlagen?",
         answer:
-          "Vaak wel — en goedkoper. Machines gefaseerd starten, laadsessies spreiden of processen verschuiven verlaagt pieken zonder investering in opslag. Bekijk dat altijd eerst.",
+          "Vaak wel, en goedkoper. Machines gefaseerd starten, laadsessies spreiden of processen verschuiven verlaagt pieken zonder investering in opslag. Bekijk dat altijd eerst.",
       },
     ],
     related: [
@@ -167,7 +167,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
         type: "lijst",
         geordend: true,
         items: [
-          "Grootverbruik: bij uw meetverantwoordelijke (meetbedrijf) of via het portaal van uw netbeheerder — vraag om een export (CSV/Excel).",
+          "Grootverbruik: bij uw meetverantwoordelijke (meetbedrijf) of via het portaal van uw netbeheerder, vraag om een export (CSV/Excel).",
           "Kleinverbruik: via uw energieleverancier of een uitleesdienst van de slimme meter.",
           "Controleer of de export volledige kalendermaanden dekt en geen gaten bevat.",
         ],
@@ -210,7 +210,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
     sourceIds: ["rvo-battery-register", "rvo-battery-investment"],
     relatedTool: { href: "/tools/zakelijke-batterijscan", label: "Doe de batterijscan" },
     kortAntwoord:
-      "Batterijsystemen die op het net zijn aangesloten moeten vanaf een bepaald vermogen worden geregistreerd; RVO noemt momenteel een grens van 0,8 kW — praktisch gezien valt vrijwel elke zakelijke batterij daaronder. De registratie helpt netbeheerders het net veilig te beheren. Controleer de actuele grens en de registratieroute bij RVO vlak voordat u een systeem in gebruik neemt.",
+      "Batterijsystemen die op het net zijn aangesloten moeten vanaf een bepaald vermogen worden geregistreerd; RVO noemt momenteel een grens van 0,8 kW, praktisch gezien valt vrijwel elke zakelijke batterij daaronder. De registratie helpt netbeheerders het net veilig te beheren. Controleer de actuele grens en de registratieroute bij RVO vlak voordat u een systeem in gebruik neemt.",
     sections: [
       { type: "kop", text: "Waarom bestaat de registratieplicht?" },
       {
@@ -221,7 +221,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
       {
         type: "lijst",
         items: [
-          "Netgekoppelde batterijsystemen vanaf de actuele vermogensgrens (RVO noemt 0,8 kW — vrijwel elke zakelijke batterij).",
+          "Netgekoppelde batterijsystemen vanaf de actuele vermogensgrens (RVO noemt 0,8 kW, vrijwel elke zakelijke batterij).",
           "Zowel nieuwe installaties als bestaande systemen die nog niet geregistreerd zijn.",
           "Controleer bij een eilandsysteem (niet netgekoppeld) de actuele uitleg; de situatie kan afwijken.",
         ],
@@ -233,7 +233,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
         items: [
           "Verzamel de systeemgegevens: vermogen (kW), capaciteit (kWh), locatie en aansluitgegevens.",
           "Volg de actuele registratieroute die RVO beschrijft.",
-          "Spreek met uw installateur af wie de registratie verzorgt — leg dat vast in de opdracht.",
+          "Spreek met uw installateur af wie de registratie verzorgt, leg dat vast in de opdracht.",
           "Bewaar de registratiebevestiging bij uw installatiedossier.",
         ],
       },
@@ -270,7 +270,7 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
     sourceIds: ["rvo-energy-saving-duty"],
     relatedTool: { href: "/pandcheck", label: "Start de PandCheck" },
     kortAntwoord:
-      "Voor de PandCheck heeft u drie cijfers nodig die vrijwel altijd op uw jaarafrekening of in het klantportaal staan: uw jaarlijkse elektriciteitsafname in kWh, uw jaarlijkse gasafname in m³ en — bij zonnepanelen — uw teruglevering in kWh. Grootverbruikers vinden daarnaast het gecontracteerd transportvermogen (kW) op de factuur van de netbeheerder of in het energiecontract.",
+      "Voor de PandCheck heeft u drie cijfers nodig die vrijwel altijd op uw jaarafrekening of in het klantportaal staan: uw jaarlijkse elektriciteitsafname in kWh, uw jaarlijkse gasafname in m³ en, bij zonnepanelen, uw teruglevering in kWh. Grootverbruikers vinden daarnaast het gecontracteerd transportvermogen (kW) op de factuur van de netbeheerder of in het energiecontract.",
     sections: [
       { type: "kop", text: "Welke cijfers zoekt u?" },
       {
@@ -306,13 +306,13 @@ export const ARTIKELEN_BATTERIJ: Article[] = [
         items: [
           "Log in op het klantportaal van uw energieleverancier; daar staan jaartotalen.",
           "Bij maandfacturen: tel twaalf maanden op of gebruik het jaaroverzicht.",
-          "Alleen een eurobedrag? Deel het leveringsdeel (exclusief netkosten en belastingen) door uw gemiddelde tarief voor een grove schatting — en kies in de check dan een bandbreedte in plaats van een exact getal.",
+          "Alleen een eurobedrag? Deel het leveringsdeel (exclusief netkosten en belastingen) door uw gemiddelde tarief voor een grove schatting, en kies in de check dan een bandbreedte in plaats van een exact getal.",
         ],
       },
       { type: "kop", text: "Waarom vragen wij hiernaar?" },
       {
         type: "paragraaf",
-        text: "De belangrijkste drempels in de regelgeving zijn verbruiksgrenzen: 50.000 kWh en 25.000 m³ voor de energiebesparingsplicht, 10 miljoen kWh en 170.000 m³ voor de onderzoeksplicht. Met uw werkelijke jaarcijfers wordt de PandCheck-indicatie direct scherper. Weet u een waarde niet, kies dan 'Weet ik niet' — dat is altijd beter dan gokken.",
+        text: "De belangrijkste drempels in de regelgeving zijn verbruiksgrenzen: 50.000 kWh en 25.000 m³ voor de energiebesparingsplicht, 10 miljoen kWh en 170.000 m³ voor de onderzoeksplicht. Met uw werkelijke jaarcijfers wordt de PandCheck-indicatie direct scherper. Weet u een waarde niet, kies dan 'Weet ik niet', dat is altijd beter dan gokken.",
       },
     ],
     faq: [

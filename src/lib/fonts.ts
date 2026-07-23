@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 
 /**
- * Plus Jakarta Sans (variabel, self-hosted) — geen externe fontrequests.
+ * Plus Jakarta Sans (variabel, self-hosted), geen externe fontrequests.
  */
 export const jakarta = localFont({
   src: [
