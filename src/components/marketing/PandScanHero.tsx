@@ -11,31 +11,59 @@ const TRUST = [
   "U krijgt eerst uw uitslag",
 ];
 
+const SCAN_MS = 2000; // duur van de scanlijn + onthulling
+
 /**
- * Hero met interactieve "pandscan". De headline en adresinvoer staan links,
- * rechts verschijnt een illustratie van een bedrijfspand met zwevende
- * analysekaarten. Bij het invullen van een postcode loopt een scanlijn over
- * het pand en verschijnen de resultaten na elkaar. Alles respecteert
- * prefers-reduced-motion en werkt zonder JavaScript (statische compositie).
+ * Hero met interactieve "pandscan". Links de headline en adresinvoer, rechts
+ * een bedrijfspand met zwevende analysekaarten. Zodra iemand het
+ * postcodeveld aanklikt (of typt) start een demo-scan: lampjes gaan aan, een
+ * gouden scanlijn loopt over het pand, de kaarten verschijnen na elkaar en de
+ * status gaat van "Klaar voor controle" naar "Pand analyseren..." naar
+ * "Pand gevonden". Puur een visuele preview, de echte uitslag volgt pas na
+ * de check. Respecteert prefers-reduced-motion en werkt zonder JavaScript.
  */
 export function PandScanHero() {
-  const [phase, setPhase] = useState<ScanPhase>("idle");
+  // Zonder JS (en dus zonder hydratatie) toont de server-render de volledige
+  // compositie: fase "done", niet "enhanced" (geen verborgen kaarten).
+  const [phase, setPhase] = useState<ScanPhase>("done");
+  const [enhanced, setEnhanced] = useState(false);
+  const [noAnim, setNoAnim] = useState(false);
   const [scanId, setScanId] = useState(0);
   const reduced = useRef(false);
-  const rafRef = useRef<number | null>(null);
-  const lastRun = useRef(0);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const running = useRef(false);
+
+  const clearTimers = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
 
   const runScan = useCallback(() => {
-    lastRun.current = Date.now();
+    if (running.current) return;
+    running.current = true;
     if (reduced.current) {
-      setPhase("revealing");
+      // Geen beweging: alles direct zichtbaar in eindstand.
+      setEnhanced(false);
+      setPhase("done");
       return;
     }
+    clearTimers();
     setScanId((n) => n + 1);
-    setPhase("armed");
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = requestAnimationFrame(() => setPhase("revealing"));
+    // Eerst één frame zonder transitie terug naar verborgen, dan scannen.
+    setNoAnim(true);
+    setEnhanced(true);
+    setPhase("idle");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setNoAnim(false);
+        setPhase("scanning");
+        timers.current.push(
+          setTimeout(() => {
+            setPhase("done");
+            running.current = false;
+          }, SCAN_MS),
+        );
+      });
     });
   }, []);
 
@@ -43,22 +71,21 @@ export function PandScanHero() {
     reduced.current =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t = setTimeout(runScan, 650);
-    return () => {
-      clearTimeout(t);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
+    if (reduced.current) return;
+    // Na hydratatie: start met een rustpand ("Klaar voor controle") en draai
+    // de demo eenmalig automatisch, zodat direct zichtbaar is wat de tool doet.
+    setEnhanced(true);
+    setNoAnim(true);
+    setPhase("idle");
+    const t = setTimeout(() => runScan(), 900);
+    timers.current.push(t);
+    return clearTimers;
   }, [runScan]);
 
-  const onPostcodeInput = useCallback(
-    (value: string) => {
-      const clean = value.replace(/\s/g, "");
-      // Start een (nieuwe) scan zodra het op een postcode begint te lijken,
-      // met een korte throttle zodat het niet bij elke toetsaanslag herstart.
-      if (clean.length >= 4 && Date.now() - lastRun.current > 1300) runScan();
-    },
-    [runScan],
-  );
+  // Focus op het postcodeveld start de scan (opnieuw).
+  const onPostcodeFocus = useCallback(() => {
+    runScan();
+  }, [runScan]);
 
   return (
     <section
@@ -112,7 +139,7 @@ export function PandScanHero() {
             </p>
 
             <div className="mx-auto mt-8 max-w-2xl lg:mx-0">
-              <AddressStarter compact onPostcodeInput={onPostcodeInput} />
+              <AddressStarter compact onPostcodeFocus={onPostcodeFocus} />
             </div>
 
             <ul className="mx-auto mt-6 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-ink-soft lg:mx-0 lg:justify-start">
@@ -137,8 +164,13 @@ export function PandScanHero() {
           </div>
 
           {/* Rechts: interactieve pandscan */}
-          <div className="relative pb-6 pt-4 lg:pb-0">
-            <PandScan phase={phase} scanId={scanId} />
+          <div className="relative pb-8 pt-4 lg:pb-2">
+            <PandScan
+              phase={phase}
+              scanId={scanId}
+              enhanced={enhanced}
+              noAnim={noAnim}
+            />
           </div>
         </div>
       </Container>
