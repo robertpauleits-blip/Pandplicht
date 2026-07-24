@@ -74,7 +74,7 @@ export function computeBatteryScore(input: AssessmentInput): BatteryScore {
       opwek += 4; // opwek zonder bekende teruglevering
       missingCount += 1;
     }
-  } else if (input.eigenOpwek === null) {
+  } else if (input.eigenOpwek === null || input.eigenOpwek === "onbekend") {
     missingCount += 1;
   } else if (input.plannen.includes("zonnepanelen")) {
     opwek = 6;
@@ -146,13 +146,49 @@ export function assessBatterijscan(input: AssessmentInput): RuleResult {
     missingInputs.push("Beschikbaarheid van kwartierdata");
   }
   if (!b || b.piekKw == null) missingInputs.push("Hoogste gemeten piekvermogen (kW)");
-  if (input.eigenOpwek === null) missingInputs.push("Eigen opwek en teruglevering");
+  if (input.eigenOpwek === null || input.eigenOpwek === "onbekend") {
+    missingInputs.push("Eigen opwek en teruglevering");
+  }
   if (!b || b.ruimteBeschikbaar == null) {
     missingInputs.push("Globale fysieke ruimte voor een batterijsysteem");
   }
 
   // Alleen noodstroom als doel: batterij kan, maar dat is een ander vraagstuk.
   const alleenNoodstroom = b?.hoofddoel === "noodstroom";
+  const noodstroomReason =
+    "Uw hoofddoel is noodstroom; dat vraagt om een andere afweging (UPS/noodstroomvoorziening) dan een batterij voor pieken of eigen opwek.";
+
+  const missingLabel = `${score.missingCount} ${
+    score.missingCount === 1 ? "onderdeel" : "onderdelen"
+  }`;
+
+  const baseNextSteps = [
+    "Exporteer kwartierdata bij uw meetbedrijf of netbeheerder voordat u offertes aanvraagt.",
+    "Laat een specialist het batterijvermogen en de capaciteit dimensioneren op basis van die data.",
+    `Houd rekening met registratie van het batterijsysteem (grens momenteel ${THRESHOLDS.batterijRegistratieKw} kW; controleer actueel bij RVO).`,
+  ];
+
+  // Bij te veel ontbrekende gegevens tonen we bewust géén cijfer: ontbrekende
+  // data als nul meetellen levert een kunstmatig lage, misleidende score op.
+  // Zeven deelscores; vanaf vier ontbrekende is een betrouwbaar cijfer niet
+  // te geven.
+  if (score.missingCount >= 4) {
+    return {
+      topicId: "batterijscan",
+      status: "insufficient_data",
+      confidence: "low",
+      priority: "monitor",
+      reasons: [
+        `De batterijkans is nog niet betrouwbaar te berekenen: voor ${missingLabel} van de zeven ontbreken gegevens.`,
+        "Een voorlopig cijfer zou nu een vertekend, kunstmatig laag beeld geven. Vul de ontbrekende gegevens aan, vooral kwartierdata, piekvermogen en eigen opwek, voor een betrouwbare indicatie.",
+        ...(alleenNoodstroom ? [noodstroomReason] : []),
+      ],
+      missingInputs,
+      nextSteps: baseNextSteps,
+      sourceIds: SOURCES,
+      assumptions: ASSUMPTIONS,
+    };
+  }
 
   const confidence: RuleResult["confidence"] =
     score.missingCount >= 4 ? "low" : score.missingCount >= 2 ? "medium" : "high";
@@ -162,20 +198,12 @@ export function assessBatterijscan(input: AssessmentInput): RuleResult {
   ];
   if (score.missingCount > 0) {
     reasons.push(
-      `Voor ${score.missingCount} onderdeel${score.missingCount === 1 ? "" : "en"} ontbreken gegevens; ontbrekende data verlaagt de zekerheid van deze score.`,
+      `Voor ${missingLabel} ontbreken gegevens; ontbrekende data verlaagt de zekerheid van deze score.`,
     );
   }
   if (alleenNoodstroom) {
-    reasons.push(
-      "Uw hoofddoel is noodstroom; dat vraagt om een andere afweging (UPS/noodstroomvoorziening) dan een batterij voor pieken of eigen opwek.",
-    );
+    reasons.push(noodstroomReason);
   }
-
-  const baseNextSteps = [
-    "Exporteer kwartierdata bij uw meetbedrijf of netbeheerder voordat u offertes aanvraagt.",
-    "Laat een specialist het batterijvermogen en de capaciteit dimensioneren op basis van die data.",
-    `Houd rekening met registratie van het batterijsysteem (grens momenteel ${THRESHOLDS.batterijRegistratieKw} kW; controleer actueel bij RVO).`,
-  ];
 
   if (cat === "kansrijk" && !alleenNoodstroom) {
     return {

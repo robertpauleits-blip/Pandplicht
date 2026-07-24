@@ -1,4 +1,5 @@
 import type { AssessmentInput, RuleResult } from "./types";
+import { labelMeetsMinimum } from "./helpers";
 import { THRESHOLDS } from "./version";
 
 const SOURCES = ["rvo-office-label-c", "rvo-office-label-c-faq", "ep-online"];
@@ -145,9 +146,12 @@ export function assessEnergielabelCKantoor(input: AssessmentInput): RuleResult {
   }
 
   // Kantoor, mogelijk onder de plicht, beoordeel op label.
+  // Vergelijken op rang, zodat de exacte klasse (bijv. A++) behouden blijft
+  // in de tekst én A++ correct als "beter dan C" telt.
   const label = input.energielabel;
+  const meetsC = labelMeetsMinimum(label, "C");
 
-  if (label === "D" || label === "E" || label === "F" || label === "G") {
+  if (meetsC === false) {
     return {
       topicId: "energielabel_c_kantoor",
       status: "likely_applicable",
@@ -170,7 +174,7 @@ export function assessEnergielabelCKantoor(input: AssessmentInput): RuleResult {
     };
   }
 
-  if (label === "A" || label === "B" || label === "C") {
+  if (meetsC === true) {
     return {
       topicId: "energielabel_c_kantoor",
       status: "likely_not_applicable",

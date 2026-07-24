@@ -5,7 +5,7 @@ import { assessEnergiebesparingsplicht, assessOnderzoeksplicht } from "./energy-
 import { assessEnergielabelCKantoor } from "./office-label";
 import { assessEnergielabelTransactie } from "./utility-label";
 import { assessNetcongestie } from "./congestion";
-import { batteryCategory, computeBatteryScore } from "./battery";
+import { assessBatterijscan, batteryCategory, computeBatteryScore } from "./battery";
 import { SOURCES } from "./sources";
 import { RULESET_VERSION } from "./version";
 
@@ -171,6 +171,16 @@ describe("energielabel C kantoren", () => {
     }
   });
 
+  it("behoudt de exacte labelklasse in de uitslag (A++ telt als beter dan C)", () => {
+    const r = assessEnergielabelCKantoor(
+      baseInput({ ...kantoorBasis, energielabel: "A++" }),
+    );
+    expect(r.status).toBe("likely_not_applicable");
+    // De exacte klasse moet letterlijk in de tekst staan, niet genormaliseerd.
+    expect(r.reasons.join(" ")).toContain("A++");
+    expect(r.reasons.join(" ")).not.toContain("label A voldoet");
+  });
+
   it("klein kantoorgebouw (<100 m²) is uitgezonderd", () => {
     const r = assessEnergielabelCKantoor(
       baseInput({ ...kantoorBasis, oppervlakteBand: "lt100", energielabel: "E" }),
@@ -290,6 +300,32 @@ describe("netcongestie", () => {
     expect(r.status).toBe("likely_not_applicable");
     expect(r.priority).toBe("monitor");
   });
+
+  it("'onbekend' telt niet als 'nee': geen geruststellende conclusie", () => {
+    const r = assessNetcongestie(
+      baseInput({
+        aansluiting: "groot",
+        beperkingen: "onbekend",
+        wachtOpAansluiting: "onbekend",
+        plannen: ["geen"],
+      }),
+    );
+    expect(r.status).toBe("insufficient_data");
+    // Mag nooit beweren dat er geen beperkingen of aanvraag zijn.
+    expect(r.reasons.join(" ")).not.toContain("geen gemelde beperkingen");
+  });
+
+  it("beperkingen 'nee' maar wachtstatus onbekend: nog geen conclusie", () => {
+    const r = assessNetcongestie(
+      baseInput({
+        aansluiting: "klein",
+        beperkingen: "nee",
+        wachtOpAansluiting: "onbekend",
+        plannen: ["geen"],
+      }),
+    );
+    expect(r.status).toBe("insufficient_data");
+  });
 });
 
 describe("batterijscore", () => {
@@ -339,6 +375,25 @@ describe("batterijscore", () => {
     expect(s.parts.economisch).toBeLessThanOrEqual(10);
     expect(s.parts.meetdata).toBeLessThanOrEqual(10);
     expect(s.parts.fysiek).toBeLessThanOrEqual(5);
+  });
+
+  it("toont geen cijfer bij te veel ontbrekende gegevens", () => {
+    const r = assessBatterijscan(baseInput());
+    expect(r.status).toBe("insufficient_data");
+    // Geen misleidende "0 van 100" tonen.
+    expect(r.reasons.join(" ")).not.toContain("van 100");
+    expect(r.reasons.join(" ")).toContain("nog niet betrouwbaar");
+  });
+
+  it("toont wél een score bij een voldoende ingevulde casus", () => {
+    const r = assessBatterijscan(vol);
+    expect(r.status).toBe("likely_applicable");
+    expect(r.reasons.join(" ")).toContain("van 100");
+  });
+
+  it("schrijft 'onderdelen' correct (geen 'onderdeelen')", () => {
+    const r = assessBatterijscan(baseInput());
+    expect(r.reasons.join(" ")).not.toContain("onderdeelen");
   });
 });
 

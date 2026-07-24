@@ -209,6 +209,9 @@ export function Wizard() {
       const res = await fetch(`/api/address/suggest?q=${encodeURIComponent(q)}`);
       if (!res.ok) throw new Error("suggest_failed");
       const data = (await res.json()) as { suggestions: AddressSuggestion[] };
+      // Alleen exacte treffers op postcode én huisnummer accepteren. Zo
+      // voorkomen we dat een tikfout (bijv. 9999 ZZ) willekeurige adressen
+      // door heel Nederland toont die alleen toevallig het huisnummer delen.
       const norm = (s: string) => s.toUpperCase().replace(/\s+/g, "");
       const exact = data.suggestions.filter(
         (s) =>
@@ -216,17 +219,17 @@ export function Wizard() {
           norm(s.postcode) === norm(pc) &&
           (s.huisnummer ?? "").replace(/\D/g, "") === hn,
       );
-      if (data.suggestions.length === 0) {
-        setAdresFout(
-          "Wij vinden dit adres niet. Controleer postcode en huisnummer, of ga verder met handmatige invoer.",
-        );
-      } else if (exact.length === 1 && exact[0]) {
-        // Exacte treffer op postcode + huisnummer: direct kiezen.
+      if (exact.length === 1 && exact[0]) {
+        // Eén exacte treffer: direct kiezen.
         kiesSuggestieRef.current(exact[0]);
-      } else if (data.suggestions.length === 1 && data.suggestions[0]) {
-        kiesSuggestieRef.current(data.suggestions[0]);
+      } else if (exact.length > 1) {
+        // Meerdere exacte treffers (bijv. verschillende toevoegingen): toon
+        // uitsluitend die sterk overeenkomende opties, gemaximeerd.
+        setSuggesties(exact.slice(0, 6));
       } else {
-        setSuggesties(data.suggestions);
+        setAdresFout(
+          "Wij konden dit adres niet exact vinden. Controleer de postcode en het huisnummer, of ga verder met handmatige invoer.",
+        );
       }
     } catch {
       setAdresFout(
@@ -816,6 +819,7 @@ export function Wizard() {
                   { value: "zon", label: "Zonnepanelen" },
                   { value: "wind", label: "Wind" },
                   { value: "anders", label: "Anders" },
+                  { value: "onbekend", label: "Weet ik niet" },
                 ]}
               />
               {input.eigenOpwek && input.eigenOpwek !== "geen" ? (

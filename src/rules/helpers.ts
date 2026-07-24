@@ -1,8 +1,51 @@
 import type {
   ElektriciteitBand,
   EnergieWaarde,
+  Energielabel,
   GasBand,
 } from "./types";
+
+/**
+ * Energielabelschaal van best naar slechtst. De exacte klasse (incl. plus-
+ * varianten) blijft behouden; vergelijken gebeurt op rang, niet door te
+ * normaliseren naar de eerste letter.
+ */
+export const LABEL_SCALE = [
+  "A+++++",
+  "A++++",
+  "A+++",
+  "A++",
+  "A+",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+] as const;
+
+/** Rang op de labelschaal (0 = best). null voor "geen"/"onbekend"/onvergelijkbaar. */
+export function labelIndex(label: Energielabel | null): number | null {
+  if (!label) return null;
+  const i = (LABEL_SCALE as readonly string[]).indexOf(label);
+  return i === -1 ? null : i;
+}
+
+/**
+ * Voldoet `label` minimaal aan `minimum` (bijv. minimaal C)?
+ * true = gelijk of beter, false = slechter, null = niet vergelijkbaar
+ * (geen/onbekend label). A++ telt dus correct als "beter dan C".
+ */
+export function labelMeetsMinimum(
+  label: Energielabel | null,
+  minimum: Energielabel,
+): boolean | null {
+  const li = labelIndex(label);
+  const mi = labelIndex(minimum);
+  if (li === null || mi === null) return null;
+  return li <= mi;
+}
 
 /** Bandbreedtes in kWh per jaar. `max: null` = geen bovengrens. */
 export const ELEKTRA_BANDS: Record<

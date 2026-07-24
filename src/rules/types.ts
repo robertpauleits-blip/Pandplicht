@@ -101,8 +101,19 @@ export type EnergieWaarde<Band extends string> =
   | { type: "band"; band: Band }
   | { type: "onbekend" };
 
+/**
+ * Exacte energielabelklasse. De plus-varianten worden bewust behouden: de
+ * waarde uit EP-Online moet ongewijzigd doorstromen tot in het eindrapport
+ * (A++ mag nooit A worden). Voor de label-C-toets wordt gerangschikt, niet
+ * genormaliseerd (zie labelMeetsMinimum in helpers).
+ */
 export type Energielabel =
-  | "A" // dekt ook A+ t/m A++++
+  | "A+++++"
+  | "A++++"
+  | "A+++"
+  | "A++"
+  | "A+"
+  | "A"
   | "B"
   | "C"
   | "D"
@@ -175,7 +186,7 @@ export type AssessmentInput = {
   elektriciteit: EnergieWaarde<ElektriciteitBand> | null;
   gas: EnergieWaarde<GasBand> | null;
   energielabel: Energielabel | null;
-  eigenOpwek: "geen" | "zon" | "wind" | "anders" | null;
+  eigenOpwek: "geen" | "zon" | "wind" | "anders" | "onbekend" | null;
   terugleveringKwh: number | null;
   aansluiting: Aansluiting | null;
   gecontracteerdVermogenKw: number | null;

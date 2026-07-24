@@ -25,6 +25,12 @@ export function assessNetcongestie(input: AssessmentInput): RuleResult {
   if (input.beperkingen === null || input.beperkingen === "onbekend") {
     missingInputs.push("Heeft de netbeheerder beperkingen gemeld?");
   }
+  if (
+    input.wachtOpAansluiting === null ||
+    input.wachtOpAansluiting === "onbekend"
+  ) {
+    missingInputs.push("Wacht u op een nieuwe of zwaardere aansluiting?");
+  }
 
   const groeiplannen = input.plannen.filter((p) => GROEI_PLANNEN.has(p));
   const heeftKnelpunt =
@@ -103,43 +109,48 @@ export function assessNetcongestie(input: AssessmentInput): RuleResult {
     };
   }
 
-  const teWeinigData =
-    (input.aansluiting === null || input.aansluiting === "onbekend") &&
-    (input.beperkingen === null || input.beperkingen === "onbekend") &&
-    input.plannen.length === 0;
+  // "Geen knelpunt" mogen we alleen concluderen als we het ook echt weten.
+  // "Onbekend" is nadrukkelijk geen "nee": onbekende beperkingen of een
+  // onbekende aanvraagstatus mogen nooit tot een geruststellende conclusie
+  // leiden.
+  const beperkingenNee = input.beperkingen === "nee";
+  const wachtNee = input.wachtOpAansluiting === "nee";
 
-  if (teWeinigData) {
+  if (beperkingenNee && wachtNee) {
     return {
       topicId: "netcongestie",
-      status: "insufficient_data",
-      confidence: "low",
+      status: "likely_not_applicable",
+      confidence: "medium",
       priority: "monitor",
       reasons: [
-        "Er is te weinig informatie over uw aansluiting, meldingen van de netbeheerder en plannen voor een locatiespecifieke indicatie.",
+        "Op basis van uw antwoorden is er nu geen concreet knelpunt bekend: geen gemelde beperkingen, geen wachtende aanvraag en geen grote groeiplannen.",
+        "Netcongestie kan zich wel ontwikkelen; blijf de situatie volgen bij plannen of signalen van de netbeheerder.",
       ],
       missingInputs,
       nextSteps: [
-        "Zoek uw aansluitgegevens op (contract of factuur van de netbeheerder).",
-        "Vraag uw netbeheerder naar de situatie op uw locatie.",
+        "Bewaar uw aansluit- en contractgegevens overzichtelijk.",
+        "Check de situatie opnieuw vóór grote investeringen in elektrificatie of uitbreiding.",
       ],
       sourceIds: SOURCES,
       assumptions: ASSUMPTIONS,
     };
   }
 
+  // Op minstens één cruciaal punt (beperkingen of wachtende aanvraag) is de
+  // situatie onbekend: geen betrouwbare conclusie mogelijk.
   return {
     topicId: "netcongestie",
-    status: "likely_not_applicable",
-    confidence: "medium",
+    status: "insufficient_data",
+    confidence: "low",
     priority: "monitor",
     reasons: [
-      "Op basis van uw antwoorden is er nu geen concreet knelpunt bekend: geen gemelde beperkingen, geen wachtende aanvraag en geen grote groeiplannen.",
-      "Netcongestie kan zich wel ontwikkelen; blijf de situatie volgen bij plannen of signalen van de netbeheerder.",
+      "U weet nog niet of de netbeheerder beperkingen heeft gemeld of dat er een nieuwe of zwaardere aansluiting is aangevraagd. Daardoor kan nog geen betrouwbare conclusie over een mogelijk knelpunt worden getrokken.",
+      "Onbekend betekent hier niet dat er geen beperking of aanvraag is; het betekent dat dit nog uitgezocht moet worden.",
     ],
     missingInputs,
     nextSteps: [
-      "Bewaar uw aansluit- en contractgegevens overzichtelijk.",
-      "Check de situatie opnieuw vóór grote investeringen in elektrificatie of uitbreiding.",
+      "Vraag uw netbeheerder naar de situatie op uw locatie: gelden er beperkingen en loopt er een aanvraag?",
+      "Zoek uw aansluitgegevens op (contract of factuur van de netbeheerder).",
     ],
     sourceIds: SOURCES,
     assumptions: ASSUMPTIONS,

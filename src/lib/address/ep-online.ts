@@ -36,13 +36,33 @@ export type EnergyLabelLookup =
 type CacheEntry = { value: EnergyLabelLookup; expiresAt: number };
 const cache = new Map<string, CacheEntry>();
 
-/** Map een EP-Online-energieklasse naar onze interne enum. */
+const LABEL_CLASSES = [
+  "A+++++",
+  "A++++",
+  "A+++",
+  "A++",
+  "A+",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+];
+
+/**
+ * Map een EP-Online-energieklasse naar onze interne enum, met behoud van de
+ * exacte klasse. A++ blijft A++ (nooit normaliseren naar A): de gebruiker
+ * vertrouwt op de officiële bronwaarde, die moet intact blijven tot in het
+ * eindrapport. Alleen klassen buiten de schaal (meer dan vijf plussen) worden
+ * afgetopt op de beste klasse.
+ */
 export function mapEnergieklasse(raw: string | null | undefined): Energielabel {
   if (!raw) return "onbekend";
-  const v = raw.trim().toUpperCase();
-  // A, A+, A++, A+++, A++++ vallen bij ons allemaal onder "A".
-  if (v.startsWith("A")) return "A";
-  if (["B", "C", "D", "E", "F", "G"].includes(v)) return v as Energielabel;
+  const v = raw.trim().toUpperCase().replace(/\s+/g, "");
+  if (LABEL_CLASSES.includes(v)) return v as Energielabel;
+  if (/^A\++$/.test(v)) return "A+++++"; // meer plussen dan de schaal kent
   return "onbekend";
 }
 
