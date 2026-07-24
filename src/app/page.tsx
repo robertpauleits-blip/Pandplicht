@@ -80,9 +80,9 @@ const FAQ_ITEMS: FaqEntry[] = [
       "Ja. In de check geeft u aan wat uw relatie tot het pand is (eigenaar, verhuurder, huurder of beheerder). Sommige verplichtingen liggen vooral bij de eigenaar, andere bij de gebruiker; de uitslag legt per onderwerp uit wie meestal aan zet is, zonder daar een definitief juridisch oordeel over te geven.",
   },
   {
-    question: "Kan PandPlicht mijn energielabel ophalen?",
+    question: "Vult PandPlicht mijn pandgegevens automatisch in?",
     answer:
-      "Nog niet automatisch. U kunt uw label zelf gratis opzoeken in EP-Online, de officiële energielabeldatabase van de overheid; wij linken daar op het juiste moment naartoe. In de check kunt u het label vervolgens zelf invullen, of 'Onbekend' kiezen.",
+      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase) en de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG, het openbare gebouwenregister. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Vinden wij geen label, dan linken wij u naar EP-Online of vult u het zelf in.",
   },
   {
     question: "Krijg ik direct een offerte?",
@@ -242,7 +242,7 @@ export default function HomePage() {
             {[
               {
                 title: "Vul uw pand in",
-                text: "Postcode, huisnummer en een paar korte vragen. ‘Weet ik niet’ mag altijd.",
+                text: "Postcode en huisnummer volstaan om te starten. Gebruiksfunctie, oppervlakte en energielabel vullen wij automatisch voor uit openbare registers.",
               },
               {
                 title: "Wij toetsen aan de regels",
@@ -294,6 +294,10 @@ export default function HomePage() {
             </div>
             <ul className="space-y-4">
               {[
+                [
+                  "Minder invulwerk",
+                  "Gebruiksfunctie, oppervlakte, bouwjaar en label halen wij automatisch uit de BAG en EP-Online. U hoeft alleen te controleren.",
+                ],
                 [
                   "Alles op één plek",
                   "Versnipperde regels samen in één check.",

@@ -7,6 +7,7 @@ import type {
   AssessmentOutcome,
   ElektriciteitBand,
   GasBand,
+  Hoofdgebruik,
 } from "@/rules/types";
 import { ELEKTRA_BANDS, GAS_BANDS } from "@/rules/helpers";
 import { runAssessment } from "@/rules/engine";
@@ -20,6 +21,7 @@ import {
 } from "./fields";
 import type { AddressSuggestion } from "@/lib/address/pdok";
 import type { EnergyLabelLookup } from "@/lib/address/ep-online";
+import type { BagKenmerken } from "@/lib/address/bag";
 
 const STORAGE_KEY = "pp-check-v1";
 const TOTAL_STEPS = 6;
@@ -32,6 +34,26 @@ const STEP_NAMES = [
   "Aansluiting en plannen",
   "Controle",
 ];
+
+// Eén bron voor de hoofdgebruik-opties, zodat de keuzekaarten én de
+// automatische BAG-invulkaart altijd dezelfde labels tonen.
+const HOOFDGEBRUIK_OPTIONS: { value: Hoofdgebruik; label: string }[] = [
+  { value: "kantoor", label: "Kantoor" },
+  { value: "winkel", label: "Winkel" },
+  { value: "horeca", label: "Horeca" },
+  { value: "industrie", label: "Bedrijfshal / industrie" },
+  { value: "opslag_logistiek", label: "Opslag / logistiek" },
+  { value: "zorg", label: "Zorg" },
+  { value: "onderwijs", label: "Onderwijs" },
+  { value: "sport", label: "Sport" },
+  { value: "bijeenkomst", label: "Bijeenkomst" },
+  { value: "gemengd", label: "Gemengd" },
+  { value: "anders", label: "Anders" },
+];
+
+const HOOFDGEBRUIK_LABEL: Record<Hoofdgebruik, string> = Object.fromEntries(
+  HOOFDGEBRUIK_OPTIONS.map((o) => [o.value, o.label]),
+) as Record<Hoofdgebruik, string>;
 
 function emptyInput(): AssessmentInput {
   return {
@@ -107,6 +129,11 @@ export function Wizard() {
   >(null);
   const [oppervlakteHandmatig, setOppervlakteHandmatig] = useState(false);
   const [labelHandmatig, setLabelHandmatig] = useState(false);
+  // BAG: automatisch gebruiksfunctie + oppervlakte + bouwjaar ophalen (keyless).
+  const [bagLookup, setBagLookup] = useState<
+    BagKenmerken | { status: "loading" } | null
+  >(null);
+  const [gebruikHandmatig, setGebruikHandmatig] = useState(false);
   const lookedUpKey = useRef<string | null>(null);
   const kiesSuggestieRef = useRef<(s: AddressSuggestion) => void>(() => {});
   const autoSearched = useRef(false);
@@ -242,17 +269,10 @@ export function Wizard() {
     [postcode, huisnummer, toevoeging],
   );
 
-  // Haal automatisch het geregistreerde energielabel + oppervlakte op.
-  // Vult de betreffende velden vooraf in; faalt het (geen sleutel/geen label),
-  // dan blijven de handmatige velden gewoon beschikbaar.
+  // Haal automatisch het geregistreerde energielabel op (EP-Online).
   const lookupLabel = useCallback(
     async (pc: string, hn: string, toev?: string) => {
-      const key = `${pc}-${hn}-${toev ?? ""}`.toUpperCase();
-      if (lookedUpKey.current === key) return;
-      lookedUpKey.current = key;
       setLabelLookup({ status: "loading" });
-      setOppervlakteHandmatig(false);
-      setLabelHandmatig(false);
       try {
         const qs = new URLSearchParams({ postcode: pc, huisnummer: hn });
         if (toev) qs.set("toevoeging", toev);
@@ -260,18 +280,61 @@ export function Wizard() {
         const data = (await res.json()) as EnergyLabelLookup;
         setLabelLookup(data);
         if (data.status === "found") {
-          patch({
-            energielabel: data.label,
-            ...(data.oppervlakteM2
-              ? { oppervlakteExactM2: data.oppervlakteM2, oppervlakteBand: null }
-              : {}),
-          });
+          patch({ energielabel: data.label });
         }
       } catch {
         setLabelLookup({ status: "error" });
       }
     },
     [patch],
+  );
+
+  // Haal automatisch gebruiksfunctie, oppervlakte en bouwjaar op (BAG, keyless).
+  const lookupBag = useCallback(
+    async (pc: string, hn: string, toev?: string) => {
+      setBagLookup({ status: "loading" });
+      try {
+        const qs = new URLSearchParams({ postcode: pc, huisnummer: hn });
+        if (toev) qs.set("toevoeging", toev);
+        const res = await fetch(`/api/address/bag?${qs.toString()}`);
+        const data = (await res.json()) as BagKenmerken;
+        setBagLookup(data);
+        if (data.status === "found") {
+          patch({
+            ...(data.hoofdgebruik ? { hoofdgebruik: data.hoofdgebruik } : {}),
+            ...(data.oppervlakteM2
+              ? { oppervlakteExactM2: data.oppervlakteM2, oppervlakteBand: null }
+              : {}),
+          });
+          if (data.bouwjaar) {
+            setInput((cur) =>
+              cur.adres
+                ? { ...cur, adres: { ...cur.adres, bouwjaar: data.bouwjaar! } }
+                : cur,
+            );
+          }
+        }
+      } catch {
+        setBagLookup({ status: "error" });
+      }
+    },
+    [patch],
+  );
+
+  // Eén keer per adres beide automatische bronnen aanroepen. Vult velden vooraf
+  // in; faalt een bron, dan blijft handmatige invoer gewoon mogelijk.
+  const runAutoLookups = useCallback(
+    (pc: string, hn: string, toev?: string) => {
+      const key = `${pc}-${hn}-${toev ?? ""}`.toUpperCase();
+      if (lookedUpKey.current === key) return;
+      lookedUpKey.current = key;
+      setOppervlakteHandmatig(false);
+      setLabelHandmatig(false);
+      setGebruikHandmatig(false);
+      void lookupLabel(pc, hn, toev);
+      void lookupBag(pc, hn, toev);
+    },
+    [lookupLabel, lookupBag],
   );
 
   const kiesSuggestie = useCallback(
@@ -291,9 +354,9 @@ export function Wizard() {
         },
       });
       setSuggesties(null);
-      void lookupLabel(pc, hn, toevoeging.trim() || undefined);
+      runAutoLookups(pc, hn, toevoeging.trim() || undefined);
     },
-    [patch, postcode, huisnummer, toevoeging, lookupLabel],
+    [patch, postcode, huisnummer, toevoeging, runAutoLookups],
   );
 
   // Houd de ref actueel zodat de auto-zoek (bij één treffer) kan selecteren.
@@ -318,12 +381,12 @@ export function Wizard() {
       },
     });
     setAdresFout(null);
-    void lookupLabel(
+    runAutoLookups(
       pc.replace(/\s+/g, ""),
       hn,
       toevoeging.trim() || undefined,
     );
-  }, [patch, postcode, huisnummer, toevoeging, plaatsHandmatig, lookupLabel]);
+  }, [patch, postcode, huisnummer, toevoeging, plaatsHandmatig, runAutoLookups]);
 
   /* ---------------- Berekenen (stap 6) ---------------- */
 
@@ -390,6 +453,29 @@ export function Wizard() {
       input.grootsteProbleem ?? "",
     ) ||
     searchParams.get("focus") === "batterij";
+
+  // Automatische gebruiksoppervlakte: BAG heeft voorrang (mét bouwjaar), anders
+  // valt de kaart terug op de oppervlakte uit het geregistreerde energielabel.
+  const oppervlakteAuto = oppervlakteHandmatig
+    ? null
+    : bagLookup?.status === "found" && bagLookup.oppervlakteM2
+      ? {
+          bron: "BAG (Kadaster)",
+          m2: bagLookup.oppervlakteM2,
+          bouwjaar: bagLookup.bouwjaar,
+          registratiedatum: null as string | null,
+        }
+      : labelLookup?.status === "found" && labelLookup.oppervlakteM2
+        ? {
+            bron: "EP-Online (RVO)",
+            m2: labelLookup.oppervlakteM2,
+            bouwjaar: null as number | null,
+            registratiedatum: labelLookup.registratiedatum ?? null,
+          }
+        : null;
+
+  const bagLaadt = bagLookup?.status === "loading";
+  const labelLaadt = labelLookup?.status === "loading";
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -595,36 +681,53 @@ export function Wizard() {
         {/* ---------------- STAP 3 ---------------- */}
         {step === 3 ? (
           <div>
-            <FieldGroup legend="Wat is het hoofdgebruik van het pand?">
-              <RadioCards
-                name="hoofdgebruik"
-                value={input.hoofdgebruik}
-                onChange={(v) => patch({ hoofdgebruik: v })}
-                columns={2}
-                options={[
-                  { value: "kantoor", label: "Kantoor" },
-                  { value: "winkel", label: "Winkel" },
-                  { value: "horeca", label: "Horeca" },
-                  { value: "industrie", label: "Bedrijfshal / industrie" },
-                  { value: "opslag_logistiek", label: "Opslag / logistiek" },
-                  { value: "zorg", label: "Zorg" },
-                  { value: "onderwijs", label: "Onderwijs" },
-                  { value: "sport", label: "Sport" },
-                  { value: "bijeenkomst", label: "Bijeenkomst" },
-                  { value: "gemengd", label: "Gemengd" },
-                  { value: "anders", label: "Anders" },
-                ]}
-              />
-            </FieldGroup>
+            {bagLookup?.status === "found" &&
+            bagLookup.hoofdgebruik &&
+            !gebruikHandmatig ? (
+              <FieldGroup legend="Wat is het hoofdgebruik van het pand?">
+                <EpAutoCard
+                  bron="BAG (Kadaster)"
+                  waarde={HOOFDGEBRUIK_LABEL[bagLookup.hoofdgebruik]}
+                  toelichting={
+                    bagLookup.gemengd
+                      ? "Volgens het gebouwenregister heeft dit pand meerdere gebruiksfuncties."
+                      : bagLookup.heeftWoonfunctie
+                        ? "Geregistreerde gebruiksfunctie. Let op: er is óók een woonfunctie geregistreerd."
+                        : "Geregistreerde gebruiksfunctie volgens het gebouwenregister."
+                  }
+                  onCorrigeer={() => setGebruikHandmatig(true)}
+                />
+              </FieldGroup>
+            ) : (
+              <FieldGroup legend="Wat is het hoofdgebruik van het pand?">
+                {bagLaadt ? (
+                  <p className="mb-3 text-sm text-ink-soft">
+                    Wij proberen de gebruiksfunctie automatisch op te halen…
+                  </p>
+                ) : null}
+                <RadioCards
+                  name="hoofdgebruik"
+                  value={input.hoofdgebruik}
+                  onChange={(v) => patch({ hoofdgebruik: v })}
+                  columns={2}
+                  options={HOOFDGEBRUIK_OPTIONS}
+                />
+              </FieldGroup>
+            )}
 
-            {labelLookup?.status === "found" &&
-            labelLookup.oppervlakteM2 &&
-            !oppervlakteHandmatig ? (
+            {oppervlakteAuto ? (
               <FieldGroup legend="Gebruiksoppervlakte">
                 <EpAutoCard
-                  waarde={`${labelLookup.oppervlakteM2.toLocaleString("nl-NL")} m²`}
-                  toelichting="Gebruiksoppervlakte volgens het geregistreerde energielabel."
-                  registratiedatum={labelLookup.registratiedatum}
+                  bron={oppervlakteAuto.bron}
+                  waarde={`${oppervlakteAuto.m2.toLocaleString("nl-NL")} m²`}
+                  toelichting={
+                    oppervlakteAuto.bron === "BAG (Kadaster)"
+                      ? oppervlakteAuto.bouwjaar
+                        ? `Gebruiksoppervlakte uit het gebouwenregister. Bouwjaar ${oppervlakteAuto.bouwjaar}.`
+                        : "Gebruiksoppervlakte uit het gebouwenregister."
+                      : "Gebruiksoppervlakte volgens het geregistreerde energielabel."
+                  }
+                  registratiedatum={oppervlakteAuto.registratiedatum}
                   onCorrigeer={() => setOppervlakteHandmatig(true)}
                 />
               </FieldGroup>
@@ -633,7 +736,7 @@ export function Wizard() {
                 legend="Hoe groot is de totale gebruiksoppervlakte?"
                 hint="Een schatting is prima. De 100 m²-grens is relevant voor de label-C-plicht van kantoren."
               >
-                {labelLookup?.status === "loading" ? (
+                {bagLaadt || labelLaadt ? (
                   <p className="mb-3 text-sm text-ink-soft">
                     Wij proberen de oppervlakte automatisch op te halen…
                   </p>
@@ -1157,12 +1260,14 @@ function EpAutoCard({
   toelichting,
   registratiedatum,
   geldigTot,
+  bron = "EP-Online (RVO)",
   onCorrigeer,
 }: {
   waarde: string;
   toelichting: string;
   registratiedatum?: string | null;
   geldigTot?: string | null;
+  bron?: string;
   onCorrigeer: () => void;
 }) {
   const fmt = (d?: string | null) =>
@@ -1181,7 +1286,7 @@ function EpAutoCard({
           <p className="text-lg font-bold text-status-no-ink">{waarde}</p>
           <p className="mt-0.5 text-sm text-status-no-ink/90">{toelichting}</p>
           <p className="mt-1 text-xs text-status-no-ink/80">
-            Bron: EP-Online (RVO)
+            Bron: {bron}
             {reg ? ` • geregistreerd op ${reg}` : ""}
             {geldig ? ` • geldig tot ${geldig}` : ""}
           </p>
