@@ -284,39 +284,6 @@ body {
   }
 }
 
-/* --- Systeemstatus-strook: rustige doorlopende datastroom --- */
-@keyframes proof-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    /* Eén rijbreedte (drie identieke rijen in de track) */
-    transform: translateX(calc(-100% / 3));
-  }
-}
-.proof-track {
-  animation: proof-scroll 42s linear infinite;
-}
-.proof-viewport:hover .proof-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .proof-track {
-    animation: none;
-    width: 100%;
-    justify-content: center;
-  }
-  .proof-track .proof-dup {
-    display: none;
-  }
-  .proof-track ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.4rem;
-    padding-right: 0;
-  }
-}
-
 /* --- Mini-scenes in de onderwerpkaarten (reageren op hover van de kaart) --- */
 .scene-slide {
   transform: translateX(-8px);

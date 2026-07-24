@@ -4,7 +4,6 @@ import { Container } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { PandScanHero } from "@/components/marketing/PandScanHero";
-import { ProofStrip } from "@/components/marketing/ProofStrip";
 import { Faq, type FaqEntry } from "@/components/marketing/Faq";
 import {
   SceneBattery,
@@ -103,9 +102,6 @@ export default function HomePage() {
 
       {/* --- HERO met interactieve pandscan --- */}
       <PandScanHero />
-
-      {/* --- Systeemstatus-strook (eerlijke bewijsvoering) --- */}
-      <ProofStrip />
 
       {/* --- Categorie-tegels, baan: wit --- */}
       <section aria-labelledby="tools-heading" className="bg-surface py-16 sm:py-20">
