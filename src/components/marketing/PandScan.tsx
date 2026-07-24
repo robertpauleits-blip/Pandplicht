@@ -8,46 +8,63 @@ import {
 
 export type ScanPhase = "idle" | "scanning" | "done";
 
+/**
+ * Eén gedeelde coördinatenruimte (viewBox 480×470) voor zowel het gebouw, de
+ * verbindingslijnen als de kaartposities. Daardoor komt elke lijn precies uit
+ * bij het bolletje van de kaart en bij een logisch ankerpunt op het gebouw.
+ */
+const VW = 480;
+const VH = 470;
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+
 type Card = {
   label: string;
   Icon: (p: { className?: string }) => ReactNode;
   tone: "amber" | "green";
-  /** Positionering rond het pand (responsief, blijft binnen de sectie). */
-  pos: string;
-  /** Volgorde waarin de kaart verschijnt tijdens de scan. */
   order: number;
+  /** Positie van het kaart-anker in de gedeelde ruimte + hoe de kaart daaraan hangt. */
+  at: { x: number; y: number; translate: string };
+  /** Verbinding: van het kaart-bolletje (from) via twee controlepunten naar het gebouw (to). */
+  link: { from: [number, number]; c1: [number, number]; c2: [number, number]; to: [number, number] };
 };
 
 const CARDS: Card[] = [
   {
-    label: "Energiebesparingsplicht",
-    Icon: IconMeter,
-    tone: "amber",
-    pos: "left-0 top-[10%] sm:-left-4",
-    order: 0,
-  },
-  {
     label: "Labelplicht",
     Icon: IconPand,
     tone: "amber",
-    pos: "right-0 top-[3%] sm:-right-3",
+    order: 0,
+    at: { x: 236, y: 40, translate: "translate(-50%, -100%)" },
+    link: { from: [236, 44], c1: [236, 62], c2: [236, 74], to: [236, 88] },
+  },
+  {
+    label: "Energiebesparingsplicht",
+    Icon: IconMeter,
+    tone: "amber",
     order: 1,
+    at: { x: 96, y: 178, translate: "translate(-100%, -50%)" },
+    link: { from: [100, 178], c1: [126, 180], c2: [140, 192], to: [151, 202] },
   },
   {
     label: "Netcongestie",
     Icon: IconGrid,
     tone: "green",
-    pos: "right-0 top-[45%] sm:-right-6",
     order: 2,
+    at: { x: 418, y: 250, translate: "translate(0, -50%)" },
+    link: { from: [414, 250], c1: [416, 266], c2: [412, 278], to: [409, 288] },
   },
   {
     label: "Batterijkans",
     Icon: IconBattery,
     tone: "green",
-    pos: "left-0 bottom-[26%] sm:-left-4",
     order: 3,
+    at: { x: 74, y: 348, translate: "translate(-100%, -50%)" },
+    link: { from: [78, 348], c1: [104, 344], c2: [116, 316], to: [124, 290] },
   },
 ];
+
+const linkPath = (l: Card["link"]) =>
+  `M ${l.from[0]} ${l.from[1]} C ${l.c1[0]} ${l.c1[1]}, ${l.c2[0]} ${l.c2[1]}, ${l.to[0]} ${l.to[1]}`;
 
 /** Vensterrasters. Sommige vensters 'branden' zodra de scan actief is. */
 function windows(
@@ -145,17 +162,16 @@ export function PandScan({
       {/* Zachte, diepe slagschaduw / gloed onder het pand */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-[10%] bottom-[13%] h-20 rounded-[50%] bg-ink/20 blur-2xl"
+        className="pointer-events-none absolute inset-x-[12%] bottom-[15%] h-16 rounded-[50%] bg-ink/20 blur-2xl"
       />
 
       <svg
         viewBox="0 0 480 470"
-        className="relative w-full drop-shadow-[0_26px_50px_rgba(22,49,58,0.18)]"
+        className="relative w-full drop-shadow-[0_26px_50px_rgba(22,49,58,0.16)]"
         aria-hidden="true"
         focusable="false"
       >
         <defs>
-          {/* licht van linksboven: gevels lichter aan de bovenkant/links */}
           <linearGradient id="ps-tower" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#1c8571" />
             <stop offset="0.5" stopColor="#116154" />
@@ -194,19 +210,8 @@ export function PandScan({
             <stop offset="0.5" stopColor="#cdf1e0" />
             <stop offset="1" stopColor="#a5e2ca" />
           </linearGradient>
-          <pattern
-            id="ps-grid"
-            width="26"
-            height="26"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M26 0H0V26"
-              fill="none"
-              stroke="#16313a"
-              strokeWidth="1"
-              opacity="0.07"
-            />
+          <pattern id="ps-grid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <path d="M26 0H0V26" fill="none" stroke="#16313a" strokeWidth="1" opacity="0.07" />
           </pattern>
           <linearGradient id="ps-grid-fade" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="white" stopOpacity="0" />
@@ -214,22 +219,15 @@ export function PandScan({
             <stop offset="1" stopColor="white" stopOpacity="1" />
           </linearGradient>
           <mask id="ps-grid-mask">
-            <rect x="90" y="40" width="320" height="380" fill="url(#ps-grid-fade)" />
+            <rect x="90" y="40" width="320" height="360" fill="url(#ps-grid-fade)" />
           </mask>
         </defs>
 
         {/* technisch meetraster achter het pand */}
-        <rect
-          x="90"
-          y="40"
-          width="320"
-          height="380"
-          fill="url(#ps-grid)"
-          mask="url(#ps-grid-mask)"
-        />
+        <rect x="90" y="40" width="320" height="360" fill="url(#ps-grid)" mask="url(#ps-grid-mask)" />
 
         {/* grondlijn / diepe schaduw */}
-        <ellipse cx="242" cy="430" rx="200" ry="18" fill="#16313a" opacity="0.10" />
+        <ellipse cx="242" cy="424" rx="196" ry="16" fill="#16313a" opacity="0.10" />
 
         {/* ---- rechter blok ---- */}
         <polygon points="300,176 396,176 410,166 314,166" fill="url(#ps-annexR-roof)" />
@@ -243,23 +241,19 @@ export function PandScan({
           (r, c) => (r === 1 && c === 1) || (r === 3 && c === 0),
         )}
 
-        {/* zonnepanelen op dak rechter blok + technische lijnen */}
+        {/* zonnepanelen op dak rechter blok */}
         <g>
           <polygon points="322,170 384,170 392,164 330,164" fill="#16313a" />
           <line x1="338" y1="164" x2="330" y2="170" stroke="#3a5560" strokeWidth="1.2" />
           <line x1="354" y1="164" x2="346" y2="170" stroke="#3a5560" strokeWidth="1.2" />
           <line x1="370" y1="164" x2="362" y2="170" stroke="#3a5560" strokeWidth="1.2" />
           <line x1="326" y1="167" x2="388" y2="167" stroke="#3a5560" strokeWidth="1.2" />
-          {/* technische annotatie */}
-          <line x1="392" y1="160" x2="392" y2="150" stroke="#f2bb4a" strokeWidth="1.4" />
-          <circle cx="392" cy="149" r="3" fill="#f2bb4a" />
         </g>
 
         {/* ---- hoofdtoren ---- */}
         <polygon points="150,86 302,86 316,74 164,74" fill="url(#ps-tower-roof)" />
         <polygon points="302,86 316,74 316,404 302,416" fill="url(#ps-tower-side)" />
         <rect x="150" y="86" width="152" height="330" rx="4" fill="url(#ps-tower)" />
-        {/* gouden dakrand */}
         <rect x="150" y="86" width="152" height="6" fill="#f2bb4a" opacity="0.85" />
         {windows(
           [170, 207, 244],
@@ -288,26 +282,36 @@ export function PandScan({
         {/* groen bij de entree */}
         <circle cx="76" cy="404" r="15" fill="#18a978" />
         <circle cx="66" cy="410" r="10" fill="#18a978" opacity="0.8" />
+      </svg>
 
-        {/* ---- verbindingslijnen + datapunten (stromen tijdens scan) ---- */}
-        <g>
-          {/* batterij linksonder met stroom naar het pand */}
-          <rect x="40" y="424" width="26" height="16" rx="3" fill="#0e5a4f" />
-          <rect x="66" y="429" width="3" height="6" rx="1.5" fill="#0e5a4f" />
-          <path d="M50 431l-3 4h5l-3 4" stroke="#f2bb4a" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <path className="ps-dataline" d="M66 432 H92" fill="none" />
-          {/* netaansluiting rechtsonder */}
-          <circle cx="432" cy="432" r="6" fill="none" stroke="#0e5a4f" strokeWidth="2" />
-          <path d="M432 426v-6" stroke="#0e5a4f" strokeWidth="2" strokeLinecap="round" />
-          <path className="ps-dataline" d="M426 432 H398" fill="none" />
-          {/* datastromen vanuit de labels naar het pand */}
-          <path className="ps-dataline" d="M120 150 C160 150 170 190 196 210" fill="none" />
-          <path className="ps-dataline" d="M360 120 C320 130 316 150 300 176" fill="none" />
-          <path className="ps-dataline" d="M404 300 C360 290 340 280 316 270" fill="none" />
-          <circle className="ps-datadot" cx="120" cy="150" r="3" />
-          <circle className="ps-datadot" cx="360" cy="120" r="3" />
-          <circle className="ps-datadot" cx="404" cy="300" r="3" />
-        </g>
+      {/* ---- verbindingslijnen: gedeelde ruimte, komen precies uit bij de kaarten ---- */}
+      <svg
+        viewBox="0 0 480 470"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {CARDS.map((card) => {
+          const stroke = card.tone === "amber" ? "#e0a92f" : "#12907b";
+          return (
+            <g
+              key={card.label}
+              className="pandscan-connector"
+              style={{ transitionDelay: `${card.order * 150 + 120}ms` }}
+            >
+              <path
+                d={linkPath(card.link)}
+                fill="none"
+                stroke={stroke}
+                strokeWidth={1.8}
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              <circle cx={card.link.to[0]} cy={card.link.to[1]} r={3} fill={stroke} />
+            </g>
+          );
+        })}
       </svg>
 
       {/* gouden scanlijn (alleen tijdens de scan; verborgen bij reduced motion) */}
@@ -315,43 +319,39 @@ export function PandScan({
         <div key={scanId} aria-hidden="true" className="pandscan-scanline" />
       )}
 
-      {/* zwevende analysekaarten */}
-      {CARDS.map(({ label, Icon, tone, pos, order }) => (
+      {/* zwevende analysekaarten, verankerd in dezelfde ruimte als de lijnen */}
+      {CARDS.map(({ label, Icon, tone, order, at }) => (
         <div
           key={label}
-          className={`par-el absolute ${pos}`}
-          style={{ "--par-depth": String(3 + order * 1.4) } as CSSProperties}
+          className="absolute"
+          style={{ left: pct(at.x, VW), top: pct(at.y, VH), transform: at.translate }}
         >
           <div
-            className="pandscan-card"
-            style={{ transitionDelay: `${order * 180}ms` }}
+            className="par-el"
+            style={{ "--par-depth": String(3 + order * 1.4) } as CSSProperties}
           >
-            <div
-              className="pandscan-float"
-              style={{ animationDelay: `${order * 400}ms` }}
-            >
-              <div className="flex items-center gap-2 rounded-xl border border-line bg-white px-3 py-2 shadow-lift">
-                <Icon className="h-4 w-4 text-pine" />
-                <span className="whitespace-nowrap text-[0.8rem] font-semibold text-ink">
-                  {label}
-                </span>
-                <span
-                  className={`h-2 w-2 shrink-0 rounded-full ${
-                    tone === "amber" ? "bg-amber" : "bg-action"
-                  }`}
-                />
+            <div className="pandscan-card" style={{ transitionDelay: `${order * 180}ms` }}>
+              <div className="pandscan-float" style={{ animationDelay: `${order * 400}ms` }}>
+                <div className="flex items-center gap-2 rounded-[0.875rem] border border-line bg-white px-3 py-2 shadow-lift">
+                  <Icon className="h-4 w-4 text-pine" />
+                  <span className="whitespace-nowrap text-[0.8rem] font-semibold text-ink">
+                    {label}
+                  </span>
+                  <span
+                    className={`h-2 w-2 shrink-0 rounded-full ${
+                      tone === "amber" ? "bg-amber" : "bg-action"
+                    }`}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       ))}
 
-      {/* statusbalk onder het pand */}
-      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2">
-        <div
-          className="par-el"
-          style={{ "--par-depth": "2" } as CSSProperties}
-        >
+      {/* statusbalk, met ruimte onder het pand */}
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+        <div className="par-el" style={{ "--par-depth": "2" } as CSSProperties}>
           <div className="pandscan-float" style={{ animationDelay: "200ms" }}>
             <StatusPill phase={phase} />
           </div>

@@ -36,8 +36,11 @@
   --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --radius-panel: 1.75rem; /* grote afgeronde hoofdpanelen */
-  --radius-card: 1.125rem; /* kaarten en formuliervelden */
+  /* Eén afrondingsschaal (design token), consistent toegepast:
+     sm = kleine componenten, card = kaarten, panel = grote panelen. */
+  --radius-sm: 0.875rem; /* 14px: kleine componenten, chips, velden */
+  --radius-card: 1.25rem; /* 20px: kaarten */
+  --radius-panel: 1.75rem; /* 28px: grote afgeronde hoofdpanelen */
 
   --shadow-soft: 0 1px 2px rgb(22 49 58 / 0.04), 0 6px 24px rgb(22 49 58 / 0.06);
   --shadow-lift: 0 2px 4px rgb(22 49 58 / 0.05), 0 12px 32px rgb(22 49 58 / 0.09);
@@ -121,6 +124,22 @@ body {
 .pandscan-enh[data-revealed="true"] .pandscan-card {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+/* Verbindingslijnen: standaard zichtbaar (server-render), tijdens de scan
+   verschijnen ze samen met hun kaart, nooit als losse 'spooklijn'. */
+.pandscan-connector {
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+}
+.pandscan-enh .pandscan-connector {
+  opacity: 0;
+}
+.pandscan-noanim .pandscan-connector {
+  transition: none !important;
+}
+.pandscan-enh[data-revealed="true"] .pandscan-connector {
+  opacity: 0.55;
 }
 
 /* Vensters: in rust mint-glas; tijdens de scan 'branden' de gemarkeerde
@@ -256,6 +275,10 @@ body {
     transform: none;
     transition: none;
   }
+  .pandscan-enh .pandscan-connector {
+    opacity: 0.55;
+    transition: none;
+  }
   .ps-win {
     transition: none;
   }
@@ -309,13 +332,13 @@ body {
 }
 
 .scene-needle {
-  transform-origin: 80px 76px;
-  transform: rotate(38deg);
+  transform-origin: 64px 80px;
+  transform: rotate(40deg);
   transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.5, 1);
 }
 .group:hover .scene-needle,
 .group:focus-visible .scene-needle {
-  transform: rotate(-42deg);
+  transform: rotate(-40deg);
 }
 
 .scene-node {
@@ -343,25 +366,25 @@ body {
 }
 
 .scene-flow {
-  stroke-dasharray: 3 6;
+  stroke-dasharray: 5 7;
 }
 .group:hover .scene-flow,
 .group:focus-visible .scene-flow {
-  animation: scene-flow-run 1.1s linear infinite;
+  animation: scene-flow-run 1s linear infinite;
 }
 @keyframes scene-flow-run {
   to {
-    stroke-dashoffset: -18;
+    stroke-dashoffset: -12;
   }
 }
 .scene-charge {
-  transform-origin: 68px 68px;
+  transform-origin: 58px 71px;
   transform: scaleX(1);
   transition: transform 0.7s ease;
 }
 .group:hover .scene-charge,
 .group:focus-visible .scene-charge {
-  transform: scaleX(2.6);
+  transform: scaleX(2.3);
 }
 
 @media (prefers-reduced-motion: reduce) {

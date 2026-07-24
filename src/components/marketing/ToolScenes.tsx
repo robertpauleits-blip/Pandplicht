@@ -1,53 +1,70 @@
 /**
- * Mini-scenes voor de onderwerpkaarten. Elke scene is een kleine SVG-wereld
- * die op hover van de kaart (Tailwind `group-hover`) subtiel reageert.
- * Alle beweging is puur CSS en wordt uitgeschakeld bij reduced motion.
+ * Mini-scenes voor de onderwerpkaarten, met één gedeelde visuele grammatica:
+ * hetzelfde viewBox-grid (128×96), dezelfde optische grootte, dezelfde
+ * lijndikte (2.5) met ronde uiteinden, dezelfde baseline (y≈82) en één
+ * merkpalet (pine, mint-glas, amber, action-groen). Elke scene reageert op
+ * hover van de kaart; alle beweging is CSS en staat uit bij reduced motion.
  */
 
-const svgProps = {
-  viewBox: "0 0 160 96",
+const PINE = "#0e5a4f";
+const PINE_D = "#0a4239";
+const GLASS = "#cdf1e0";
+const AMBER = "#f2bb4a";
+const ACTION = "#18a978";
+const LINE = "#d7e3e0";
+
+const svgBase = {
+  viewBox: "0 0 128 96",
   fill: "none",
+  strokeWidth: 2.5,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
   "aria-hidden": true as const,
   focusable: false as const,
 };
 
+const BASELINE = 82;
+
+/** Grondschaduw zodat elke scene op dezelfde baseline 'staat'. */
+function Ground() {
+  return (
+    <ellipse cx="64" cy={BASELINE + 4} rx="52" ry="4" fill="#16313a" opacity="0.06" />
+  );
+}
+
 /** Pandverplichtingen: een checklist schuift uit het gebouw. */
 export function ScenePand({ className = "" }: { className?: string }) {
   return (
-    <svg {...svgProps} className={className}>
+    <svg {...svgBase} className={className}>
+      <Ground />
       {/* gebouw */}
-      <rect x="22" y="20" width="44" height="62" rx="4" fill="#0e5a4f" />
-      <rect x="22" y="20" width="44" height="5" fill="#f2bb4a" opacity="0.9" />
-      {[32, 46].map((x) =>
-        [32, 46, 60].map((y) => (
-          <rect key={`${x}-${y}`} x={x} y={y} width="9" height="10" rx="1.5" fill="#cdf1e0" />
+      <rect x="18" y="30" width="40" height="52" rx="4" fill={PINE} />
+      <rect x="18" y="30" width="40" height="5" rx="2" fill={AMBER} />
+      {[26, 42].map((x) =>
+        [42, 56, 70].map((y) => (
+          <rect key={`${x}-${y}`} x={x} y={y} width="9" height="9" rx="1.5" fill={GLASS} />
         )),
       )}
-      <rect x="38" y="70" width="12" height="12" rx="1.5" fill="#bceedc" />
       {/* checklist-kaart die uitschuift */}
       <g className="scene-slide">
-        <rect x="76" y="26" width="62" height="48" rx="6" fill="#ffffff" stroke="#e6eceb" />
-        {[38, 50, 62].map((y, i) => (
+        <rect x="66" y="28" width="52" height="46" rx="6" fill="#fff" stroke={LINE} />
+        {[40, 51, 62].map((y, i) => (
           <g key={y}>
             <circle
-              cx="86"
+              cx="77"
               cy={y}
-              r="4"
-              fill={i < 2 ? "#18a978" : "#fff"}
-              stroke={i < 2 ? "none" : "#ccd9d8"}
-              strokeWidth="1.5"
-              className={i === 2 ? "scene-check-late" : undefined}
+              r="4.5"
+              fill={i < 2 ? ACTION : "#fff"}
+              stroke={i < 2 ? "none" : LINE}
             />
             {i < 2 && (
               <path
-                d={`m83.5 ${y} 1.8 1.8 3.4-3.8`}
+                d={`m74.6 ${y} 1.7 1.7 3.2-3.6`}
                 stroke="#fff"
                 strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               />
             )}
-            <rect x="95" y={y - 2.5} width={i === 1 ? 30 : 38} height="5" rx="2.5" fill="#e6eceb" />
+            <rect x="87" y={y - 2.5} width={i === 1 ? 20 : 26} height="5" rx="2.5" fill={LINE} />
           </g>
         ))}
       </g>
@@ -55,81 +72,64 @@ export function ScenePand({ className = "" }: { className?: string }) {
   );
 }
 
-/** Energiebesparing: de meter loopt bij hover terug van hoog naar laag. */
+/** Energiebesparing: meter met gelijke openingen; naald zakt bij hover terug. */
 export function SceneMeter({ className = "" }: { className?: string }) {
+  // Halve boog (180°→360°) in drie segmenten met exact gelijke openingen.
+  const cx = 64;
+  const cy = BASELINE - 2;
+  const r = 34;
+  const pol = (deg: number) => {
+    const a = (deg * Math.PI) / 180;
+    return `${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)}`;
+  };
+  const arc = (from: number, to: number) =>
+    `M ${pol(from)} A ${r} ${r} 0 0 1 ${pol(to)}`;
   return (
-    <svg {...svgProps} className={className}>
-      {/* meterboog */}
-      <path
-        d="M40 76a40 40 0 0 1 80 0"
-        stroke="#e6eceb"
-        strokeWidth="10"
-        strokeLinecap="round"
-      />
-      <path
-        d="M40 76a40 40 0 0 1 23-36"
-        stroke="#18a978"
-        strokeWidth="10"
-        strokeLinecap="round"
-      />
-      <path
-        d="M74 37.5a40 40 0 0 1 24 4.5"
-        stroke="#f2bb4a"
-        strokeWidth="10"
-        strokeLinecap="round"
-      />
-      <path
-        d="M105 46a40 40 0 0 1 15 30"
-        stroke="#d76652"
-        strokeWidth="10"
-        strokeLinecap="round"
-      />
-      {/* naald: staat hoog, zakt bij hover terug naar groen */}
+    <svg {...svgBase} className={className}>
+      <Ground />
+      {/* drie segmenten, elk 54°, met 9° opening ertussen, ronde uiteinden */}
+      <path d={arc(180, 234)} stroke={ACTION} />
+      <path d={arc(243, 297)} stroke={AMBER} />
+      <path d={arc(306, 360)} stroke="#d76652" />
+      {/* naald: staat hoog, zakt bij hover richting groen */}
       <g className="scene-needle">
-        <line x1="80" y1="76" x2="80" y2="44" stroke="#16313a" strokeWidth="3.5" strokeLinecap="round" />
+        <line x1={cx} y1={cy} x2={cx} y2={cy - 26} stroke={PINE_D} strokeWidth="3" />
       </g>
-      <circle cx="80" cy="76" r="6" fill="#16313a" />
-      <circle cx="80" cy="76" r="2.5" fill="#fff" />
+      <circle cx={cx} cy={cy} r="5" fill={PINE_D} />
+      <circle cx={cx} cy={cy} r="2" fill="#fff" />
     </svg>
   );
 }
 
-/** Netcongestie: netwerkpunten kleuren bij hover van rood naar groen. */
+/** Netcongestie: netwerkknopen kleuren bij hover van amber naar groen. */
 export function SceneGrid({ className = "" }: { className?: string }) {
   const nodes: [number, number, number][] = [
-    [26, 66, 0],
-    [58, 30, 1],
-    [80, 62, 2],
-    [110, 26, 3],
-    [134, 58, 4],
+    [28, 70, 0],
+    [56, 40, 1],
+    [78, 66, 2],
+    [100, 36, 3],
+    [112, 64, 4],
   ];
+  const path = "M28 70 L56 40 L78 66 L100 36 L112 64";
   return (
-    <svg {...svgProps} className={className}>
-      {/* verbindingen */}
-      <g stroke="#ccd9d8" strokeWidth="2">
-        <path d="M26 66 58 30M58 30l22 32M80 62l30-36M110 26l24 32M58 30h52M26 66l54-4 54-4" opacity="0.6" />
-      </g>
-      {/* stroompuls over de lijn (alleen bij hover zichtbaar) */}
-      <path
-        className="scene-pulse"
-        d="M26 66 58 30l22 32 30-36 24 32"
-        stroke="#18a978"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      {/* knooppunten: rood -> groen */}
+    <svg {...svgBase} className={className}>
+      <Ground />
+      {/* verbindingen: mint, duidelijk zichtbaar */}
+      <path d={path} stroke={GLASS} strokeWidth="3" />
+      <path d="M56 40 L112 64" stroke={GLASS} strokeWidth="3" opacity="0.7" />
+      {/* stroompuls over de route (bij hover) */}
+      <path className="scene-pulse" d={path} stroke={ACTION} strokeWidth="3" />
+      {/* knooppunten: amber → groen */}
       {nodes.map(([x, y, i]) => (
         <g key={i}>
-          <circle cx={x} cy={y} r="8" fill="#fff" stroke="#e6eceb" strokeWidth="1.5" />
+          <circle cx={x} cy={y} r="7.5" fill="#fff" stroke={LINE} strokeWidth="2" />
           <circle
             cx={x}
             cy={y}
-            r="4.5"
-            fill="#d76652"
+            r="4"
+            fill={AMBER}
             className="scene-node"
-            style={{ transitionDelay: `${i * 90}ms` }}
+            style={{ transitionDelay: `${i * 80}ms` }}
           />
         </g>
       ))}
@@ -137,51 +137,38 @@ export function SceneGrid({ className = "" }: { className?: string }) {
   );
 }
 
-/** Zakelijke batterij: stroom loopt van paneel via batterij naar het pand. */
+/** Zakelijke batterij: één vloeiende energieroute paneel → batterij → pand. */
 export function SceneBattery({ className = "" }: { className?: string }) {
   return (
-    <svg {...svgProps} className={className}>
-      {/* zonnepaneel */}
+    <svg {...svgBase} className={className}>
+      <Ground />
+      {/* zonnepaneel (links, op de baseline) */}
       <g>
-        <rect x="14" y="22" width="34" height="20" rx="2.5" fill="#16313a" transform="skewX(-8)" />
-        <path d="M20 27h30M22 32h30M24 37h30" stroke="#3a5560" strokeWidth="1.4" transform="skewX(-8)" />
-        <path d="M28 42v10h-6" stroke="#46606a" strokeWidth="2" />
+        <rect x="12" y="52" width="30" height="18" rx="2.5" fill={PINE} transform="skewX(-10)" />
+        <path d="M19 57h26M17 62h26M15 67h26" stroke={GLASS} strokeWidth="1.4" transform="skewX(-10)" />
+        <path d="M22 70v12" stroke={PINE} strokeWidth="2.5" />
       </g>
-      {/* batterij */}
-      <rect x="64" y="52" width="34" height="20" rx="4" fill="#0e5a4f" />
-      <rect x="98" y="58" width="4" height="8" rx="2" fill="#0e5a4f" />
-      <path
-        d="M83 56l-5 7h6l-4 7"
-        stroke="#f2bb4a"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      {/* batterij (midden, op de baseline) */}
+      <rect x="54" y="60" width="30" height="22" rx="4" fill={PINE} />
+      <rect x="84" y="66" width="4" height="10" rx="2" fill={PINE} />
+      <path d="M71 64l-4 6h5l-4 6" stroke={AMBER} strokeWidth="2.2" />
       {/* laadniveau dat bij hover vult */}
-      <rect x="68" y="56" width="10" height="12" rx="2" fill="#18a978" className="scene-charge" />
-      {/* pand */}
-      <rect x="118" y="34" width="30" height="44" rx="3" fill="#116154" />
-      {[124, 136].map((x) =>
-        [40, 52, 64].map((y) => (
-          <rect key={`${x}-${y}`} x={x} y={y} width="7" height="8" rx="1.2" fill="#cdf1e0" />
+      <rect x="58" y="64" width="9" height="14" rx="2" fill={ACTION} className="scene-charge" />
+      {/* pand (rechts, op de baseline) */}
+      <rect x="98" y="44" width="24" height="38" rx="3" fill={PINE} />
+      <rect x="98" y="44" width="24" height="4" rx="2" fill={AMBER} />
+      {[103, 113].map((x) =>
+        [52, 63, 74].map((y) => (
+          <rect key={`${x}-${y}`} x={x} y={y} width="6" height="6" rx="1.2" fill={GLASS} />
         )),
       )}
-      {/* stroomlijnen paneel -> batterij -> pand */}
+      {/* één vloeiende energieroute paneel → batterij → pand */}
       <path
         className="scene-flow"
-        d="M40 52c8 10 14 12 22 12"
-        stroke="#18a978"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        className="scene-flow"
-        d="M102 62c6 0 10-2 14-6"
-        stroke="#18a978"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        fill="none"
+        d="M30 74 C42 74 46 71 54 71 M84 71 C90 71 94 66 98 63"
+        stroke={ACTION}
+        strokeWidth="2.5"
+        strokeDasharray="5 7"
       />
     </svg>
   );
