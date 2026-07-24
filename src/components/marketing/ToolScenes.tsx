@@ -142,18 +142,20 @@ export function SceneBattery({ className = "" }: { className?: string }) {
   return (
     <svg {...svgBase} className={className}>
       <Ground />
-      {/* zonnepaneel (links, op de baseline) */}
-      <g>
-        <rect x="12" y="52" width="30" height="18" rx="2.5" fill={PINE} transform="skewX(-10)" />
-        <path d="M19 57h26M17 62h26M15 67h26" stroke={GLASS} strokeWidth="1.4" transform="skewX(-10)" />
-        <path d="M22 70v12" stroke={PINE} strokeWidth="2.5" />
+      {/* zonnepaneel (links): paneel en strepen in één gekantelde groep,
+          zodat de strepen exact meelopen met het paneel */}
+      <g transform="rotate(-8 28 60)">
+        <rect x="14" y="52" width="28" height="16" rx="2.5" fill={PINE} />
+        <path d="M17 56.5h22M17 60h22M17 63.5h22" stroke={GLASS} strokeWidth="1.4" />
       </g>
+      <path d="M28 67v15" stroke={PINE} strokeWidth="2.5" />
       {/* batterij (midden, op de baseline) */}
       <rect x="54" y="60" width="30" height="22" rx="4" fill={PINE} />
       <rect x="84" y="66" width="4" height="10" rx="2" fill={PINE} />
-      <path d="M71 64l-4 6h5l-4 6" stroke={AMBER} strokeWidth="2.2" />
-      {/* laadniveau dat bij hover vult */}
+      {/* laadniveau dat bij hover vult, blijft áchter het bliksemicoon */}
       <rect x="58" y="64" width="9" height="14" rx="2" fill={ACTION} className="scene-charge" />
+      {/* bliksem staat vóór het laadniveau */}
+      <path d="M71 64l-4 6h5l-4 6" stroke={AMBER} strokeWidth="2.2" />
       {/* pand (rechts, op de baseline) */}
       <rect x="98" y="44" width="24" height="38" rx="3" fill={PINE} />
       <rect x="98" y="44" width="24" height="4" rx="2" fill={AMBER} />

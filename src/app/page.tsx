@@ -121,14 +121,14 @@ export default function HomePage() {
               <Link
                 key={href}
                 href={href}
-                className="vt-rise group flex flex-col items-center rounded-panel border border-line bg-surface p-6 pt-4 text-center shadow-soft transition-all duration-200 hover:-translate-y-1.5 hover:border-pine/40 hover:bg-[#f8fcfa] hover:shadow-lift"
+                className="vt-rise group flex flex-col items-center rounded-panel border border-line bg-surface p-6 pt-4 text-center shadow-soft transition-colors duration-200 hover:border-pine/40 hover:bg-[#f8fcfa]"
               >
                 <Scene className="h-24 w-full max-w-[11rem]" />
                 <h3 className="mt-3 text-lg font-bold text-ink">{title}</h3>
                 <p className="mt-1.5 flex-1 text-[0.95rem] text-ink-soft">{text}</p>
                 <span className="mt-4 inline-flex items-center gap-1.5 font-bold text-pine">
                   Bekijk
-                  <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 10h12m-5-5 5 5-5 5" />
                   </svg>
                 </span>
