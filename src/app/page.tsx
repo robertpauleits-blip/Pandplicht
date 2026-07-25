@@ -82,7 +82,7 @@ const FAQ_ITEMS: FaqEntry[] = [
   {
     question: "Vult PandPlicht mijn pandgegevens automatisch in?",
     answer:
-      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase) en de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG, het openbare gebouwenregister. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Vinden wij geen label, dan linken wij u naar EP-Online of vult u het zelf in.",
+      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase), de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG (het openbare gebouwenregister) en controleren wij in het rijksmonumentenregister of het pand een rijksmonument is. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Vinden wij een gegeven niet, dan vult u het gewoon zelf in.",
   },
   {
     question: "Krijg ik direct een offerte?",
@@ -242,7 +242,7 @@ export default function HomePage() {
             {[
               {
                 title: "Vul uw pand in",
-                text: "Postcode en huisnummer volstaan om te starten. Gebruiksfunctie, oppervlakte en energielabel vullen wij automatisch voor uit openbare registers.",
+                text: "Postcode en huisnummer volstaan om te starten. Gebruiksfunctie, oppervlakte, energielabel en monumentstatus vullen wij automatisch voor uit openbare registers.",
               },
               {
                 title: "Wij toetsen aan de regels",
@@ -296,7 +296,7 @@ export default function HomePage() {
               {[
                 [
                   "Minder invulwerk",
-                  "Gebruiksfunctie, oppervlakte, bouwjaar en label halen wij automatisch uit de BAG en EP-Online. U hoeft alleen te controleren.",
+                  "Gebruiksfunctie, oppervlakte, bouwjaar, label en monumentstatus halen wij automatisch uit BAG, EP-Online en het monumentenregister. U hoeft alleen te controleren.",
                 ],
                 [
                   "Alles op één plek",

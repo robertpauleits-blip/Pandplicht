@@ -22,6 +22,7 @@ import {
 import type { AddressSuggestion } from "@/lib/address/pdok";
 import type { EnergyLabelLookup } from "@/lib/address/ep-online";
 import type { BagKenmerken } from "@/lib/address/bag";
+import type { MonumentStatus } from "@/lib/address/monument";
 
 const STORAGE_KEY = "pp-check-v1";
 const TOTAL_STEPS = 6;
@@ -134,6 +135,11 @@ export function Wizard() {
     BagKenmerken | { status: "loading" } | null
   >(null);
   const [gebruikHandmatig, setGebruikHandmatig] = useState(false);
+  // Rijksmonument: automatisch bepalen via RCE-cultuurhistorie (keyless).
+  const [monumentLookup, setMonumentLookup] = useState<
+    MonumentStatus | { status: "loading" } | null
+  >(null);
+  const [monumentHandmatig, setMonumentHandmatig] = useState(false);
   const lookedUpKey = useRef<string | null>(null);
   const kiesSuggestieRef = useRef<(s: AddressSuggestion) => void>(() => {});
   const autoSearched = useRef(false);
@@ -321,7 +327,29 @@ export function Wizard() {
     [patch],
   );
 
-  // Eén keer per adres beide automatische bronnen aanroepen. Vult velden vooraf
+  // Bepaal automatisch of het pand een rijksmonument is (RCE, keyless).
+  const lookupMonument = useCallback(
+    async (pc: string, hn: string, toev?: string) => {
+      setMonumentLookup({ status: "loading" });
+      try {
+        const qs = new URLSearchParams({ postcode: pc, huisnummer: hn });
+        if (toev) qs.set("toevoeging", toev);
+        const res = await fetch(`/api/address/monument?${qs.toString()}`);
+        const data = (await res.json()) as MonumentStatus;
+        setMonumentLookup(data);
+        // Alleen "ja" automatisch invullen. Bij "niet gevonden" laten we de
+        // vraag open: een gemeentelijk monument of gezicht staat hier niet in.
+        if (data.status === "rijksmonument") {
+          patch({ monument: "ja" });
+        }
+      } catch {
+        setMonumentLookup({ status: "error" });
+      }
+    },
+    [patch],
+  );
+
+  // Eén keer per adres alle automatische bronnen aanroepen. Vult velden vooraf
   // in; faalt een bron, dan blijft handmatige invoer gewoon mogelijk.
   const runAutoLookups = useCallback(
     (pc: string, hn: string, toev?: string) => {
@@ -331,10 +359,12 @@ export function Wizard() {
       setOppervlakteHandmatig(false);
       setLabelHandmatig(false);
       setGebruikHandmatig(false);
+      setMonumentHandmatig(false);
       void lookupLabel(pc, hn, toev);
       void lookupBag(pc, hn, toev);
+      void lookupMonument(pc, hn, toev);
     },
-    [lookupLabel, lookupBag],
+    [lookupLabel, lookupBag, lookupMonument],
   );
 
   const kiesSuggestie = useCallback(
@@ -798,17 +828,54 @@ export function Wizard() {
               legend="Is het pand een monument?"
               hint="Voor monumenten gelden uitzonderingen op sommige labeleisen."
             >
-              <RadioCards
-                name="monument"
-                value={input.monument}
-                onChange={(v) => patch({ monument: v })}
-                columns={3}
-                options={[
-                  { value: "ja", label: "Ja" },
-                  { value: "nee", label: "Nee" },
-                  { value: "onbekend", label: "Weet ik niet" },
-                ]}
-              />
+              {monumentLookup?.status === "rijksmonument" && !monumentHandmatig ? (
+                <EpAutoCard
+                  bron="Rijksmonumentenregister (RCE)"
+                  bronHref={monumentLookup.registerUrl}
+                  waarde="Rijksmonument"
+                  toelichting={
+                    monumentLookup.monumentnummer
+                      ? `Dit pand is geregistreerd als rijksmonument (nr. ${monumentLookup.monumentnummer}). Voor monumenten geldt een uitzondering op sommige labeleisen.`
+                      : "Dit pand is geregistreerd als rijksmonument. Voor monumenten geldt een uitzondering op sommige labeleisen."
+                  }
+                  onCorrigeer={() => setMonumentHandmatig(true)}
+                />
+              ) : (
+                <>
+                  {monumentLookup?.status === "loading" ? (
+                    <p className="mb-3 text-sm text-ink-soft">
+                      Wij controleren of dit een rijksmonument is…
+                    </p>
+                  ) : monumentLookup?.status === "beschermd_gezicht" ? (
+                    <p className="mb-3 text-sm text-ink-soft">
+                      Dit pand ligt in een{" "}
+                      <strong className="text-ink">
+                        beschermd stads- of dorpsgezicht
+                      </strong>{" "}
+                      (bron: RCE). Dat betekent niet automatisch dat het pand
+                      zelf een monument is. Is het pand zelf een (gemeentelijk)
+                      monument? Kies dan &lsquo;Ja&rsquo;.
+                    </p>
+                  ) : monumentLookup?.status === "not_found" ? (
+                    <p className="mb-3 text-sm text-ink-soft">
+                      Geen rijksmonument gevonden op dit adres. Is het pand een
+                      gemeentelijk monument of beschermd stads-/dorpsgezicht? Kies
+                      dan &lsquo;Ja&rsquo;.
+                    </p>
+                  ) : null}
+                  <RadioCards
+                    name="monument"
+                    value={input.monument}
+                    onChange={(v) => patch({ monument: v })}
+                    columns={3}
+                    options={[
+                      { value: "ja", label: "Ja" },
+                      { value: "nee", label: "Nee" },
+                      { value: "onbekend", label: "Weet ik niet" },
+                    ]}
+                  />
+                </>
+              )}
             </FieldGroup>
 
             <FieldGroup legend="Speelt er verkoop, nieuwe verhuur of oplevering?">
@@ -1261,6 +1328,7 @@ function EpAutoCard({
   registratiedatum,
   geldigTot,
   bron = "EP-Online (RVO)",
+  bronHref,
   onCorrigeer,
 }: {
   waarde: string;
@@ -1268,6 +1336,7 @@ function EpAutoCard({
   registratiedatum?: string | null;
   geldigTot?: string | null;
   bron?: string;
+  bronHref?: string | null;
   onCorrigeer: () => void;
 }) {
   const fmt = (d?: string | null) =>
@@ -1286,7 +1355,19 @@ function EpAutoCard({
           <p className="text-lg font-bold text-status-no-ink">{waarde}</p>
           <p className="mt-0.5 text-sm text-status-no-ink/90">{toelichting}</p>
           <p className="mt-1 text-xs text-status-no-ink/80">
-            Bron: {bron}
+            Bron:{" "}
+            {bronHref ? (
+              <a
+                href={bronHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline"
+              >
+                {bron}
+              </a>
+            ) : (
+              bron
+            )}
             {reg ? ` • geregistreerd op ${reg}` : ""}
             {geldig ? ` • geldig tot ${geldig}` : ""}
           </p>
