@@ -14,7 +14,8 @@
  * monumentvraag automatisch met "ja". Een gezicht melden we informatief.
  */
 
-const LOCATIESERVER = "https://api.pdok.nl/bzk/locatieserver/search/v3_1";
+import { resolveRdPoint } from "./rd";
+
 const RCE_WFS = "https://service.pdok.nl/rce/ps-ch/wfs/v1_0";
 const RD_SRS = "urn:ogc:def:crs:EPSG::28992";
 const PUNT_STRAAL_M = 3; // strakke terugval voor monumenten zonder vlakgeometrie
@@ -43,17 +44,6 @@ export type MonumentStatus =
     };
 
 type Props = Record<string, unknown>;
-
-/** Parse "POINT(x y)" (RD, EPSG:28992) naar coördinaten. */
-export function parseRdPoint(
-  centroideRd: string,
-): { x: number; y: number } | null {
-  const m = /POINT\(\s*([0-9.]+)\s+([0-9.]+)\s*\)/i.exec(centroideRd ?? "");
-  if (!m) return null;
-  const x = Number(m[1]);
-  const y = Number(m[2]);
-  return Number.isFinite(x) && Number.isFinite(y) ? { x, y } : null;
-}
 
 /** Maak van een localid ("10001.00") een net rijksmonumentnummer ("10001"). */
 export function formatMonumentnummer(localid: unknown): string | null {
@@ -119,34 +109,6 @@ async function fetchJson(url: string): Promise<unknown> {
   } finally {
     clearTimeout(timer);
   }
-}
-
-/** Stap 1: RD-coördinaat van het pand ophalen via de Locatieserver. */
-async function resolveRdPoint(
-  postcode: string,
-  huisnummer: string,
-  toevoeging: string,
-): Promise<{ x: number; y: number } | null> {
-  const q = `${postcode} ${huisnummer}${toevoeging ? ` ${toevoeging}` : ""}`;
-  const params = new URLSearchParams({
-    q,
-    fq: "type:adres",
-    rows: "5",
-    fl: "centroide_rd,postcode,huisnummer",
-  });
-  const data = (await fetchJson(`${LOCATIESERVER}/free?${params}`)) as {
-    response?: { docs?: Record<string, unknown>[] };
-  };
-  const docs = data.response?.docs ?? [];
-  const pc = postcode.toUpperCase().replace(/\s+/g, "");
-  const exact = docs.find(
-    (d) =>
-      String(d.postcode ?? "").toUpperCase().replace(/\s+/g, "") === pc &&
-      String(d.huisnummer ?? "") === huisnummer,
-  );
-  const chosen = exact ?? docs[0];
-  const rd = chosen?.centroide_rd;
-  return typeof rd === "string" ? parseRdPoint(rd) : null;
 }
 
 function puntGml(x: number, y: number): string {

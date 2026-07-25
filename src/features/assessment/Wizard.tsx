@@ -23,6 +23,11 @@ import type { AddressSuggestion } from "@/lib/address/pdok";
 import type { EnergyLabelLookup } from "@/lib/address/ep-online";
 import type { BagKenmerken } from "@/lib/address/bag";
 import type { MonumentStatus } from "@/lib/address/monument";
+import {
+  CAPACITEIT_LABEL,
+  isKnelpunt,
+  type Netcapaciteit,
+} from "@/lib/address/netcapaciteit";
 
 const STORAGE_KEY = "pp-check-v1";
 const TOTAL_STEPS = 6;
@@ -141,6 +146,8 @@ export function Wizard() {
     MonumentStatus | { status: "loading" } | null
   >(null);
   const [monumentHandmatig, setMonumentHandmatig] = useState(false);
+  // Netcapaciteit: gebiedsindicatie als context, nooit als antwoord.
+  const [netLookup, setNetLookup] = useState<Netcapaciteit | null>(null);
   const lookedUpKey = useRef<string | null>(null);
   const kiesSuggestieRef = useRef<(s: AddressSuggestion) => void>(() => {});
   const autoSearched = useRef(false);
@@ -355,6 +362,22 @@ export function Wizard() {
     [patch],
   );
 
+  /**
+   * Haal de gebiedsindicatie van de capaciteitskaart op. Deze data gaat over
+   * het voedingsgebied, niet over deze aansluiting: we tonen het als context
+   * bij de vraag en vullen het antwoord bewust niet automatisch in.
+   */
+  const lookupNet = useCallback(async (pc: string, hn: string, toev?: string) => {
+    try {
+      const qs = new URLSearchParams({ postcode: pc, huisnummer: hn });
+      if (toev) qs.set("toevoeging", toev);
+      const res = await fetch(`/api/address/netcapaciteit?${qs.toString()}`);
+      setNetLookup((await res.json()) as Netcapaciteit);
+    } catch {
+      setNetLookup({ status: "error" });
+    }
+  }, []);
+
   // Eén keer per adres alle automatische bronnen aanroepen. Vult velden vooraf
   // in; faalt een bron, dan blijft handmatige invoer gewoon mogelijk.
   const runAutoLookups = useCallback(
@@ -370,8 +393,9 @@ export function Wizard() {
       void lookupLabel(pc, hn, toev);
       void lookupBag(pc, hn, toev);
       void lookupMonument(pc, hn, toev);
+      void lookupNet(pc, hn, toev);
     },
-    [lookupLabel, lookupBag, lookupMonument],
+    [lookupLabel, lookupBag, lookupMonument, lookupNet],
   );
 
   const kiesSuggestie = useCallback(
@@ -1088,6 +1112,9 @@ export function Wizard() {
             </FieldGroup>
 
             <FieldGroup legend="Heeft de netbeheerder beperkingen gemeld op afname of teruglevering?">
+              {netLookup?.status === "found" ? (
+                <NetcapaciteitContext info={netLookup} />
+              ) : null}
               <RadioCards
                 name="beperkingen"
                 value={input.beperkingen}
@@ -1419,6 +1446,50 @@ function EpAutoCard({
       >
         Klopt niet? Pas handmatig aan
       </button>
+    </div>
+  );
+}
+
+/* ---------------- Netcapaciteit: gebiedscontext ---------------- */
+
+/**
+ * Toont de gebiedsindicatie van de capaciteitskaart als hulp bij de vraag.
+ * Bewust géén auto-invulkaart: de kaart beschrijft het voedingsgebied en niet
+ * deze aansluiting, dus het antwoord blijft aan de gebruiker.
+ */
+function NetcapaciteitContext({
+  info,
+}: {
+  info: Extract<Netcapaciteit, { status: "found" }>;
+}) {
+  const knelpunt = isKnelpunt(info.afname) || isKnelpunt(info.teruglevering);
+  return (
+    <div
+      className={`mb-4 rounded-card border p-4 ${
+        knelpunt
+          ? "border-amber/60 bg-amber-soft/50"
+          : "border-line bg-[#f6f8f8]"
+      }`}
+    >
+      <p className="text-sm font-bold text-ink">
+        In uw gebied{info.voedingsgebied ? ` (${info.voedingsgebied})` : ""}
+      </p>
+      <dl className="mt-2 space-y-1 text-sm text-ink-soft">
+        <div className="flex flex-wrap gap-x-2">
+          <dt className="font-semibold text-ink">Afname:</dt>
+          <dd>{CAPACITEIT_LABEL[info.afname]}</dd>
+        </div>
+        <div className="flex flex-wrap gap-x-2">
+          <dt className="font-semibold text-ink">Teruglevering:</dt>
+          <dd>{CAPACITEIT_LABEL[info.teruglevering]}</dd>
+        </div>
+      </dl>
+      <p className="mt-2 text-xs text-ink-soft">
+        Bron: Capaciteitskaart elektriciteitsnet, Netbeheer Nederland
+        {info.netbeheerder ? ` • netbeheerder ${info.netbeheerder}` : ""}. Dit
+        geldt voor het hele gebied en zegt niets over úw aansluiting; alleen uw
+        netbeheerder kan dat bevestigen.
+      </p>
     </div>
   );
 }

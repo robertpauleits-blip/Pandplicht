@@ -100,6 +100,13 @@ export const SOURCES: Record<string, SourceRecord> = {
     url: "https://www.rvo.nl/onderwerpen/netcongestie/wat-netcongestie",
     checkedAt: "2026-07-20",
   },
+  "nbnl-capaciteitskaart": {
+    id: "nbnl-capaciteitskaart",
+    title: "Capaciteitskaart elektriciteitsnet",
+    publisher: "Netbeheer Nederland",
+    url: "https://capaciteitskaart.netbeheernederland.nl/",
+    checkedAt: "2026-07-25",
+  },
   "rvo-grid-guide": {
     id: "rvo-grid-guide",
     title: "Wegwijzer netcongestie voor ondernemers",
