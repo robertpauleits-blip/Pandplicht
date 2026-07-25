@@ -135,6 +135,7 @@ export function Wizard() {
     BagKenmerken | { status: "loading" } | null
   >(null);
   const [gebruikHandmatig, setGebruikHandmatig] = useState(false);
+  const [kantoorHandmatig, setKantoorHandmatig] = useState(false);
   // Rijksmonument: automatisch bepalen via RCE-cultuurhistorie (keyless).
   const [monumentLookup, setMonumentLookup] = useState<
     MonumentStatus | { status: "loading" } | null
@@ -311,6 +312,11 @@ export function Wizard() {
             ...(data.oppervlakteM2
               ? { oppervlakteExactM2: data.oppervlakteM2, oppervlakteBand: null }
               : {}),
+            // Alleen invullen als de BAG-samenstelling een eenduidig antwoord
+            // geeft; bij onzekere combifuncties beantwoordt de gebruiker zelf.
+            ...(data.pand?.kantoorAandeel
+              ? { kantoorAandeel: data.pand.kantoorAandeel }
+              : {}),
           });
           if (data.bouwjaar) {
             setInput((cur) =>
@@ -359,6 +365,7 @@ export function Wizard() {
       setOppervlakteHandmatig(false);
       setLabelHandmatig(false);
       setGebruikHandmatig(false);
+      setKantoorHandmatig(false);
       setMonumentHandmatig(false);
       void lookupLabel(pc, hn, toev);
       void lookupBag(pc, hn, toev);
@@ -811,17 +818,49 @@ export function Wizard() {
               legend="Welk deel van het oppervlak is kantoorfunctie?"
               hint="Beslaat het kantoordeel minder dan de helft van het gebouw, dan geldt de label-C-plicht meestal niet."
             >
-              <RadioCards
-                name="kantoorAandeel"
-                value={input.kantoorAandeel}
-                onChange={(v) => patch({ kantoorAandeel: v })}
-                columns={3}
-                options={[
-                  { value: "lt50", label: "Minder dan 50%" },
-                  { value: "gte50", label: "50% of meer" },
-                  { value: "onbekend", label: "Weet ik niet" },
-                ]}
-              />
+              {bagLookup?.status === "found" &&
+              bagLookup.pand?.kantoorAandeel &&
+              !kantoorHandmatig ? (
+                <EpAutoCard
+                  bron="BAG (Kadaster)"
+                  waarde={
+                    bagLookup.pand.kantoorAandeel === "gte50"
+                      ? "50% of meer kantoorfunctie"
+                      : "Minder dan 50% kantoorfunctie"
+                  }
+                  toelichting={`Berekend uit alle ${bagLookup.pand.aantalVerblijfsobjecten} geregistreerde ruimten in dit gebouw: ${bagLookup.pand.kantoorM2.toLocaleString("nl-NL")} m² kantoor van in totaal ${bagLookup.pand.totaalM2.toLocaleString("nl-NL")} m² (${bagLookup.pand.kantoorPctMin}%).`}
+                  onCorrigeer={() => setKantoorHandmatig(true)}
+                />
+              ) : (
+                <>
+                  {bagLaadt ? (
+                    <p className="mb-3 text-sm text-ink-soft">
+                      Wij proberen het kantooraandeel automatisch te berekenen…
+                    </p>
+                  ) : bagLookup?.status === "found" &&
+                    bagLookup.pand &&
+                    bagLookup.pand.onzekerM2 > 0 ? (
+                    <p className="mb-3 text-sm text-ink-soft">
+                      Dit gebouw heeft ruimten met een gecombineerde functie. De
+                      BAG splitst die oppervlakte niet, dus het kantooraandeel
+                      ligt ergens tussen {bagLookup.pand.kantoorPctMin}% en{" "}
+                      {bagLookup.pand.kantoorPctMax}%. Kiest u zelf wat het
+                      dichtst in de buurt komt?
+                    </p>
+                  ) : null}
+                  <RadioCards
+                    name="kantoorAandeel"
+                    value={input.kantoorAandeel}
+                    onChange={(v) => patch({ kantoorAandeel: v })}
+                    columns={3}
+                    options={[
+                      { value: "lt50", label: "Minder dan 50%" },
+                      { value: "gte50", label: "50% of meer" },
+                      { value: "onbekend", label: "Weet ik niet" },
+                    ]}
+                  />
+                </>
+              )}
             </FieldGroup>
 
             <FieldGroup

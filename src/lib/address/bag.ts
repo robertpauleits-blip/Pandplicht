@@ -1,23 +1,51 @@
-import type { Hoofdgebruik } from "@/rules/types";
+import type { Hoofdgebruik, KantoorAandeel } from "@/rules/types";
 
 /**
  * Server-side BAG-adapter (Basisregistratie Adressen en Gebouwen), keyless.
  *
- * Twee stappen, beide via officiële open PDOK-diensten:
+ * Drie stappen, alle via officiële open PDOK-diensten:
  *  1. Locatieserver: postcode + huisnummer -> adresseerbaarobject-id (het
  *     BAG verblijfsobject-id).
- *  2. BAG WFS: dat verblijfsobject -> gebruiksdoel(en), oppervlakte en bouwjaar.
+ *  2. BAG WFS: dat verblijfsobject -> gebruiksdoel(en), oppervlakte, bouwjaar
+ *     en de pandidentificatie.
+ *  3. BAG WFS: alle verblijfsobjecten in datzelfde pand -> samenstelling van
+ *     het gebouw, waarmee we het kantooraandeel kunnen afleiden.
  *
- * Zo halen we de gebruiksfunctie, oppervlakte en het bouwjaar automatisch op,
- * zodat de gebruiker die niet meer hoeft in te vullen. Geen sleutel nodig.
- * Bij een storing of onbekend adres volgt een nette terugval (status !== found)
- * en blijft handmatige invoer mogelijk.
+ * Zo halen we de gebruiksfunctie, oppervlakte, het bouwjaar en het
+ * kantooraandeel automatisch op, zodat de gebruiker die niet meer hoeft in te
+ * vullen. Geen sleutel nodig. Bij een storing of onbekend adres volgt een nette
+ * terugval (status !== found) en blijft handmatige invoer mogelijk.
  */
 
 const LOCATIESERVER = "https://api.pdok.nl/bzk/locatieserver/search/v3_1";
 const BAG_WFS = "https://service.pdok.nl/lv/bag/wfs/v2_0";
 const TIMEOUT_MS = 5_000;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // BAG verandert zelden
+
+/**
+ * Samenstelling van het hele pand, afgeleid uit alle verblijfsobjecten die
+ * dezelfde pandidentificatie delen.
+ */
+export type PandSamenstelling = {
+  aantalVerblijfsobjecten: number;
+  totaalM2: number;
+  /** m² van verblijfsobjecten met uitsluitend een kantoorfunctie. */
+  kantoorM2: number;
+  /**
+   * m² van verblijfsobjecten die kantoorfunctie combineren met een andere
+   * functie. De BAG splitst die oppervlakte niet, dus dit deel is onzeker.
+   */
+  onzekerM2: number;
+  /** Ondergrens van het kantooraandeel (onzekere m² tellen niet mee), 0-100. */
+  kantoorPctMin: number;
+  /** Bovengrens van het kantooraandeel (onzekere m² tellen wél mee), 0-100. */
+  kantoorPctMax: number;
+  /**
+   * Alleen gevuld wanneer de uitkomst niet van de onzekere m² afhangt:
+   * de boven- én ondergrens vallen dan aan dezelfde kant van de 50%-grens.
+   */
+  kantoorAandeel: KantoorAandeel | null;
+};
 
 export type BagKenmerken =
   | { status: "not_found" }
@@ -34,6 +62,8 @@ export type BagKenmerken =
       heeftWoonfunctie: boolean;
       oppervlakteM2: number | null;
       bouwjaar: number | null;
+      /** null wanneer de pandsamenstelling niet op te halen was. */
+      pand: PandSamenstelling | null;
     };
 
 /** BAG-gebruiksdoel -> interne Hoofdgebruik. Woonfunctie telt niet als zakelijk. */
@@ -72,6 +102,66 @@ export function mapGebruiksdoelen(gebruiksdoelen: string[]): {
     return { hoofdgebruik: zakelijk[0]!, gemengd: false, heeftWoonfunctie };
   }
   return { hoofdgebruik: "gemengd", gemengd: true, heeftWoonfunctie };
+}
+
+/** Eén verblijfsobject zoals wij het voor de pandsamenstelling nodig hebben. */
+export type VboRegel = { gebruiksdoel: string; oppervlakteM2: number };
+
+/**
+ * Leidt de samenstelling van een pand af uit zijn verblijfsobjecten.
+ *
+ * Een verblijfsobject kan meerdere gebruiksdoelen tegelijk hebben (bijv.
+ * "kantoorfunctie,woonfunctie") zonder dat de BAG de oppervlakte over die
+ * functies verdeelt. Die m² zijn dus onzeker. We rekenen daarom met een onder-
+ * en bovengrens en vullen het kantooraandeel alleen automatisch in wanneer
+ * beide grenzen aan dezelfde kant van de 50%-grens liggen. Zo geven we nooit
+ * een schijnzeker antwoord op een vraag die de label-C-plicht bepaalt.
+ */
+export function bepaalPandSamenstelling(vbos: VboRegel[]): PandSamenstelling {
+  let totaalM2 = 0;
+  let kantoorM2 = 0;
+  let onzekerM2 = 0;
+
+  for (const vbo of vbos) {
+    const m2 = Number.isFinite(vbo.oppervlakteM2) ? Math.max(vbo.oppervlakteM2, 0) : 0;
+    if (m2 <= 0) continue;
+    const doelen = vbo.gebruiksdoel
+      .split(",")
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    totaalM2 += m2;
+    const heeftKantoor = doelen.includes("kantoorfunctie");
+    if (!heeftKantoor) continue;
+    if (doelen.length === 1) kantoorM2 += m2;
+    else onzekerM2 += m2;
+  }
+
+  if (totaalM2 <= 0) {
+    return {
+      aantalVerblijfsobjecten: vbos.length,
+      totaalM2: 0,
+      kantoorM2: 0,
+      onzekerM2: 0,
+      kantoorPctMin: 0,
+      kantoorPctMax: 0,
+      kantoorAandeel: null,
+    };
+  }
+
+  const pctMin = (kantoorM2 / totaalM2) * 100;
+  const pctMax = ((kantoorM2 + onzekerM2) / totaalM2) * 100;
+  const kantoorAandeel: KantoorAandeel | null =
+    pctMax < 50 ? "lt50" : pctMin >= 50 ? "gte50" : null;
+
+  return {
+    aantalVerblijfsobjecten: vbos.length,
+    totaalM2,
+    kantoorM2,
+    onzekerM2,
+    kantoorPctMin: Math.round(pctMin),
+    kantoorPctMax: Math.round(pctMax),
+    kantoorAandeel,
+  };
 }
 
 type CacheEntry = { value: BagKenmerken; expiresAt: number };
@@ -121,29 +211,41 @@ async function resolveVerblijfsobjectId(
   return typeof id === "string" && id ? id : null;
 }
 
-/** Stap 2: kenmerken van het verblijfsobject ophalen via de BAG WFS. */
-async function fetchVerblijfsobject(id: string): Promise<{
-  gebruiksdoelen: string[];
-  oppervlakteM2: number | null;
-  bouwjaar: number | null;
-} | null> {
+/** Haal verblijfsobjecten op met een gelijkheidsfilter op één veld. */
+async function queryVerblijfsobjecten(
+  veld: "identificatie" | "pandidentificatie",
+  waarde: string,
+  count: number,
+): Promise<Record<string, unknown>[]> {
   const filter =
     `<Filter xmlns="http://www.opengis.net/fes/2.0">` +
-    `<PropertyIsEqualTo><ValueReference>identificatie</ValueReference>` +
-    `<Literal>${id}</Literal></PropertyIsEqualTo></Filter>`;
+    `<PropertyIsEqualTo><ValueReference>${veld}</ValueReference>` +
+    `<Literal>${waarde}</Literal></PropertyIsEqualTo></Filter>`;
   const params = new URLSearchParams({
     service: "WFS",
     version: "2.0.0",
     request: "GetFeature",
     typeNames: "bag:verblijfsobject",
     outputFormat: "application/json",
-    count: "1",
+    count: String(count),
     filter,
   });
   const data = (await fetchJson(`${BAG_WFS}?${params}`)) as {
     features?: { properties?: Record<string, unknown> }[];
   };
-  const props = data.features?.[0]?.properties;
+  return (data.features ?? [])
+    .map((f) => f.properties)
+    .filter((p): p is Record<string, unknown> => !!p);
+}
+
+/** Stap 2: kenmerken van het verblijfsobject ophalen via de BAG WFS. */
+async function fetchVerblijfsobject(id: string): Promise<{
+  gebruiksdoelen: string[];
+  oppervlakteM2: number | null;
+  bouwjaar: number | null;
+  pandId: string | null;
+} | null> {
+  const props = (await queryVerblijfsobjecten("identificatie", id, 1))[0];
   if (!props) return null;
 
   const gebruiksdoelen = String(props.gebruiksdoel ?? "")
@@ -152,11 +254,34 @@ async function fetchVerblijfsobject(id: string): Promise<{
     .filter(Boolean);
   const opp = Number(props.oppervlakte);
   const bj = Number(props.bouwjaar);
+  const pandId = props.pandidentificatie;
   return {
     gebruiksdoelen,
     oppervlakteM2: Number.isFinite(opp) && opp > 0 ? Math.round(opp) : null,
     bouwjaar: Number.isFinite(bj) && bj > 1500 ? bj : null,
+    pandId: typeof pandId === "string" && pandId ? pandId : null,
   };
+}
+
+/**
+ * Stap 3: alle verblijfsobjecten van hetzelfde pand ophalen, zodat we het
+ * kantooraandeel van het gebouw kunnen afleiden. Faalt dit, dan blijft de rest
+ * van de BAG-gegevens gewoon bruikbaar (we geven null terug).
+ */
+async function fetchPandSamenstelling(
+  pandId: string,
+): Promise<PandSamenstelling | null> {
+  try {
+    const props = await queryVerblijfsobjecten("pandidentificatie", pandId, 200);
+    if (props.length === 0) return null;
+    const vbos: VboRegel[] = props.map((p) => ({
+      gebruiksdoel: String(p.gebruiksdoel ?? ""),
+      oppervlakteM2: Number(p.oppervlakte) || 0,
+    }));
+    return bepaalPandSamenstelling(vbos);
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchBagKenmerken(params: {
@@ -190,6 +315,7 @@ export async function fetchBagKenmerken(params: {
       return value;
     }
     const mapped = mapGebruiksdoelen(vo.gebruiksdoelen);
+    const pand = vo.pandId ? await fetchPandSamenstelling(vo.pandId) : null;
     const value: BagKenmerken = {
       status: "found",
       gebruiksdoelen: vo.gebruiksdoelen,
@@ -198,6 +324,7 @@ export async function fetchBagKenmerken(params: {
       heeftWoonfunctie: mapped.heeftWoonfunctie,
       oppervlakteM2: vo.oppervlakteM2,
       bouwjaar: vo.bouwjaar,
+      pand,
     };
     cache.set(cacheKey, { value, expiresAt: Date.now() + CACHE_TTL_MS });
     return value;

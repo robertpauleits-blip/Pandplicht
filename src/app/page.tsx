@@ -82,7 +82,7 @@ const FAQ_ITEMS: FaqEntry[] = [
   {
     question: "Vult PandPlicht mijn pandgegevens automatisch in?",
     answer:
-      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase), de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG (het openbare gebouwenregister) en controleren wij in het rijksmonumentenregister of het pand een rijksmonument is. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Vinden wij een gegeven niet, dan vult u het gewoon zelf in.",
+      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase), de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG (het openbare gebouwenregister) en controleren wij in het rijksmonumentenregister of het pand een rijksmonument is. Uit alle geregistreerde ruimten in het gebouw berekenen wij bovendien het kantooraandeel, dat bepalend is voor de label-C-plicht. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Is een gegeven niet eenduidig af te leiden, dan vragen wij het gewoon aan u.",
   },
   {
     question: "Krijg ik direct een offerte?",
@@ -296,7 +296,7 @@ export default function HomePage() {
               {[
                 [
                   "Minder invulwerk",
-                  "Gebruiksfunctie, oppervlakte, bouwjaar, label en monumentstatus halen wij automatisch uit BAG, EP-Online en het monumentenregister. U hoeft alleen te controleren.",
+                  "Gebruiksfunctie, oppervlakte, bouwjaar, kantooraandeel, label en monumentstatus halen wij automatisch uit BAG, EP-Online en het monumentenregister. U hoeft alleen te controleren.",
                 ],
                 [
                   "Alles op één plek",

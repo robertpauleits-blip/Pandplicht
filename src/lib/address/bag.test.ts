@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapGebruiksdoelen } from "./bag";
+import { bepaalPandSamenstelling, mapGebruiksdoelen } from "./bag";
 
 describe("mapGebruiksdoelen (BAG -> interne hoofdgebruik)", () => {
   it("mapt enkele zakelijke functies", () => {
@@ -42,5 +42,77 @@ describe("mapGebruiksdoelen (BAG -> interne hoofdgebruik)", () => {
 
   it("negeert hoofdletters en spaties", () => {
     expect(mapGebruiksdoelen([" Kantoorfunctie "]).hoofdgebruik).toBe("kantoor");
+  });
+});
+
+describe("bepaalPandSamenstelling (kantooraandeel uit de BAG)", () => {
+  it("overwegend kantoor => gte50 (praktijkgeval Provinciehuis Utrecht)", () => {
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "kantoorfunctie", oppervlakteM2: 26127 },
+      { gebruiksdoel: "logiesfunctie", oppervlakteM2: 3810 },
+    ]);
+    expect(r.totaalM2).toBe(29937);
+    expect(r.kantoorM2).toBe(26127);
+    expect(r.kantoorAandeel).toBe("gte50");
+    expect(r.kantoorPctMin).toBe(87);
+  });
+
+  it("geen kantoorfunctie => lt50 (praktijkgeval winkelpand)", () => {
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "winkelfunctie", oppervlakteM2: 1959 },
+      { gebruiksdoel: "bijeenkomstfunctie", oppervlakteM2: 270 },
+    ]);
+    expect(r.kantoorAandeel).toBe("lt50");
+    expect(r.kantoorPctMax).toBe(0);
+  });
+
+  it("combifunctie is onzeker en blijft onbeantwoord (Stadskantoor Utrecht)", () => {
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "industriefunctie,kantoorfunctie", oppervlakteM2: 64446 },
+      { gebruiksdoel: "industriefunctie", oppervlakteM2: 1 },
+    ]);
+    expect(r.onzekerM2).toBe(64446);
+    expect(r.kantoorM2).toBe(0);
+    // Ondergrens 0%, bovengrens ~100%: de 50%-grens ligt ertussen.
+    expect(r.kantoorAandeel).toBeNull();
+  });
+
+  it("onzekere m² die de uitkomst niet kan kantelen, blokkeert niet", () => {
+    // 80 m² zeker kantoor + 10 m² onzeker op 100 m² totaal: min 80%, max 90%.
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "kantoorfunctie", oppervlakteM2: 80 },
+      { gebruiksdoel: "kantoorfunctie,woonfunctie", oppervlakteM2: 10 },
+      { gebruiksdoel: "winkelfunctie", oppervlakteM2: 10 },
+    ]);
+    expect(r.kantoorAandeel).toBe("gte50");
+
+    // Spiegelbeeld: max blijft onder de 50%.
+    const laag = bepaalPandSamenstelling([
+      { gebruiksdoel: "kantoorfunctie", oppervlakteM2: 30 },
+      { gebruiksdoel: "kantoorfunctie,woonfunctie", oppervlakteM2: 10 },
+      { gebruiksdoel: "winkelfunctie", oppervlakteM2: 60 },
+    ]);
+    expect(laag.kantoorAandeel).toBe("lt50");
+  });
+
+  it("precies 50% telt als gte50", () => {
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "kantoorfunctie", oppervlakteM2: 500 },
+      { gebruiksdoel: "winkelfunctie", oppervlakteM2: 500 },
+    ]);
+    expect(r.kantoorAandeel).toBe("gte50");
+    expect(r.kantoorPctMin).toBe(50);
+  });
+
+  it("zonder bruikbare oppervlakten geen uitspraak", () => {
+    const r = bepaalPandSamenstelling([
+      { gebruiksdoel: "kantoorfunctie", oppervlakteM2: 0 },
+    ]);
+    expect(r.totaalM2).toBe(0);
+    expect(r.kantoorAandeel).toBeNull();
+  });
+
+  it("leeg pand levert geen uitspraak", () => {
+    expect(bepaalPandSamenstelling([]).kantoorAandeel).toBeNull();
   });
 });
