@@ -119,13 +119,71 @@ class FileStorage implements Storage {
   }
 }
 
+/**
+ * Netlify Blobs-adapter voor productie.
+ *
+ * Belangrijk: op Netlify draaien routes in serverless functions met een
+ * tijdelijk bestandssysteem dat niet gedeeld wordt tussen aanroepen. Een
+ * bestandsadapter lijkt daar te werken (de write slaagt) maar de data is
+ * daarna weg. Blobs is de duurzame opslag die Netlify daarvoor biedt.
+ */
+class BlobStorage implements Storage {
+  /** Dynamisch geladen zodat lokaal ontwikkelen zonder Netlify blijft werken. */
+  private async store(naam: string) {
+    const { getStore } = await import("@netlify/blobs");
+    return getStore({ name: naam, consistency: "strong" });
+  }
+
+  async saveAssessment(a: StoredAssessment): Promise<void> {
+    const safe = a.token.replace(/[^a-zA-Z0-9_-]/g, "");
+    await (await this.store("assessments")).setJSON(safe, a);
+  }
+
+  async getAssessment(token: string): Promise<StoredAssessment | null> {
+    const safe = token.replace(/[^a-zA-Z0-9_-]/g, "");
+    const parsed = (await (await this.store("assessments")).get(safe, {
+      type: "json",
+    })) as StoredAssessment | null;
+    if (!parsed) return null;
+    const age = Date.now() - new Date(parsed.createdAt).getTime();
+    if (age > RETENTION_DAYS * 86_400_000) return null; // verlopen
+    return parsed;
+  }
+
+  async saveLead(lead: LeadRecord): Promise<void> {
+    // Sorteerbare sleutel: leads staan chronologisch bij een list().
+    await (await this.store("leads")).setJSON(`${lead.createdAt}-${lead.id}`, lead);
+  }
+
+  async saveContact(c: ContactRecord): Promise<void> {
+    await (await this.store("contact")).setJSON(`${c.createdAt}-${c.id}`, c);
+  }
+}
+
+/**
+ * Draaien we in een omgeving met Netlify Blobs? Netlify zet deze variabelen
+ * automatisch in zijn build- en functieomgeving.
+ */
+function heeftNetlifyBlobs(): boolean {
+  return Boolean(
+    process.env.NETLIFY_BLOBS_CONTEXT ||
+      (process.env.NETLIFY && process.env.SITE_ID) ||
+      process.env.NETLIFY_SITE_ID,
+  );
+}
+
 let instance: Storage | null = null;
 
 export function getStorage(): Storage {
   if (!instance) {
-    // P1: kies hier een PostgresStorage wanneer DATABASE_URL is gezet.
-    // De rest van de applicatie merkt daar niets van.
-    instance = new FileStorage();
+    // Op Netlify: duurzame Blobs-opslag. Lokaal: bestandsadapter, zodat
+    // ontwikkelen zonder cloudafhankelijkheid blijft werken.
+    instance = heeftNetlifyBlobs() ? new BlobStorage() : new FileStorage();
   }
   return instance;
+}
+
+/** Alleen voor tests: forceer een specifieke adapter. */
+export function __setStorageForTests(s: Storage | null) {
+  instance = s;
 }

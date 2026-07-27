@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { getStorage } from "@/lib/db/storage";
+import { notifyContactbericht } from "@/lib/notify/email";
 import { clientKey, rateLimit } from "@/lib/security/rate-limit";
 
 const contactSchema = z.object({
@@ -44,20 +45,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true }, { status: 201 });
   }
 
+  const bericht = {
+    id: randomBytes(12).toString("base64url"),
+    createdAt: new Date().toISOString(),
+    name: data.name,
+    email: data.email,
+    message: data.message,
+  };
+
   try {
-    await getStorage().saveContact({
-      id: randomBytes(12).toString("base64url"),
-      createdAt: new Date().toISOString(),
-      name: data.name,
-      email: data.email,
-      message: data.message,
-    });
+    await getStorage().saveContact(bericht);
   } catch {
     return NextResponse.json(
       { error: "storage_unavailable", message: "Versturen lukt nu niet. Probeer het later opnieuw." },
       { status: 503 },
     );
   }
+
+  // Niet blokkerend: het bericht staat al veilig opgeslagen.
+  await notifyContactbericht(bericht);
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { getStorage, type LeadRecord } from "@/lib/db/storage";
+import { notifyNieuweLead } from "@/lib/notify/email";
 import { clientKey, rateLimit } from "@/lib/security/rate-limit";
 
 const PRIVACY_VERSION = "2026-07";
@@ -140,8 +141,10 @@ export async function POST(req: Request) {
     );
   }
 
-  // P1: e-mailnotificatie via adapter (EMAIL_PROVIDER_API_KEY), bewust
-  // uitgeschakeld zolang er geen echt e-mailadres is geconfigureerd.
+  // Notificatie is bewust niet blokkerend: de lead is al veilig opgeslagen,
+  // dus een haperende mailprovider mag de bezoeker geen fout opleveren.
+  // Zonder RESEND_API_KEY + LEAD_NOTIFY_TO gebeurt hier simpelweg niets.
+  await notifyNieuweLead(lead);
 
   return NextResponse.json({ ok: true, id: lead.id }, { status: 201 });
 }
