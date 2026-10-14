@@ -20,8 +20,8 @@ export const SOURCES: Record<string, SourceRecord> = {
     title: "Informatieplicht energiebesparing",
     publisher: "RVO",
     url: "https://www.rvo.nl/onderwerpen/energiebesparingsplicht/informatieplicht-energiebesparing",
-    checkedAt: "2026-07-20",
-    notes: "Rapportage kan eens per vier jaar gelden.",
+    checkedAt: "2026-10-14",
+    notes: "Volgende uiterste indieningsdatum 1 december 2027; rapportage eens per vier jaar afhankelijk van activiteiten en energiegebruik.",
   },
   "rvo-research-duty": {
     id: "rvo-research-duty",
