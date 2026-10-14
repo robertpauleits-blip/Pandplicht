@@ -191,58 +191,94 @@ export const ARTIKELEN_VERPLICHTINGEN: Article[] = [
 
   {
     slug: "informatieplicht-energiebesparing-uitgelegd",
-    title: "Informatieplicht energiebesparing uitgelegd",
+    title: "Informatieplicht energiebesparing 2027: wie moet rapporteren?",
     description:
-      "Wat is de informatieplicht energiebesparing, wie moet rapporteren, wanneer en hoe? Praktische uitleg voor ondernemers en pandeigenaren.",
+      "Informatieplicht energiebesparing in 2027: deadline 1 december, drempels, eigenaar of huurder, EML en rapporteren via RVO. Met gratis check.",
     category: "Energiebesparing",
     searchIntent: "informatieplicht energiebesparing",
     publishedAt: D,
-    lastReviewedAt: D,
+    lastReviewedAt: "2026-10-14",
     publisher: "PandPlicht",
     sourceIds: ["rvo-information-duty", "rvo-energy-saving-duty", "rvo-eml"],
     relatedTool: {
       href: "/tools/energiebesparingsplicht-check",
-      label: "Check of de plicht voor u geldt",
+      label: "Doe de gratis energiebesparingsplichtcheck",
     },
     kortAntwoord:
-      "De informatieplicht is de rapportageverplichting die hoort bij de energiebesparingsplicht. Locaties die jaarlijks 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) of meer gebruiken, rapporteren eens per vier jaar aan RVO welke energiebesparende maatregelen zij hebben genomen. De rapportage gaat via het eLoket van RVO.",
+      "De informatieplicht energiebesparing verplicht bedrijven en instellingen die onder de energiebesparingsplicht vallen om eens per vier jaar te rapporteren over genomen maatregelen. De volgende uiterste indieningsdatum is 1 december 2027. Of u moet rapporteren hangt af van het energiegebruik én de activiteiten op uw locatie. Controleer dit eerst; bij de informatieplicht rapporteert u over gebouwmaatregelen en, afhankelijk van uw situatie, over activiteitgebonden maatregelen.",
     sections: [
-      { type: "kop", text: "Wat is de informatieplicht?" },
+      { type: "kop", text: "Wanneer is de deadline voor de informatieplicht?" },
       {
         type: "paragraaf",
-        text: "De energiebesparingsplicht verplicht u maatregelen te nemen; de informatieplicht verplicht u te laten zien wát u heeft gedaan. U rapporteert per locatie welke erkende maatregelen (EML) zijn uitgevoerd, welke niet en waarom. Zo kunnen gemeenten en omgevingsdiensten gerichter toezicht houden.",
+        text: "Volgens RVO is de volgende uiterste indieningsdatum 1 december 2027. Heeft u een verplichte rapportage over 2023 nog niet ingediend? Wacht dan niet tot 2027: RVO adviseert om die zo snel mogelijk alsnog in te dienen. De informatieplicht heeft een cyclus van vier jaar.",
       },
-      { type: "kop", text: "Wie moet rapporteren: eigenaar of gebruiker?" },
+      { type: "kop", text: "Voor wie geldt de informatieplicht energiebesparing?" },
       {
         type: "paragraaf",
-        text: "De rapportage ligt bij degene op wie de energiebesparingsplicht rust, vaak de gebruiker van het pand (de drijver van de activiteit). Sinds de actualisering van de regels zijn er ook maatregelen die juist het gebouw betreffen en daarmee de eigenaar raken. Bij verhuurde panden is het verstandig om samen vast te leggen wie wat rapporteert.",
+        text: "De informatieplicht hangt samen met de energiebesparingsplicht. Een belangrijk uitgangspunt is jaarlijks energiegebruik per locatie vanaf 50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent). Maar energiegebruik alleen is niet voldoende voor een definitieve beoordeling: ook de activiteiten, gebouwfunctie en eventuele uitzonderingen zijn belangrijk. Gebruik de Wetchecker van RVO of raadpleeg de omgevingsdienst voor uw specifieke situatie.",
       },
-      { type: "kop", text: "Wanneer moet u rapporteren?" },
       {
         type: "lijst",
         items: [
-          "De rapportage geldt in een cyclus van vier jaar.",
-          "Nieuw boven de drempel? Controleer bij RVO wanneer uw eerstvolgende rapportage moet zijn ingediend.",
-          "Valt uw locatie onder de onderzoeksplicht, dan gelden aanvullende eisen; de rapportage verloopt dan (deels) via het onderzoek.",
+          "Bekijk uw jaarlijkse elektriciteits- en gasverbruik per locatie.",
+          "Controleer welke gebouw- en milieubelastende activiteiten u uitvoert.",
+          "Toets uw situatie met de officiële Wetchecker energiebesparing van RVO.",
+          "Controleer of u daarnaast ook onder de onderzoeksplicht valt.",
         ],
       },
-      { type: "kop", text: "Wat moet u nu doen?" },
+      { type: "kop", text: "Waarover moet u rapporteren?" },
+      {
+        type: "paragraaf",
+        text: "Via de informatieplicht rapporteert u over energiebesparende maatregelen voor uw gebouw. Voor maatregelen die verband houden met de activiteiten op de locatie rapporteert u via de informatieplicht, de onderzoeksplicht of beide. De Erkende Maatregelenlijst energiebesparing (EML) is daarbij meestal het uitgangspunt. U geeft per maatregel aan of deze is uitgevoerd, niet is uitgevoerd of door een alternatieve maatregel is vervangen.",
+      },
+      { type: "kop", text: "Wie dient de rapportage in: eigenaar of huurder?" },
+      {
+        type: "paragraaf",
+        text: "Bij een verhuurd pand kunnen gebouwmaatregelen en activiteitgebonden maatregelen bij verschillende partijen liggen. De eigenaar is meestal verantwoordelijk voor gebouwmaatregelen, terwijl de organisatie die de activiteiten uitvoert verantwoordelijk is voor die maatregelen. Voor locaties die op 1 december 2023 een informatieplicht hadden, geldt tot de deadline van 1 december 2027 overgangsrecht: de drijver van de inrichting blijft dan formeel verantwoordelijk voor de rapportage. Spreek onderling af wie de gegevens verzamelt en raadpleeg zo nodig uw omgevingsdienst.",
+      },
+      { type: "kop", text: "Informatieplicht rapporteren: stappenplan" },
       {
         type: "lijst",
         geordend: true,
         items: [
-          "Stel vast of uw locatie boven een van de drempels zit (jaarafrekening).",
-          "Loop de EML door en noteer per maatregel de status.",
-          "Verzamel bewijsstukken (facturen, foto's, onderhoudsrapporten).",
-          "Dien de rapportage in via het eLoket van RVO en bewaar een kopie.",
+          "Controleer in de Wetchecker van RVO of de informatie- of onderzoeksplicht voor uw locatie geldt.",
+          "Verzamel een recente, representatieve jaarafrekening en de gegevens over uw pand en activiteiten.",
+          "Loop de relevante Erkende Maatregelenlijst (EML) door en noteer de status van iedere maatregel.",
+          "Regel voor zelf indienen tijdig eHerkenning niveau 2+ en de benodigde machtiging voor RVO-diensten, of machtig een intermediair.",
+          "Dien de rapportage in via de rapportageomgeving van RVO en bewaar de bevestiging.",
         ],
+      },
+      { type: "kop", text: "Informatieplicht uitbesteden: kan dat?" },
+      {
+        type: "paragraaf",
+        text: "U kunt een adviseur of andere intermediair machtigen om de informatieplicht namens u in te dienen. RVO heeft hiervoor een machtigingsformulier. De verantwoordelijkheid voor een correcte rapportage blijft wel bij u liggen. Controleer welke informatie de intermediair nodig heeft en wie het rapportagedossier beheert.",
+      },
+      { type: "kop", text: "Begin met een indicatieve check" },
+      {
+        type: "paragraaf",
+        text: "Weet u nog niet of uw locatie onder de informatieplicht valt? Gebruik de gratis PandPlicht-check voor een eerste indicatie. Deze check vervangt de RVO-Wetchecker niet en is geen juridisch oordeel; bij twijfel volgt altijd verificatie bij de officiële bron of uw omgevingsdienst.",
       },
     ],
     faq: [
       {
+        question: "Wat is de uiterste datum voor de informatieplicht in 2027?",
+        answer:
+          "De volgende uiterste indieningsdatum is 1 december 2027 volgens RVO. Een nog ontbrekende rapportage over 2023 moet u zo snel mogelijk alsnog indienen.",
+      },
+      {
+        question: "Geldt de informatieplicht al vanaf 50.000 kWh elektriciteit?",
+        answer:
+          "50.000 kWh elektriciteit of 25.000 m³ aardgas(equivalent) per jaar zijn belangrijke gebruiksdrempels. Of de plicht echt geldt hangt ook af van de activiteiten en omstandigheden van uw locatie. Controleer uw situatie met de RVO-Wetchecker.",
+      },
+      {
         question: "Is de informatieplicht hetzelfde als de onderzoeksplicht?",
         answer:
-          "Nee. De informatieplicht is een rapportage over genomen EML-maatregelen en geldt vanaf de reguliere drempels. De onderzoeksplicht geldt voor zeer grote verbruikers (vanaf circa 10 miljoen kWh of 170.000 m³ gas) en vraagt een uitgebreider onderzoek met een uitvoeringsplan.",
+          "Nee. De informatieplicht ziet op rapportage over energiebesparende maatregelen, onder meer voor gebouwen. De onderzoeksplicht richt zich op bepaalde zeer grote energiegebruikers en vraagt uitgebreider onderzoek naar maatregelen. Soms gelden beide.",
+      },
+      {
+        question: "Mag een adviseur de informatieplicht voor mij indienen?",
+        answer:
+          "Ja. U kunt een intermediair machtigen om namens u te rapporteren. U blijft verantwoordelijk voor de juistheid van de ingediende informatie.",
       },
     ],
     related: [
