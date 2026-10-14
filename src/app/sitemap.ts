@@ -5,18 +5,19 @@ import { ARTICLES } from "@/content/knowledge";
 
 /**
  * Sitemap met echte wijzigingsdatums. Kennisbankartikelen krijgen hun eigen
- * controledatum mee (freshness-signaal en eerlijk); overige pagina's de
- * builddatum als beste benadering.
+ * werkelijke controledatum mee. Voor overige pagina's zonder betrouwbare
+ * wijzigingsdatum laten we lastModified weg; een build is geen inhoudsupdate.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const build = new Date();
   const articleDates = new Map(
     ARTICLES.map((a) => [`/kennisbank/${a.slug}`, new Date(a.lastReviewedAt)]),
   );
 
   return indexableRoutes().map((r) => ({
     url: absoluteUrl(r.path),
-    lastModified: articleDates.get(r.path) ?? build,
+    ...(articleDates.has(r.path)
+      ? { lastModified: articleDates.get(r.path) }
+      : {}),
     changeFrequency:
       r.path === "/"
         ? "weekly"
