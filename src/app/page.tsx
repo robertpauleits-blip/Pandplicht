@@ -82,7 +82,7 @@ const FAQ_ITEMS: FaqEntry[] = [
   {
     question: "Vult PandPlicht mijn pandgegevens automatisch in?",
     answer:
-      "Voor een groot deel wel. Zodra u postcode en huisnummer invult, halen wij het geregistreerde energielabel op uit EP-Online (de officiële overheidsdatabase), de gebruiksfunctie, oppervlakte en het bouwjaar uit de BAG (het openbare gebouwenregister) en controleren wij in het rijksmonumentenregister of het pand een rijksmonument is. Uit alle geregistreerde ruimten in het gebouw berekenen wij bovendien het kantooraandeel, dat bepalend is voor de label-C-plicht. U ziet per veld welke bron is gebruikt en kunt alles met één klik zelf corrigeren. Is een gegeven niet eenduidig af te leiden, dan vragen wij het gewoon aan u.",
+      "Soms. Na het invullen van uw adres proberen wij gebruiksfunctie, oppervlakte en bouwjaar via de openbare BAG te bepalen. Ook proberen wij de rijksmonumentstatus te controleren en het kantooraandeel te berekenen als de gegevens dat toelaten. Het geregistreerde energielabel kunnen wij alleen automatisch ophalen als de EP-Online-koppeling is ingeschakeld en gegevens beschikbaar zijn. Ontbreekt er iets of is een bron niet bereikbaar? Dan kunt u het zelf invullen of corrigeren. U ziet bij de ingevulde gegevens welke bron is gebruikt.",
   },
   {
     question: "Krijg ik direct een offerte?",
